@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Stripe Capture The Flag 2.0 - Problem 2 - Qiu&#8217;s Quibble</title>
+  <meta name="author" content="Kevin Jing Qiu">
+
+  
+  <meta name="description" content="Level 2 &lt;?php session_start(); if ($_FILES[&quot;dispic&quot;][&quot;error&quot;] &gt; 0) { echo &quot;&lt;p&gt;Error: &quot; . $_FILES[&quot; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://kevinjqiu.github.io/2012/09/12/ctf2-dot-0-problem-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Qiu's Quibble" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-32737230-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+
+<body>
+	<div class="container">
+		<aside class="left">
+			<div class="inner-left">
+				<header>
+					
+  <img src="http://www.gravatar.com/avatar/696a8f13a7fcf0b4265fe801f18ba7b5?s=200" alt="Gravatar of Kevin Jing Qiu " title="Gravatar of Kevin Jing Qiu" class="profilepic" />
+
+<hgroup>
+  <h1><a href="/">Qiu&#8217;s Quibble</a></h1>
+  
+    <h2 class="subtitle">A blog about nothing and everything</h2>
+   
+</hgroup>
+
+<section>
+  <p style="color:white">I&#8217;m a software developer living in the Greater Toronto Area, Canada. My favourite programming language is Python while I admire the beauty of Clojure and Scala. I use console vim with tmux for most of my coding, and I use Arch Linux at home and Ubuntu at work.
+  </p>
+</section>
+
+
+				</header>
+				<footer>
+					<p>
+	
+		<a href="http://github.com/kevinjqiu" class="btn btn-dark">GitHub</a>
+	
+	
+		<a href="http://twitter.com/kevinjqiu" class="btn btn-dark">Twitter</a>
+	
+</p>
+				</footer>
+			</div>
+		</aside>
+    	<section class="right">
+    		<div class="inner-right">
+    			<div id="posts">
+    			  	<article class="post">
+    
+  <header>
+    
+      <h1 class="entry-title">Stripe Capture the Flag 2.0 - Problem 2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-12T23:50:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Level 2</h2>
+
+<div><script src='https://gist.github.com/3711719.js?file=index.php'></script>
+<noscript><pre><code>&lt;?php
+  session_start();
+
+  if ($_FILES[&quot;dispic&quot;][&quot;error&quot;] &gt; 0) {
+    echo &quot;&lt;p&gt;Error: &quot; . $_FILES[&quot;dispic&quot;][&quot;error&quot;] . &quot;&lt;/p&gt;&quot;;
+  }
+  else
+  {
+    $dest_dir = &quot;uploads/&quot;;
+    $dest = $dest_dir . basename($_FILES[&quot;dispic&quot;][&quot;name&quot;]);
+    $src = $_FILES[&quot;dispic&quot;][&quot;tmp_name&quot;];
+    if (move_uploaded_file($src, $dest)) {
+      $_SESSION[&quot;dispic_url&quot;] = $dest;
+      chmod($dest, 0644);
+      echo &quot;&lt;p&gt;Successfully uploaded your display picture.&lt;/p&gt;&quot;;
+    }
+  }
+
+  $url = &quot;https://upload.wikimedia.org/wikipedia/commons/f/f8/&quot; .
+         &quot;Question_mark_alternate.svg&quot;;
+  if (isset($_SESSION[&quot;dispic_url&quot;])) {
+    $url = $_SESSION[&quot;dispic_url&quot;];
+  }
+
+?&gt;
+
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Welcome to the CTF!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;center&gt;
+      &lt;h1&gt;Welcome to the CTF Social Network!&lt;/h1&gt;
+      &lt;div&gt;
+        &lt;img src=&lt;?php echo $url; ?&gt; /&gt;
+        &lt;?php
+          if (!isset($_SESSION[&quot;dispic_url&quot;])) {
+            echo &quot;&lt;p&gt;Oh, looks like you don't have a profile image&quot; .
+                 &quot; -- upload one now!&lt;/p&gt;&quot;;
+          }
+        ?&gt;
+        &lt;form action=&quot;&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+          &lt;input type=&quot;file&quot; name=&quot;dispic&quot; size=&quot;40&quot; /&gt;
+          &lt;input type=&quot;submit&quot; value=&quot;Upload!&quot;&gt;
+        &lt;/form&gt;
+
+        &lt;p&gt;
+           Password for Level 3 (accessible only to members of the club):
+           &lt;a href=&quot;password.txt&quot;&gt;password.txt&lt;/a&gt;
+        &lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/center&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>In level 2, we&rsquo;re faced with a PHP app that allows you to upload a &ldquo;profile picture&rdquo;. The password to level 3 is contained in a &ldquo;password.txt&rdquo; file of the document root, as revealed in line 49. Of course, you won&rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.</p>
+
+<p>Reading through the code, it&rsquo;s a clear that whatever file uploaded to the server will be under <code>uploads/</code>, and the file is publicly accessible through <code>&lt;base&gt;/uploads/&lt;your_file_name&gt;</code>, as seen on line 37. The file input is expecting a image file, but it doesn&rsquo;t restrict the type of file it accepts. What if we upload a PHP script, read the file content <code>../password.txt</code>?</p>
+
+<p>With that in mind, I quickly cooked up a PHP script:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">echo</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">&#39;../password.txt&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>uploaded it and hit it with curl. Guess what? The password is right there in the clear!</p>
+
+<h2>Conclusion</h2>
+
+<p>There&rsquo;s a few problems with this app:</p>
+
+<ul>
+<li>The user shouldn&rsquo;t be able to upload files of any type they want. Restrict to only image files if you&rsquo;re expecting profile pictures.</li>
+<li>The above point is necessary but not sufficient. The bigger problem is that the server is not properly configured. Files under <code>uploads/</code> folder should be considered &ldquo;user input&rdquo; and thus should not be able to be executed on the server. Much more exploits can be done here and as it turns out, some later levels require the control of this machine.</li>
+</ul>
+
+</div>
+
+
+</article>
+
+
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kevinjqiu.github.io/2012/09/12/ctf2-dot-0-problem-2/" data-via="kevinjqiu" data-counturl="http://kevinjqiu.github.io/2012/09/12/ctf2-dot-0-problem-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+
+
+
+<section id="comments">
+    <div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+
+    			</div>
+    			<footer id="footer">
+    				<p class="credit">
+  Copyright &copy; 2014 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
+</p>
+
+
+    			</footer>
+    			
+
+<script type="text/javascript">
+      var disqus_shortname = 'reminiscential';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://kevinjqiu.github.io/2012/09/12/ctf2-dot-0-problem-2/';
+        var disqus_url = 'http://kevinjqiu.github.io/2012/09/12/ctf2-dot-0-problem-2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+<link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-32737230-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+
+    		</div>
+    	</section>
+  	</div>
+</body>
+</html>

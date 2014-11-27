@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: functional | Qiu's Quibble]]></title>
+  <link href="http://kevinjqiu.github.io/blog/categories/functional/atom.xml" rel="self"/>
+  <link href="http://kevinjqiu.github.io/"/>
+  <updated>2014-11-27T01:02:58-05:00</updated>
+  <id>http://kevinjqiu.github.io/</id>
+  <author>
+    <name><![CDATA[Kevin Jing Qiu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Use Python decorator to curry functions]]></title>
+    <link href="http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions/"/>
+    <updated>2010-10-22T20:06:00-04:00</updated>
+    <id>http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing functional programming and dynamic languages&hellip;I learned Python before I went into Computer Science, and then I learned about functional programming and through learning of Scala and Clojure, my functional programming concepts have been enriched. As I was listening, it suddenly appeared to me that there isn&rsquo;t a way in Python to <a href="http://en.wikipedia.org/wiki/Currying">curry</a> a function. Not that it&rsquo;s critical to everyday development, but wouldn&rsquo;t it be neat if I can curry a function in Python?</p>
+
+<p>Then the hosts of the podcast discussed how dynamic languages are so flexible that you can pretty much do anything to it. &ldquo;You can take a function as parameter, return a function from a function, and so on.&rdquo; Hey, isn&rsquo;t that what Python&rsquo;s <a href="http://www.artima.com/weblogs/viewpost.jsp?thread=240808">decorator</a> can do? I learned decorators before, but I haven&rsquo;t used it beyond the scope of creating properties and certainly haven&rsquo;t written any decorators. I thought this would be a good exercise for learning decorators.</p>
+
+<p>Here&rsquo;s a simple example of what function currying: suppose you have a method</p>
+
+<pre><code class="python">def add(x,y):
+  return x+y
+</code></pre>
+
+<p>Then calling <code>add(1,2)</code> should be the same as <code>add(1)(2)</code>. <code>add(1)</code> is what they call a partially applied function. It&rsquo;s a function that takes one parameter.</p>
+
+<p>Our goal here is to write a decorator &ldquo;curried&rdquo; that takes a function with n parameters and transform it in a way that can be applied n times and get the final result.</p>
+
+<p>We&rsquo;ll start with unit tests first:</p>
+
+<pre><code class="python">import unittest
+
+class CurryTest(unittest.TestCase):
+
+    def test_with_no_args(self):
+        @curried
+        def do_nothing():
+            return ""
+        self.assertEquals("", do_nothing())
+
+    def test_with_int_args(self):
+        @curried
+        def add_int(x,y):
+            return x+y
+        self.assertEquals(3, add_int(1)(2))
+    def test_with_str_args(self):
+        @curried
+        def add_str(x,y):
+            return "%s%s"%(x,y)
+        self.assertEquals("ab", add_str("a")("b"))
+</code></pre>
+
+<p>So we make sure that a currying on a function takes no parameter is valid but should be a pass through, and also the &ldquo;curried&rdquo; decorator can be applied to any function with arguments (excluding positional arguments and keyword arguments)</p>
+
+<p>A decorator is simply a function that takes a function as parameter:
+<code>python
+def curried(fn):
+  pass
+</code>
+and <code>@curried</code> is simply a syntactic sugar for:</p>
+
+<pre><code class="python">def fn(...): ...
+fn=curried(fn)
+</code></pre>
+
+<p>So, now we can write <code>curried</code> decorator.
+To make the test for function with no argument pass, in <code>curried()</code> function, we can test to see if fn has arguments. Python&rsquo;s standard library provides <code>inspect.getargspec</code> method:</p>
+
+<pre><code class="python">def curried(fn):
+  argspec = inspect.getargspec(fn)
+  if len(argspec.args)==0:
+    return fn
+  else:
+    # later
+</code></pre>
+
+<p>Now the first test passes.</p>
+
+<p>For the other two cases, here&rsquo;s the strategy. In Python, when a class defines <code>__call__</code> method, the instance of that class is said to be &ldquo;callable&rdquo;. For instance:</p>
+
+<pre><code class="python">class A(object):
+  def __call__(self, arg):
+    return arg
+
+f=A()
+f("echo")  # this gives you "echo"
+</code></pre>
+
+<p>This is very similar to Scala&rsquo;s <code>apply()</code> function. Now that we have this in our inventory, we can define a <code>PartialFunction</code> class, take all the required parameters of the original function, and allow them to be applied one at a time. So the <code>__call__</code> method of PartialFunc will look like this:</p>
+
+<pre><code class="python">def __call__(self, value):
+  # Xxx
+</code></pre>
+
+<p>If all the required parameters are passed in, <code>PartialFunc</code> should evaluate the original function with the complete argument list. Otherwise, <code>PartialFunc</code> stores the parameter in an instance variable, and returns itself.</p>
+
+<p>Here&rsquo;s the complete code:
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">PartialFunc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="err">&lt;</span><span class="nf">strong</span><span class="o">&gt;</span><span class="n">init</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">argspec</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">argspec</span> <span class="o">=</span> <span class="n">argspec</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">arglist</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;self.args[</span><span class="si">%d</span><span class="s">]&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))])</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="s">&quot;self.fn(&quot;</span> <span class="o">+</span> <span class="n">arglist</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>
+</span><span class='line'><span class="ow">and</span> <span class="n">the</span> <span class="n">curried</span> <span class="n">decorator</span><span class="p">:</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">curried</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">argspec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">fn</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">PartialFunc</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">argspec</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>It&rsquo;s pretty straightforward. When the parameters are complete, I construct a python statement that calls the original function with the complete argument list, and then pass the statement into an eval statement. I know evals are evil, but I can&rsquo;t find a way in Python to dynamically change the signature of the original method and make it accept a variable length argument (varargs).</p>
+
+<p>So this is it. It&rsquo;s quite simple. Python methods can have varargs and keyword args, the situation gets a little more complicated. The thing is, both varargs and keyword args are not mandatory, so it&rsquo;s hard for the curried function to know whether the argument list has been completed&hellip;Also, if you take default values into account, it could get even more complicated.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Use delegation to write map/filter in Java]]></title>
+    <link href="http://kevinjqiu.github.io/2010/03/01/use-delegation-to-write-map-slash-filter-in-java/"/>
+    <updated>2010-03-01T19:32:00-05:00</updated>
+    <id>http://kevinjqiu.github.io/2010/03/01/use-delegation-to-write-map-slash-filter-in-java</id>
+    <content type="html"><![CDATA[<h2>The problem</h2>
+
+<p>In Java, imagine you have a list of <code>User</code> objects, each encapsulates the user&rsquo;s <code>id</code>, <code>first name</code>, <code>last name</code> and <code>age</code>. Then you want to call a web service <code>UserService.deleteUsersByIds(List&lt;Integer&gt; userIds)</code> to delete the users from your data store. It doesn&rsquo;t sound too hard, does it? All you need to do is to transform you <code>List&lt;User&gt;</code> to <code>List&lt;Integer&gt;</code>. So you go ahead and write the following code:</p>
+
+<pre><code class="java">List&lt;Integer&gt; ids = new ArrayList&lt;Integer&gt;(users.size());
+for (User user : users) {
+  ids.append(user.getId());
+}
+</code></pre>
+
+<p>Then you go ahead and use your <code>ids</code> list, and everything is fine and dandy.</p>
+
+<p>However, two minutes later, you find yourself having to provide another API method with a list of user&rsquo;s names in String. So, again, you exercise your <em>CSC101</em> skill:</p>
+
+<pre><code class="java">List&lt;String&gt; names = new ArrayList&lt;String&gt;(users.size());
+for (User user : users) {
+  names.append(new StringBuilder(user.getFirstName()).append(" ").append("user.getLastName()));
+}
+</code></pre>
+
+<p>Now, something else comes along and you need to write a piece of code that returns a list of names that belong to people who are under 21 years of age in the list&hellip;You get the idea. Well, things get boring pretty quickly.</p>
+
+<p>As it turns out, these are two very important functions in <a href="http://en.wikipedia.org/wiki/Functional_programming">functional programming</a> map and filter.</p>
+
+<ul>
+<li><code>map(coll, f)</code> &ldquo;loops&rdquo; over the collection, calls the function f on each element, and add the return of the <code>f(element)</code> to the return collection.</li>
+<li><code>filter(coll, f)</code> &ldquo;loops&rdquo; over the collection, calls <code>f(element)</code>, and only add element to the return list when <code>f(element)</code> returns <code>true</code></li>
+</ul>
+
+
+<h2>Use delegation for generic-ity</h2>
+
+<p>Now we take our first step in designing our generic map function:</p>
+
+<pre><code class="java">&lt;FromType, ToType&gt; List&lt;ToType&gt; map(ArrayList&lt;FromType&gt; list) {
+  List&lt;ToType&gt; retval = new ArrayList&lt;ToType&gt;(list.size());
+  for (FromType item : list) {
+    [...]
+  }
+  return retval;
+}
+</code></pre>
+
+<p>What we left out in the above code snippet is how the input is mapped to the output. This is where delegates come in. Unfortunately, Java doesn&rsquo;t have the language-level delegate. We need to design an interface for this delegate.</p>
+
+<pre><code class="java">interface MapDelegate&lt;FromType, ToType&gt; {
+  ToType map(FromType obj);
+}
+</code></pre>
+
+<p>The delegate is parameterized (to provide more type safety) with <code>FromType</code> and <code>ToType</code>. <code>FromType</code> is the type of the objects in the original list, and <code>ToType</code> is the type of objects in the mapped list. Now we need to change our method signature to incorporate the delegate.</p>
+
+<pre><code class="java">&lt;FromType, ToType&gt; List&lt;ToType&gt; map(ArrayList&lt;FromType&gt; list, MapDelegate&lt;FromType, ToType&gt; mapDelegate) {
+  List&lt;ToType&gt; retval = new ArrayList&lt;ToType&gt;(list.size());
+  for (FromType item : list) {
+    retval.add(mapDelegate.map(item));
+  }
+  return retval;
+}
+</code></pre>
+
+<p>Now the client code will look like this:</p>
+
+<pre><code class="java">List&lt;User&gt; users = getUserListFromSomeWhere();
+List&lt;String&gt; ids = map(users, new MapDelegate&lt;User,String&gt;() {
+  public String map(User obj) {
+    return new StringBuilder(user.getFirstName()).append(" ").append("user.getLastName()).toString();
+  }
+});
+</code></pre>
+
+<p>Similarly, we can write a filter function:
+<code>java
+&lt;T&gt; List&lt;T&gt; filter(List&lt;T&gt; list, FilterDelegate&lt;T&gt; filterDelegate) {
+  List&lt;T&gt; retval = new ArrayList&lt;T&gt;(list.size());
+  for (T item : list) {
+    if (filterDelegate.filter(item)
+      retval.add(item);
+  return retval;
+}
+</code></p>
+
+<pre><code class="java">interface FilterDelegate&lt;T&gt; {
+  boolean filter(T item);
+}
+</code></pre>
+
+<h2>What about return value creation?</h2>
+
+<p>Use delegation, we can separate the parts of an algorithm in terms of their interfaces and leave the implementation to the caller. However, given the above filter and map methods, what if I don&rsquo;t want the return type to be <code>ArrayList</code>? What if I want a <code>LinkedList</code> or a <code>HashSet</code>? Doesn&rsquo;t the statement</p>
+
+<pre><code class="java">  List&lt;T&gt; retval = new ArrayList&lt;T&gt;(list.size());
+</code></pre>
+
+<p>an implementation by itself?</p>
+
+<p>Absolutely! For more flexibility, the &ldquo;new&rdquo; statement in the implementation body has to be delegated out as well. We introduce a <code>ReturnDelegate</code> interface:</p>
+
+<pre><code class="java">interface ReturnDelegate&lt;R extends Collection&lt;?&gt;&gt; {
+  R createReturnCollection();
+}
+</code></pre>
+
+<p>and plug in the return delegate to the map method:
+<code>java
+&lt;FromType, ToType, R extends Collection&lt;?&gt;&gt; R map(Collection&lt;FromType&gt; coll, MapDelegate&lt;FromType, ToType&gt; mapDelegate, ReturnDelegate&lt;R&gt; returnDelegate) {
+  R retval = returnDelegate.createReturnCollection();
+  for (FromType item : list) {
+    retval.add(mapDelegate.map(item));
+  }
+  return retval;
+}
+</code></p>
+
+<p>Now the actual implementation has been completely separated. I know you can probably achieve flexibility without return delegate with the use of reflection, but on some systems (like GWT, which is what I&rsquo;m working on and what this code is originally designed for), reflection is off limits.</p>
+]]></content>
+  </entry>
+  
+</feed>

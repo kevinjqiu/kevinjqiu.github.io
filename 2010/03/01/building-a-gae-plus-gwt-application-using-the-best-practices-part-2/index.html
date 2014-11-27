@@ -1,0 +1,502 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Building a GAE+GWT application using the best practices (Part 2) - Qiu&#8217;s Quibble</title>
+  <meta name="author" content="Kevin Jing Qiu">
+
+  
+  <meta name="description" content="Building a GAE+GWT application using the best practices series Part 1
+Part 2
+Part 3
+Part 4
+Part 5 In Part 2, we&rsquo;re going to go over project &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://kevinjqiu.github.io/2010/03/01/building-a-gae-plus-gwt-application-using-the-best-practices-part-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Qiu's Quibble" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-32737230-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+
+<body>
+	<div class="container">
+		<aside class="left">
+			<div class="inner-left">
+				<header>
+					
+  <img src="http://www.gravatar.com/avatar/696a8f13a7fcf0b4265fe801f18ba7b5?s=200" alt="Gravatar of Kevin Jing Qiu " title="Gravatar of Kevin Jing Qiu" class="profilepic" />
+
+<hgroup>
+  <h1><a href="/">Qiu&#8217;s Quibble</a></h1>
+  
+    <h2 class="subtitle">A blog about nothing and everything</h2>
+   
+</hgroup>
+
+<section>
+  <p style="color:white">I&#8217;m a software developer living in the Greater Toronto Area, Canada. My favourite programming language is Python while I admire the beauty of Clojure and Scala. I use console vim with tmux for most of my coding, and I use Arch Linux at home and Ubuntu at work.
+  </p>
+</section>
+
+
+				</header>
+				<footer>
+					<p>
+	
+		<a href="http://github.com/kevinjqiu" class="btn btn-dark">GitHub</a>
+	
+	
+		<a href="http://twitter.com/kevinjqiu" class="btn btn-dark">Twitter</a>
+	
+</p>
+				</footer>
+			</div>
+		</aside>
+    	<section class="right">
+    		<div class="inner-right">
+    			<div id="posts">
+    			  	<article class="post">
+    
+  <header>
+    
+      <h1 class="entry-title">Building a GAE+GWT Application Using the Best Practices (Part 2)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-01T00:44:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Building a GAE+GWT application using the best practices series</h2>
+
+<ol>
+<li><a href="/2010/02/26/building-a-gae-plus-gwt-application-using-the-best-practices-part-1/">Part 1</a></li>
+<li>Part 2</li>
+<li><a href="/2010/03/03/building-a-gae-plus-gwt-application-using-the-best-practices-part-3/">Part 3</a></li>
+<li><a href="/2010/03/03/building-a-gae-plus-gwt-application-using-the-best-practices-part-4/">Part 4</a></li>
+<li><a href="/2010/03/09/building-a-gae-plus-gwt-application-using-the-best-practices-part-5/">Part 5</a></li>
+</ol>
+
+
+<p>In Part 2, we&rsquo;re going to go over project setup for GAE and GWT applications, and wire the server (servlet) using <a href="http://code.google.com/p/google-guice/">Guice</a> and <a href="http://code.google.com/p/gwt-dispatch/">GWT-Dispatch</a>.</p>
+
+<h2>Project setup</h2>
+
+<p>I&rsquo;m using Eclipse as my development environment. Install <a href="http://code.google.com/eclipse/">Google Eclipse plugin</a>, and install the provided GWT (2.0.2) and GAE (1.3.1) with the plugin. Create a new project in Eclipse using the &ldquo;New web application project&rdquo; wizard, and create a sample project.</p>
+
+<p>Now, because during deployment, GAE applications are executed within its own servlet container, all dependencies have to be placed inside the directory /war/WEB-INF/lib. Go ahead, download <a href="http://code.google.com/p/google-guice/downloads/list">Guice</a>, <a href="http://code.google.com/p/gwt-dispatch/downloads/list">GWT-dispatch</a>, <a href="http://code.google.com/p/gwt-log/downloads/list">GWT-log</a>, <a href="http://commons.apache.org/downloads/download_logging.cgi">commons-logging</a> and <a href="http://logging.apache.org/log4j/1.2/download.html">log4j</a>. Put the jar files inside /war/WEB-INF/lib directory. Then in Eclipse, select the jars you just placed, right click and select &ldquo;Add to build path&rdquo;. Your lib directory should look something like this:</p>
+
+<p><a href="http://reminiscential.files.wordpress.com/2010/03/screenshot.png"><img class="aligncenter size-medium wp-image-158" title="Screenshot" src="http://reminiscential.files.wordpress.com/2010/03/screenshot.png?w=168" alt="" width="168" height="300" /></a></p>
+
+<h2>&ldquo;Wiring&rdquo; the server</h2>
+
+<p>Now that the project is setup, we need to wire the server to utilize the dependency injection container Guice. The details can be found <a href="http://code.google.com/p/google-guice/wiki/GoogleAppEngine">here</a> but in short, we need to do the following:</p>
+
+<h3>Modify web.xml</h3>
+
+<p>Find web.xml in /war/WEB-INF. In traditional GWT-RPC development, every service needs to be written as a servlet and declared in web.xml. For Guice + GWT-dispatch, we only need a filter and a listener (as the entry point).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;webapp&gt;</span>
+</span><span class='line'>        [...]
+</span><span class='line'>    <span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;filter-name&gt;</span>guiceFilter<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;filter-class&gt;</span>com.google.inject.servlet.GuiceFilter<span class="nt">&lt;/filter-class&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;filter-mapping&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;filter-name&gt;</span>guiceFilter<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/filter-mapping&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;listener&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;listener-class&gt;</span>ratechecker.server.guice.GuiceServletConfig<span class="nt">&lt;/listener-class&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/listener&gt;</span>
+</span><span class='line'>        [...]
+</span><span class='line'><span class="nt">&lt;/webapp&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, our listener is ratechecker.server.guice.GuiceServletConfig. It reads like the following</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GuiceServletConfig</span> <span class="kd">extends</span> <span class="n">GuiceServletContextListener</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ServletContext</span> <span class="n">_ctx</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextDestroyed</span><span class="o">(</span><span class="kd">final</span> <span class="n">ServletContextEvent</span> <span class="n">servletContextEvent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">_ctx</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">contextDestroyed</span><span class="o">(</span><span class="n">servletContextEvent</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextInitialized</span><span class="o">(</span><span class="kd">final</span> <span class="n">ServletContextEvent</span> <span class="n">servletContextEvent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">_ctx</span> <span class="o">=</span> <span class="n">servletContextEvent</span><span class="o">.</span><span class="na">getServletContext</span><span class="o">();</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">contextInitialized</span><span class="o">(</span><span class="n">servletContextEvent</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">Injector</span> <span class="nf">getInjector</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Guice</span><span class="o">.</span><span class="na">createInjector</span><span class="o">(</span><span class="k">new</span> <span class="nf">GuiceServerModule</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">DispatchServletModule</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This code is borrowed from <a href="http://james.apache.org/hupa/project-info.html">Hupa</a>. The responsibility of this servlet context listener is to construct an injector (achieved by the last method). Here, our injector contains two modules, <code>ratechecker.server.guice.GuiceServerModule</code> and <code>ratechecker.server.guice.DispatchServletModule</code>.</p>
+
+<figure class='code'><figcaption><span>DispatchServletModule.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DispatchServletModule</span> <span class="kd">extends</span> <span class="n">ServletModule</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configureServlets</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">configureServlets</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">serve</span><span class="o">(</span><span class="s">&quot;/ratechecker/dispatch&quot;</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">RateCheckerDispatchServlet</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This module has a mapping of URIs and its serving classes. It serves &ldquo;/ratechecker/dispatch&rdquo; with <code>RateCheckerDispatchServlet</code>, which is the entry point for GWT-dispatch.</p>
+
+<figure class='code'><figcaption><span>GuiceServerModule.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GuiceServerModule</span> <span class="kd">extends</span> <span class="n">ActionHandlerModule</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">GuiceServerModule</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configureHandlers</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// declare bindings</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is where you declare your bindings for the application. We&rsquo;ll come back to this file frequently as the application develops.</p>
+
+<figure class='code'><figcaption><span>RateCheckerDispatchServlet.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Singleton</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RateCheckerDispatchServlet</span> <span class="kd">extends</span> <span class="n">DispatchServiceServlet</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">4895255235709260169L</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Log</span> <span class="n">_logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Inject</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">RateCheckerDispatchServlet</span><span class="o">(</span><span class="kd">final</span> <span class="n">Dispatch</span> <span class="n">dispatch</span><span class="o">,</span> <span class="kd">final</span> <span class="n">Log</span> <span class="n">logger</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">dispatch</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">_logger</span> <span class="o">=</span> <span class="n">logger</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Result</span> <span class="nf">execute</span><span class="o">(</span><span class="kd">final</span> <span class="n">Action</span><span class="o">&lt;?&gt;</span> <span class="n">action</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ActionException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">_logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;executing: &quot;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>            <span class="kd">final</span> <span class="n">Result</span> <span class="n">res</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">action</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">_logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;finished: &quot;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="kd">final</span> <span class="n">ActionException</span> <span class="n">ae</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">_logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">ae</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+</span><span class='line'>            <span class="n">ae</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="n">ae</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="kd">final</span> <span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">_logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;Unexpected exception: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This servlet extends from GWT-dispatch&rsquo;s DispatchServiceServlet. It&rsquo;s main responsibility is to provide unified logging.</p>
+
+<p>Notice you cannot run the application, because Guice is complaining that there&rsquo;s no binding for <code>org.apache.commons.logging.Log</code>, which we declared as a dependency for RateCheckerDispatchServlet. We go ahead write our <code>LogProvider</code> (to provide lazy initialization for the Log object to its users)</p>
+
+<figure class='code'><figcaption><span>LogProvider.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LogProvider</span> <span class="kd">implements</span> <span class="n">Provider</span><span class="o">&lt;</span><span class="n">Log</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Log</span> <span class="nf">get</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">Log4JLogger</span><span class="o">(</span><span class="s">&quot;RateCheckerLogger&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the binding should be added to <code>GuiceServerModule</code>:</p>
+
+<figure class='code'><figcaption><span>GuiceServerModule.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">[...]</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configureHandlers</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">bind</span><span class="o">(</span><span class="n">Log</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">toProvider</span><span class="o">(</span><span class="n">LogProvider</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">in</span><span class="o">(</span><span class="n">Singleton</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">[...]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now everytime Guice sees <code>Log.class</code> declared as a dependency in the constructor, it uses <code>LogProvider.get()</code> method to retrieve an instance of the log if there&rsquo;s none, and uses the existing log instance if it&rsquo;s been initialized (because of the singleton scope).</p>
+
+<p>In the end, your server package should look like this:
+<a href="http://reminiscential.files.wordpress.com/2010/03/screenshot-1.png"><img src="http://reminiscential.files.wordpress.com/2010/03/screenshot-1.png?w=300" alt="" title="Screenshot-1" width="300" height="154" class="aligncenter size-medium wp-image-159" /></a></p>
+
+<p>We haven&rsquo;t covered PersistenceManagerProvider but it&rsquo;s the same idea as LogProvider. It provides an instance of PersistenceManager, which is used by the data store related action handlers to deal with data persistence.</p>
+
+<p>That&rsquo;s it for server wiring. In the next blog post, I&rsquo;ll go through designing and writing GWT-RPC services using Guice and GWT-dispatch.</p>
+</div>
+
+
+</article>
+
+
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kevinjqiu.github.io/2010/03/01/building-a-gae-plus-gwt-application-using-the-best-practices-part-2/" data-via="kevinjqiu" data-counturl="http://kevinjqiu.github.io/2010/03/01/building-a-gae-plus-gwt-application-using-the-best-practices-part-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+
+
+
+<section id="comments">
+    <div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+
+    			</div>
+    			<footer id="footer">
+    				<p class="credit">
+  Copyright &copy; 2014 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
+</p>
+
+
+    			</footer>
+    			
+
+<script type="text/javascript">
+      var disqus_shortname = 'reminiscential';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://kevinjqiu.github.io/2010/03/01/building-a-gae-plus-gwt-application-using-the-best-practices-part-2/';
+        var disqus_url = 'http://kevinjqiu.github.io/2010/03/01/building-a-gae-plus-gwt-application-using-the-best-practices-part-2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+<link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-32737230-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+
+    		</div>
+    	</section>
+  	</div>
+</body>
+</html>
