@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rabbitmq,dead-letter-exchange | Qiu's Quibble]]></title>
   <link href="http://kevinjqiu.github.io/blog/categories/rabbitmq-dead-letter-exchange/atom.xml" rel="self"/>
   <link href="http://kevinjqiu.github.io/"/>
-  <updated>2015-04-30T23:56:27-04:00</updated>
+  <updated>2015-05-01T00:00:15-04:00</updated>
   <id>http://kevinjqiu.github.io/</id>
   <author>
     <name><![CDATA[Kevin Jing Qiu]]></name>
@@ -18,7 +18,7 @@
     <link href="http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/"/>
     <updated>2015-04-30T00:37:42-04:00</updated>
     <id>http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry</id>
-    <content type="html"><![CDATA[<p>In this post, I&rsquo;m going to describe the experience at <code>$DAYJOB</code> regarding implementing delayed retry using [rabbitmq]For instance, (<a href="https://www.rabbitmq.com/">https://www.rabbitmq.com/</a>)&rsquo;s <a href="https://www.rabbitmq.com/dlx.html">DLX</a> combined with a TTL. The technique has been described at a few <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">places</a> but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.</p>
+    <content type="html"><![CDATA[<p>In this post, I&rsquo;m going to describe the experience at <code>$DAYJOB</code> regarding implementing delayed retry using <a href="https://www.rabbitmq.com/">rabbitmq</a>&rsquo;s <a href="https://www.rabbitmq.com/dlx.html">DLX</a> combined with a TTL. The technique has been described at a few <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">places</a> but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.</p>
 
 <h1>The problem</h1>
 

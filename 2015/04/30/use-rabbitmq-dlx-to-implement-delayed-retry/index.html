@@ -9,7 +9,7 @@
   <meta name="author" content="Kevin Jing Qiu">
 
   
-  <meta name="description" content="In this post, I&rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using [rabbitmq]For instance, (https://www. &hellip;">
+  <meta name="description" content="In this post, I&rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using rabbitmq&rsquo;s DLX combined with a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -108,7 +108,7 @@
   </header>
 
 
-<div class="entry-content"><p>In this post, I&rsquo;m going to describe the experience at <code>$DAYJOB</code> regarding implementing delayed retry using [rabbitmq]For instance, (<a href="https://www.rabbitmq.com/">https://www.rabbitmq.com/</a>)&rsquo;s <a href="https://www.rabbitmq.com/dlx.html">DLX</a> combined with a TTL. The technique has been described at a few <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">places</a> but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.</p>
+<div class="entry-content"><p>In this post, I&rsquo;m going to describe the experience at <code>$DAYJOB</code> regarding implementing delayed retry using <a href="https://www.rabbitmq.com/">rabbitmq</a>&rsquo;s <a href="https://www.rabbitmq.com/dlx.html">DLX</a> combined with a TTL. The technique has been described at a few <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">places</a> but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.</p>
 
 <h1>The problem</h1>
 
