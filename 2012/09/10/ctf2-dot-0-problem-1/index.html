@@ -121,18 +121,18 @@
     &lt;h1&gt;Welcome to the Guessing Game!&lt;/h1&gt;
     &lt;p&gt;
       Guess the secret combination below, and if you get it right,
-      you'll get the password to the next level!
+      you&#39;ll get the password to the next level!
     &lt;/p&gt;
     &lt;?php
-      $filename = 'secret-combination.txt';
+      $filename = &#39;secret-combination.txt&#39;;
       extract($_GET);
       if (isset($attempt)) {
         $combination = trim(file_get_contents($filename));
         if ($attempt === $combination) {
           echo &quot;&lt;p&gt;How did you know the secret combination was&quot; .
                &quot; $combination!?&lt;/p&gt;&quot;;
-          $next = file_get_contents('level02-password.txt');
-          echo &quot;&lt;p&gt;You've earned the password to the access Level 2:&quot; .
+          $next = file_get_contents(&#39;level02-password.txt&#39;);
+          echo &quot;&lt;p&gt;You&#39;ve earned the password to the access Level 2:&quot; .
                &quot; $next&lt;/p&gt;&quot;;
         } else {
           echo &quot;&lt;p&gt;Incorrect! The secret combination is not $attempt&lt;/p&gt;&quot;;
@@ -204,7 +204,7 @@
     			</div>
     			<footer id="footer">
     				<p class="credit">
-  Copyright &copy; 2014 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
+  Copyright &copy; 2015 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
 </p>
 
 

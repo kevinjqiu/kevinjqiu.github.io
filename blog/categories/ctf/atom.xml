@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ctf | Qiu's Quibble]]></title>
   <link href="http://kevinjqiu.github.io/blog/categories/ctf/atom.xml" rel="self"/>
   <link href="http://kevinjqiu.github.io/"/>
-  <updated>2014-11-27T01:02:58-05:00</updated>
+  <updated>2015-04-30T23:56:27-04:00</updated>
   <id>http://kevinjqiu.github.io/</id>
   <author>
     <name><![CDATA[Kevin Jing Qiu]]></name>
@@ -43,7 +43,7 @@ A beta version has launched with some interesting secrets (including the passwor
 # );
 #
 # - For extra security, the dictionary of secrets lives
-#   data/secrets.json (so a compromise of the database won't
+#   data/secrets.json (so a compromise of the database won&#39;t
 #   compromise the secrets themselves)
 
 import flask
@@ -57,23 +57,23 @@ import sys
 from werkzeug import debug
 
 # Generate test data when running locally
-data_dir = os.path.join(os.path.dirname(__file__), 'data')
+data_dir = os.path.join(os.path.dirname(__file__), &#39;data&#39;)
 if not os.path.exists(data_dir):
     import generate_data
     os.mkdir(data_dir)
-    generate_data.main(data_dir, 'dummy-password', 'dummy-proof', 'dummy-plans')
+    generate_data.main(data_dir, &#39;dummy-password&#39;, &#39;dummy-proof&#39;, &#39;dummy-plans&#39;)
 
-secrets = json.load(open(os.path.join(data_dir, 'secrets.json')))
-index_html = open('index.html').read()
+secrets = json.load(open(os.path.join(data_dir, &#39;secrets.json&#39;)))
+index_html = open(&#39;index.html&#39;).read()
 app = flask.Flask(__name__)
 
-# Turn on backtraces, but turn off code execution (that'd be an easy level!)
-app.config['PROPAGATE_EXCEPTIONS'] = True
+# Turn on backtraces, but turn off code execution (that&#39;d be an easy level!)
+app.config[&#39;PROPAGATE_EXCEPTIONS&#39;] = True
 app.wsgi_app = debug.DebuggedApplication(app.wsgi_app, evalex=False)
 
 app.logger.addHandler(logging.StreamHandler(sys.stderr))
 # use persistent entropy file for secret_key
-app.secret_key = open(os.path.join(data_dir, 'entropy.dat')).read()
+app.secret_key = open(os.path.join(data_dir, &#39;entropy.dat&#39;)).read()
 
 # Allow setting url_root if needed
 try:
@@ -84,26 +84,26 @@ except ImportError:
 def absolute_url(path):
     return url_root + path
 
-@app.route('/')
+@app.route(&#39;/&#39;)
 def index():
     try:
-        user_id = flask.session['user_id']
+        user_id = flask.session[&#39;user_id&#39;]
     except KeyError:
         return index_html
     else:
         secret = secrets[str(user_id)]
-        return (u'Welcome back! Your secret is: &quot;{0}&quot;'.format(secret) +
-                u' (&lt;a href=&quot;./logout&quot;&gt;Log out&lt;/a&gt;)\n')
+        return (u&#39;Welcome back! Your secret is: &quot;{0}&quot;&#39;.format(secret) +
+                u&#39; (&lt;a href=&quot;./logout&quot;&gt;Log out&lt;/a&gt;)\n&#39;)
 
-@app.route('/logout')
+@app.route(&#39;/logout&#39;)
 def logout():
-    flask.session.pop('user_id', None)
-    return flask.redirect(absolute_url('/'))
+    flask.session.pop(&#39;user_id&#39;, None)
+    return flask.redirect(absolute_url(&#39;/&#39;))
 
-@app.route('/login', methods=['POST'])
+@app.route(&#39;/login&#39;, methods=[&#39;POST&#39;])
 def login():
-    username = flask.request.form.get('username')
-    password = flask.request.form.get('password')
+    username = flask.request.form.get(&#39;username&#39;)
+    password = flask.request.form.get(&#39;password&#39;)
 
     if not username:
         return &quot;Must provide username\n&quot;
@@ -111,26 +111,26 @@ def login():
     if not password:
         return &quot;Must provide password\n&quot;
 
-    conn = sqlite3.connect(os.path.join(data_dir, 'users.db'))
+    conn = sqlite3.connect(os.path.join(data_dir, &#39;users.db&#39;))
     cursor = conn.cursor()
 
     query = &quot;&quot;&quot;SELECT id, password_hash, salt FROM users
-               WHERE username = '{0}' LIMIT 1&quot;&quot;&quot;.format(username)
+               WHERE username = &#39;{0}&#39; LIMIT 1&quot;&quot;&quot;.format(username)
     cursor.execute(query)
 
     res = cursor.fetchone()
     if not res:
-        return &quot;There's no such user {0}!\n&quot;.format(username)
+        return &quot;There&#39;s no such user {0}!\n&quot;.format(username)
     user_id, password_hash, salt = res
 
     calculated_hash = hashlib.sha256(password + salt)
     if calculated_hash.hexdigest() != password_hash:
-        return &quot;That's not the password for {0}!\n&quot;.format(username)
+        return &quot;That&#39;s not the password for {0}!\n&quot;.format(username)
 
-    flask.session['user_id'] = user_id
-    return flask.redirect(absolute_url('/'))
+    flask.session[&#39;user_id&#39;] = user_id
+    return flask.redirect(absolute_url(&#39;/&#39;))
 
-if __name__ == '__main__':
+if __name__ == &#39;__main__&#39;:
     # In development: app.run(debug=True)
     app.run()
 </code></pre></noscript></div>
@@ -298,7 +298,7 @@ bob' UNION select id, 'a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5
         &lt;img src=&lt;?php echo $url; ?&gt; /&gt;
         &lt;?php
           if (!isset($_SESSION[&quot;dispic_url&quot;])) {
-            echo &quot;&lt;p&gt;Oh, looks like you don't have a profile image&quot; .
+            echo &quot;&lt;p&gt;Oh, looks like you don&#39;t have a profile image&quot; .
                  &quot; -- upload one now!&lt;/p&gt;&quot;;
           }
         ?&gt;
@@ -360,18 +360,18 @@ echo file_get_contents('../password.txt');
     &lt;h1&gt;Welcome to the Guessing Game!&lt;/h1&gt;
     &lt;p&gt;
       Guess the secret combination below, and if you get it right,
-      you'll get the password to the next level!
+      you&#39;ll get the password to the next level!
     &lt;/p&gt;
     &lt;?php
-      $filename = 'secret-combination.txt';
+      $filename = &#39;secret-combination.txt&#39;;
       extract($_GET);
       if (isset($attempt)) {
         $combination = trim(file_get_contents($filename));
         if ($attempt === $combination) {
           echo &quot;&lt;p&gt;How did you know the secret combination was&quot; .
                &quot; $combination!?&lt;/p&gt;&quot;;
-          $next = file_get_contents('level02-password.txt');
-          echo &quot;&lt;p&gt;You've earned the password to the access Level 2:&quot; .
+          $next = file_get_contents(&#39;level02-password.txt&#39;);
+          echo &quot;&lt;p&gt;You&#39;ve earned the password to the access Level 2:&quot; .
                &quot; $next&lt;/p&gt;&quot;;
         } else {
           echo &quot;&lt;p&gt;Incorrect! The secret combination is not $attempt&lt;/p&gt;&quot;;
@@ -427,23 +427,23 @@ echo file_get_contents('../password.txt');
 <p>Here are the code for level 0:</p>
 
 <p><div><script src='https://gist.github.com/3688655.js?file=level00.js'></script>
-<noscript><pre><code>// Install dependencies with 'npm install'
-// Run as 'node level00.js'
+<noscript><pre><code>// Install dependencies with &#39;npm install&#39;
+// Run as &#39;node level00.js&#39;
 
-var express = require('express'), // Web framework
-    mu = require('mu2'),          // Mustache.js templating
-    sqlite3 = require('sqlite3'); // SQLite (database) driver
+var express = require(&#39;express&#39;), // Web framework
+    mu = require(&#39;mu2&#39;),          // Mustache.js templating
+    sqlite3 = require(&#39;sqlite3&#39;); // SQLite (database) driver
 
 // Look for templates in the current directory
 mu.root = __dirname;
 
 // Set up the DB
-var db = new sqlite3.Database('level00.db');
+var db = new sqlite3.Database(&#39;level00.db&#39;);
 db.run(
-  'CREATE TABLE IF NOT EXISTS secrets (' +
-    'key varchar(255),' +
-    'secret varchar(255)' +
-  ')'
+  &#39;CREATE TABLE IF NOT EXISTS secrets (&#39; +
+    &#39;key varchar(255),&#39; +
+    &#39;secret varchar(255)&#39; +
+  &#39;)&#39;
 );
 
 // Create the server
@@ -451,16 +451,16 @@ var app = express();
 app.use(express.bodyParser());
 
 function renderPage(res, variables) {
-  var stream = mu.compileAndRender('level00.html', variables);
-  res.header('Content-Type', 'text/html');
+  var stream = mu.compileAndRender(&#39;level00.html&#39;, variables);
+  res.header(&#39;Content-Type&#39;, &#39;text/html&#39;);
   stream.pipe(res);
 }
 
-app.get('/*', function(req, res) {
-  var namespace = req.param('namespace');
+app.get(&#39;/*&#39;, function(req, res) {
+  var namespace = req.param(&#39;namespace&#39;);
 
   if (namespace) {
-    var query = 'SELECT * FROM secrets WHERE key LIKE ? || &quot;.%&quot;';
+    var query = &#39;SELECT * FROM secrets WHERE key LIKE ? || &quot;.%&quot;&#39;;
     db.all(query, namespace, function(err, secrets) {
              if (err) throw err;
 
@@ -471,17 +471,17 @@ app.get('/*', function(req, res) {
   }
 });
 
-app.post('/*', function(req, res) {
-  var namespace = req.body['namespace'];
-  var secret_name = req.body['secret_name'];
-  var secret_value = req.body['secret_value'];
+app.post(&#39;/*&#39;, function(req, res) {
+  var namespace = req.body[&#39;namespace&#39;];
+  var secret_name = req.body[&#39;secret_name&#39;];
+  var secret_value = req.body[&#39;secret_value&#39;];
 
-  var query = 'INSERT INTO secrets (key, secret) VALUES (? || &quot;.&quot; || ?, ?)';
+  var query = &#39;INSERT INTO secrets (key, secret) VALUES (? || &quot;.&quot; || ?, ?)&#39;;
   db.run(query, namespace, secret_name, secret_value, function(err) {
      if (err) throw err;
 
-           res.header('Content-Type', 'text/html');
-           res.redirect(req.path + '?namespace=' + namespace);
+           res.header(&#39;Content-Type&#39;, &#39;text/html&#39;);
+           res.redirect(req.path + &#39;?namespace=&#39; + namespace);
          });
 });
 

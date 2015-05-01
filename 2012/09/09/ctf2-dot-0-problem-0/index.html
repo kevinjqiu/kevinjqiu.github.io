@@ -117,23 +117,23 @@
 <p>Here are the code for level 0:</p>
 
 <div><script src='https://gist.github.com/3688655.js?file=level00.js'></script>
-<noscript><pre><code>// Install dependencies with 'npm install'
-// Run as 'node level00.js'
+<noscript><pre><code>// Install dependencies with &#39;npm install&#39;
+// Run as &#39;node level00.js&#39;
 
-var express = require('express'), // Web framework
-    mu = require('mu2'),          // Mustache.js templating
-    sqlite3 = require('sqlite3'); // SQLite (database) driver
+var express = require(&#39;express&#39;), // Web framework
+    mu = require(&#39;mu2&#39;),          // Mustache.js templating
+    sqlite3 = require(&#39;sqlite3&#39;); // SQLite (database) driver
 
 // Look for templates in the current directory
 mu.root = __dirname;
 
 // Set up the DB
-var db = new sqlite3.Database('level00.db');
+var db = new sqlite3.Database(&#39;level00.db&#39;);
 db.run(
-  'CREATE TABLE IF NOT EXISTS secrets (' +
-    'key varchar(255),' +
-    'secret varchar(255)' +
-  ')'
+  &#39;CREATE TABLE IF NOT EXISTS secrets (&#39; +
+    &#39;key varchar(255),&#39; +
+    &#39;secret varchar(255)&#39; +
+  &#39;)&#39;
 );
 
 // Create the server
@@ -141,16 +141,16 @@ var app = express();
 app.use(express.bodyParser());
 
 function renderPage(res, variables) {
-  var stream = mu.compileAndRender('level00.html', variables);
-  res.header('Content-Type', 'text/html');
+  var stream = mu.compileAndRender(&#39;level00.html&#39;, variables);
+  res.header(&#39;Content-Type&#39;, &#39;text/html&#39;);
   stream.pipe(res);
 }
 
-app.get('/*', function(req, res) {
-  var namespace = req.param('namespace');
+app.get(&#39;/*&#39;, function(req, res) {
+  var namespace = req.param(&#39;namespace&#39;);
 
   if (namespace) {
-    var query = 'SELECT * FROM secrets WHERE key LIKE ? || &quot;.%&quot;';
+    var query = &#39;SELECT * FROM secrets WHERE key LIKE ? || &quot;.%&quot;&#39;;
     db.all(query, namespace, function(err, secrets) {
              if (err) throw err;
 
@@ -161,17 +161,17 @@ app.get('/*', function(req, res) {
   }
 });
 
-app.post('/*', function(req, res) {
-  var namespace = req.body['namespace'];
-  var secret_name = req.body['secret_name'];
-  var secret_value = req.body['secret_value'];
+app.post(&#39;/*&#39;, function(req, res) {
+  var namespace = req.body[&#39;namespace&#39;];
+  var secret_name = req.body[&#39;secret_name&#39;];
+  var secret_value = req.body[&#39;secret_value&#39;];
 
-  var query = 'INSERT INTO secrets (key, secret) VALUES (? || &quot;.&quot; || ?, ?)';
+  var query = &#39;INSERT INTO secrets (key, secret) VALUES (? || &quot;.&quot; || ?, ?)&#39;;
   db.run(query, namespace, secret_name, secret_value, function(err) {
      if (err) throw err;
 
-           res.header('Content-Type', 'text/html');
-           res.redirect(req.path + '?namespace=' + namespace);
+           res.header(&#39;Content-Type&#39;, &#39;text/html&#39;);
+           res.redirect(req.path + &#39;?namespace=&#39; + namespace);
          });
 });
 
@@ -299,7 +299,7 @@ if (process.argv.length &gt; 2) {
     			</div>
     			<footer id="footer">
     				<p class="credit">
-  Copyright &copy; 2014 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
+  Copyright &copy; 2015 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
 </p>
 
 
