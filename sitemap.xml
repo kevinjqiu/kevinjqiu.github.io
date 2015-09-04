@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://kevinjqiu.github.io/2015/09/03/use-python-bytecode-to-solve-puzzler/</loc>
+    <lastmod>2015-09-03T22:16:36-04:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</loc>
     <lastmod>2015-04-30T00:37:42-04:00</lastmod>
     <priority>0.8</priority>
@@ -217,19 +222,19 @@
   </url>
   <url>
     <loc>http://kevinjqiu.github.io/</loc>
-    <lastmod>2015-05-01T00:00:15-04:00</lastmod>
+    <lastmod>2015-09-04T00:02:53-04:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://kevinjqiu.github.io/blog/archives/</loc>
-    <lastmod>2015-05-01T00:00:15-04:00</lastmod>
+    <lastmod>2015-09-04T00:02:53-04:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://kevinjqiu.github.io/about-me/</loc>
-    <lastmod>2015-05-01T00:00:15-04:00</lastmod>
+    <lastmod>2015-09-04T00:02:53-04:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
