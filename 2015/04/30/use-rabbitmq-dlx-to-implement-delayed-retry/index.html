@@ -1,132 +1,187 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <title>Use rabbitmq DLX to implement delayed retry - Qiu&#8217;s Quibble</title>
-  <meta name="author" content="Kevin Jing Qiu">
+  <title>
+    Use rabbitmq DLX to implement delayed retry // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Use rabbitmq DLX to implement delayed retry" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/" />
+
 
   
-  <meta name="description" content="In this post, I&rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using rabbitmq&rsquo;s DLX combined with a &hellip;">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
   
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
 
   
-  <link rel="canonical" href="http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Qiu's Quibble" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
 
+  
+
+  
+
+  
 </head>
 
-
 <body>
-	<div class="container">
-		<aside class="left">
-			<div class="inner-left">
-				<header>
-					
-  <img src="http://www.gravatar.com/avatar/696a8f13a7fcf0b4265fe801f18ba7b5?s=200" alt="Gravatar of Kevin Jing Qiu " title="Gravatar of Kevin Jing Qiu" class="profilepic" />
-
-<hgroup>
-  <h1><a href="/">Qiu&#8217;s Quibble</a></h1>
-  
-    <h2 class="subtitle">A blog about nothing and everything</h2>
-   
-</hgroup>
-
-<section>
-  <p style="color:white">I&#8217;m a software developer living in the Greater Toronto Area, Canada. My favourite programming language is Python while I admire the beauty of Clojure and Scala. I use console vim with tmux for most of my coding, and I use Arch Linux at home and Ubuntu at work.
-  </p>
-</section>
-
-
-				</header>
-				<footer>
-					<p>
 	
-		<a href="http://github.com/kevinjqiu" class="btn btn-dark">GitHub</a>
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
 	
-	
-		<a href="http://twitter.com/kevinjqiu" class="btn btn-dark">Twitter</a>
-	
-</p>
-				</footer>
-			</div>
-		</aside>
-    	<section class="right">
-    		<div class="inner-right">
-    			<div id="posts">
-    			  	<article class="post">
-    
-  <header>
-    
-      <h1 class="entry-title">Use Rabbitmq DLX to Implement Delayed Retry</h1>
-    
-    
-      <p class="meta">
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
         
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-04-30T00:37:42-04:00" pubdate data-updated="true"></time>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
         
-      </p>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
     
-  </header>
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
 
+  </div>
+</div>
 
-<div class="entry-content"><p>In this post, I&rsquo;m going to describe the experience at <code>$DAYJOB</code> regarding implementing delayed retry using <a href="https://www.rabbitmq.com/">rabbitmq</a>&rsquo;s <a href="https://www.rabbitmq.com/dlx.html">DLX</a> combined with a TTL. The technique has been described at a few <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">places</a> but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.</p>
+	
+	
 
-<h1>The problem</h1>
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#the-problem:f116081bb98b0fd4ebe93c08e96b2c34">The problem</a></li>
+<li><a href="#architecting-the-solution:f116081bb98b0fd4ebe93c08e96b2c34">Architecting the solution</a></li>
+<li><a href="#the-missing-piece:f116081bb98b0fd4ebe93c08e96b2c34">The missing piece</a></li>
+<li><a href="#dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html:f116081bb98b0fd4ebe93c08e96b2c34"><a href="https://www.rabbitmq.com/dlx.html">Dead-Letter-Exchange</a> and <a href="https://www.rabbitmq.com/ttl.html">TTL</a></a></li>
+<li><a href="#implementation-testing-strategy-and-deployment-saga:f116081bb98b0fd4ebe93c08e96b2c34">Implementation, Testing Strategy and Deployment saga</a>
+<ul>
+<li><a href="#implementation:f116081bb98b0fd4ebe93c08e96b2c34">Implementation</a></li>
+<li><a href="#testing-strategy:f116081bb98b0fd4ebe93c08e96b2c34">Testing Strategy</a></li>
+<li><a href="#deployment:f116081bb98b0fd4ebe93c08e96b2c34">Deployment</a></li>
+</ul></li>
+<li><a href="#conclusion:f116081bb98b0fd4ebe93c08e96b2c34">Conclusion</a></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/">Use rabbitmq DLX to implement delayed retry</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>30</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Apr</span> <span class="post-date-year">2015</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-rabbitmq" href="http://blog.idempotent.ca/categories/rabbitmq">rabbitmq</a>
+				
+					<a class="post-category post-category-dead-letter-exchange" href="http://blog.idempotent.ca/categories/dead-letter-exchange">dead-letter-exchange</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<p>In this post, I&rsquo;m going to describe the experience at <code>$DAYJOB</code> regarding implementing delayed retry using <a href="https://www.rabbitmq.com/">rabbitmq</a>&rsquo;s <a href="https://www.rabbitmq.com/dlx.html">DLX</a> combined with a TTL. The technique has been described at a few <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">places</a> but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.</p>
+
+<h1 id="the-problem:f116081bb98b0fd4ebe93c08e96b2c34">The problem</h1>
 
 <p>At <code>$DAYJOB</code> we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&rsquo;s invoices, and change the invoice status. Pretty straight-forward stuff. However, lately we&rsquo;ve been experiencing an elevated amount of random failures from our service provider.</p>
 
-<p>Calls to our provider to create a checkout using the client&rsquo;s credit card information would time out randomly, or return an &ldquo;unknown error&rdquo;. When it happens, we don&rsquo;t record a payment object on the invoice since we don&rsquo;t know the actual status of the checkout, nor do we have the <code>reference_id</code> for the checkout. However, as we discovered, some of these timed-out calls did go through and the clients&#8217; credit cards charged.</p>
+<p>Calls to our provider to create a checkout using the client&rsquo;s credit card information would time out randomly, or return an &ldquo;unknown error&rdquo;. When it happens, we don&rsquo;t record a payment object on the invoice since we don&rsquo;t know the actual status of the checkout, nor do we have the <code>reference_id</code> for the checkout. However, as we discovered, some of these timed-out calls did go through and the clients&rsquo; credit cards charged.</p>
 
 <p>We checked with our service provider and were told that they have been experiencing increased volumes and their infrastructure currently can&rsquo;t keep up. However, they suggest that we use an undocumented feature which allows a <code>unique_id</code> to be passed in along with the checkout call. The <code>unique_id</code> serves as an idempotent key (similar to <a href="https://stripe.com/docs/api?lang=curl#idempotent_requests">Stripe&rsquo;s</a>). Multiple calls with the same <code>unique_id</code> won&rsquo;t create multiple checkout objects on their end and thus ensuring the checkout is made but won&rsquo;t double/triple charge the customer&rsquo;s car.</p>
 
-<h1>Architecting the solution</h1>
+<h1 id="architecting-the-solution:f116081bb98b0fd4ebe93c08e96b2c34">Architecting the solution</h1>
 
 <p>Armed with this new secret API feature, our team goes back to the drawing board. At work, we use <a href="https://www.rabbitmq.com/">rabbitmq</a> extensively for asynchronous processing. If some operation doesn&rsquo;t have to be carried out synchronously with a web request, we throw a message on the queue and have a queue consumer process that message and update states. We use a library called <a href="https://github.com/ojacobson/sparkplug">sparkplug</a> that makes writing queue consumer super-easy. So, everything seems to fall in friendly terrotiries: we make a checkout call with a random id and when we encounter timeout or unknown error, instead of returning an error response to the user, we return <code>202 Accepted</code> to our user and throw a message on the queue, so a consumer can grab it and retry the checkout with the same original <code>unique_id</code>.</p>
 
-<h1>The missing piece</h1>
+<h1 id="the-missing-piece:f116081bb98b0fd4ebe93c08e96b2c34">The missing piece</h1>
 
 <p>However, we quickly realized it&rsquo;s not that simple. What if the retry encountered the same error? We can put it back on the queue, but when does it get processed by the consumer again? We want to add a time delay to the subsequent retries, and the orginal retry as well.</p>
 
-<h1><a href="https://www.rabbitmq.com/dlx.html">Dead-Letter-Exchange</a> and <a href="https://www.rabbitmq.com/ttl.html">TTL</a></h1>
+<h1 id="dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html:f116081bb98b0fd4ebe93c08e96b2c34"><a href="https://www.rabbitmq.com/dlx.html">Dead-Letter-Exchange</a> and <a href="https://www.rabbitmq.com/ttl.html">TTL</a></h1>
 
 <p>After some research on the internet, seems like this problem has been <a href="https://www.cloudamqp.com/docs/delayed-messages.html">solved</a> <a href="http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/">before</a>.</p>
 
@@ -134,21 +189,45 @@
 
 <p>If the retry call fails for the same reason (timeout or unknown error), we re-publish the message to <code>Qa</code> again and acknowledges the message so it&rsquo;s no longer in <code>Qb</code>.</p>
 
-<p><img class="center" src="/assets/images/dlx_1.png"></p>
+
+<figure >
+    
+        <img src="/images/dlx_1.png" />
+    
+    
+    <figcaption>
+        <h4>Flow diagram</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>The whole flow looks like this:</p>
 
-<p><img class="center" src="/assets/images/dlx_2.png"></p>
 
-<h1>Implementation, Testing Strategy and Deployment saga</h1>
+<figure >
+    
+        <img src="/images/dlx_2.png" />
+    
+    
+    <figcaption>
+        <h4>Flow diagram</h4>
+        
+    </figcaption>
+    
+</figure>
 
-<h2>Implementation</h2>
+
+<h1 id="implementation-testing-strategy-and-deployment-saga:f116081bb98b0fd4ebe93c08e96b2c34">Implementation, Testing Strategy and Deployment saga</h1>
+
+<h2 id="implementation:f116081bb98b0fd4ebe93c08e96b2c34">Implementation</h2>
 
 <p>Implementation is probably the most straight-forward phase of the project once we have the design on paper.  The only obstacle is that the library we use for writing rabbitmq consumers (sparkplug) does not support declaring queues with extra parameters, and the DLX related parameters: <code>x-dead-letter-exchange</code> <code>x-dead-letter-routing-key</code>, and <code>x-message-ttl</code> are all &ldquo;extra parameters&rdquo; according to <code>amqplib</code>, which is used by sparkplug. To solve this, I sent this <a href="https://github.com/ojacobson/sparkplug/pull/10/files">PR</a> to sparkplug, so it recognizes extra parameters and pass them down to amqp library.</p>
 
 <p>Another road block appeared when we ran the system on our dev images for the first time. The underlying amqplib would error out on startup. Upon closer investigation, it appeared the error happened while talking to rabbitmq and the amqplib can&rsquo;t handle certain rabbitmq frames. So I went searching for the amqp project, only to find out that it was deprecated <a href="https://pypi.python.org/pypi/amqplib">long ago</a>. Fortunately, there&rsquo;s a fork of the library <a href="https://pypi.python.org/pypi/amqp">amqp</a> that&rsquo;s maintained by the reputable <a href="http://www.celeryproject.org/">Celery project</a>. It&rsquo;s has API compatibility with amqplib and appeared to be a drop-in replacement. We dropped it in and everything seems to work. Reading the online literature, it seems to be the case that the old library does not handle the <code>TTL</code> amqp extension.</p>
 
-<h2>Testing Strategy</h2>
+<h2 id="testing-strategy:f116081bb98b0fd4ebe93c08e96b2c34">Testing Strategy</h2>
 
 <p>So, since the 3rd party API timeout is an edge case, they did not provide a way trigger this behaviour the same way we can trigger, say, a declined transaction. We could fake the URL for the 3rd party service in DNS or <code>/etc/hosts</code> or we can change the SDK to change the base url for their API to somewhere else and cause a timeout that way, but neither is ideal. The biggest disadvantage is that we have no way of getting a request out of the retry state.</p>
 
@@ -156,7 +235,7 @@
 
 <p>We used this small nifty library <a href="https://github.com/allfro/pymiproxy">pymiproxy</a> as a base for our proxy server. It turns out the proxy is pretty straight-forward as well, and a big shout-out to the author of pymiproxy.</p>
 
-<h2>Deployment</h2>
+<h2 id="deployment:f116081bb98b0fd4ebe93c08e96b2c34">Deployment</h2>
 
 <p>Everything until now is like a cake walk. Sure, there are some problems with the underlying libraries but that requires patching but they were quite easy to identify and fix. Deployment, on the other hand, has been like riding on the <a href="https://www.youtube.com/watch?v=Mgsbau5qkTE">Behemoth in Canada&rsquo;s Wonderland</a>.</p>
 
@@ -164,49 +243,19 @@
 
 <p>Just as I thought my shrewed observation has solved this major mystery, the second day, people reported that the queue started go AWOL again! Grumbled, I sat down and read carefully the documentation on <a href="https://www.rabbitmq.com/dlx.html">dead-letter exchange</a> and discovered this:</p>
 
-<blockquote><p>Note that the exchange does not have to be declared when the queue is declared, but it should exist by the time messages need to be dead-lettered; if it is missing then, the messages will be silently dropped.</p></blockquote>
-
+<blockquote>
+<p>Note that the exchange does not have to be declared when the queue is declared, but it should exist by the time messages need to be dead-lettered; if it is missing then, the messages will be silently dropped.</p>
+</blockquote>
 
 <p>This invalidates my previous hypothesis that the out-of order declaration was the root cause of the problem. There we go, I was back to square one.</p>
 
 <p>At this time, I wanted to try a different approach. Instead of forming hypothesis from observation, I searched for evidence. I went on the server, and start to look at the logs to search for any traces that can be salvaged. The rabbitmq log is very noisy with all the connection messages. Once in a while you get something remotely interesting, but they were not relevant. Then I manually published a message on the queue, and waited for the message and queue to disappear. Lo and behold, there&rsquo;s something in the logs!</p>
 
-<div><script src='https://gist.github.com/e626bcc40eb803214968.js'></script>
-<noscript><pre><code>** Reason for termination ==
-** {{badmatch,
-     {{msg_status,13,
-       &lt;&lt;247,153,167,208,33,41,98,109,106,45,132,14,79,220,50,7&gt;&gt;,
-       {basic_message,
-        {resource,&lt;&lt;&quot;/.../trunk&quot;&gt;&gt;,exchange,&lt;&lt;&quot;...&quot;&gt;&gt;},
-        [&lt;&lt;&quot;cardapp.txnfailed&quot;&gt;&gt;],
-        {content,60,none,
-         &lt;&lt;248,0,16,97,112,112,108,105,99,97,116,105,111,110,47,106,115,111,
-           110,5,117,116,102,45,56,0,0,0,0,2,0&gt;&gt;,
-         rabbit_framing_amqp_0_9_1,
-         [...]},
-        &lt;&lt;247,153,167,208,33,41,98,109,106,45,132,14,79,220,50,7&gt;&gt;,
-        true},
-       true,false,true,true,
-       {message_properties,1429816688490829,false}},
-      {vqstate,
-       {0,{[],[]}},
-       {0,{[],[]}},
-       {delta,undefined,0,undefined},
-       {0,{[],[]}},
-       {0,{[],[]}},
-       14,
-       {1,
-        {13,
-         {msg_status,13,
-          &lt;&lt;247,153,167,208,33,41,98,109,106,45,132,14,79,220,50,7&gt;&gt;,
-          undefined,true,true,true,true,
-          {message_properties,1429816688490829,false}},
-...</code></pre></noscript></div>
-
+<script src="//gist.github.com/kevinjqiu/e626bcc40eb803214968.js"></script>
 
 <p>There&rsquo;s our smoking gun! Further gooling revealed <a href="http://lists.rabbitmq.com/pipermail/rabbitmq-discuss/2012-April/019368.html">this</a>. That&rsquo;s EXACTLY our issue! And the version of rabbitmq we&rsquo;re using is EXACTLY 2.8.1! What a relief! We just need to upgrade to 2.8.2 and everything would be fine.</p>
 
-<p>So there I was, preparing an internal repository to host the rpm (since we&rsquo;re on a hopelessly old version of CentOS), and prepared puppet changes for the new version. Deployed on all the environments and sent it off to QA. QA ok&#8217;ed it just before the weekend and life is good again.</p>
+<p>So there I was, preparing an internal repository to host the rpm (since we&rsquo;re on a hopelessly old version of CentOS), and prepared puppet changes for the new version. Deployed on all the environments and sent it off to QA. QA ok&rsquo;ed it just before the weekend and life is good again.</p>
 
 <p>Except, not at all! There are a few more surprises waiting for us before the end of tunnel. First of all, our partner whose payment API we&rsquo;re integrating has received an imminent DDOS threat, and fearing not having a retry mechanism would caused a huge burden for us and our support crew, we need to get this out to production ASAP. After pulling some levers and convincing our ops team that this is a relatively low risk point release upgrade (from rabbitmq 2.8.1 to 2.8.2), we got the green light and ops are on their way upgrading rabbitmq. Everything seemed to be going alone well, until, when we switched all components to point to the hosts that&rsquo;s on the new rabbitmq, our app stopped working! Phone calls flooded in, alerts set off everywhere and on top of that, even the streets in front of our building had a couple of emergency vehicles passing by! Goodness, what have we done! Ops quickly rolled it back, and we were left dumbfounded by this yet another surprise.</p>
 
@@ -216,26 +265,22 @@
 
 <p>In that afternoon, our fortune suddenly took a positive turn, when one of the ops discovered this in the logs while starting the new rabbitmq:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>=INFO REPORT==== 29-Apr-2015::14:51:09 ===
-</span><span class='line'>Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>=INFO REPORT==== 29-Apr-2015::14:51:09 ===
+Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
+</code></pre>
 
 <p>So, this version of rabbitmq started to check free disk space, and <strong>blocks</strong> incoming message if the disk space is deemed inadequate! Wow, this is so unexpected that we all laughed when we discovered this to be the root cause. However, for me, I need to be convinced that why it wasn&rsquo;t an issue for staging environment.</p>
 
 <p>So I cloned rabbitmq git repository, and looked for anything that&rsquo;s related to <code>disk_free_limit</code>. Finally, I found this:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">{</span><span class="n">disk_free_limit</span><span class="p">,</span> <span class="p">{</span><span class="n">mem_relative</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">}},</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-erlang">{disk_free_limit, {mem_relative, 1.0}},
+</code></pre>
 
 <p>from <a href="https://github.com/rabbitmq/rabbitmq-server/blob/rabbitmq_v2_8_2/ebin/rabbit_app.in#L22">here</a>. Since we&rsquo;re using the default config, this is in effect, and it essentially says &ldquo;stop accepting message if the disk space is not at least as big as the RAM&rdquo;, and it just so happens on prod, we have 50G of RAM and therefore, require at least 50G of free space for rabbitmq to start accepting messages!</p>
 
 <p>Reading the rabbitmq 2.8.2 release notes, and they <strong>did</strong> <a href="https://www.rabbitmq.com/release-notes/README-2.8.2.txt">mention</a> this &ldquo;feature&rdquo;, but failed to mention that it could block your connection <strong>forever</strong> and bring your site down&hellip;</p>
 
-<h1>Conclusion</h1>
+<h1 id="conclusion:f116081bb98b0fd4ebe93c08e96b2c34">Conclusion</h1>
 
 <p>There you go.  That&rsquo;s our adventure implementing and deploying delayed retry using rabbitmq&rsquo;s DLX and TTL. It&rsquo;s frustrating and rewarding at the same time, and there&rsquo;s definitely something we can all take home with:</p>
 
@@ -246,117 +291,52 @@
 <li>Expect problems when switching environments</li>
 </ul>
 
-
 <p>I haven&rsquo;t been blogging for a while, partly because life catches up, and partly because I&rsquo;ve been less than disciplined but I spent some time writing down this experience worth remembering :)</p>
-</div>
 
+	
+			
 
-</article>
+			
 
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2015/09/03/use-python-bytecode-to-solve-puzzler/">Use Python bytecode to solve puzzler</a>
+		            </div>
+		            
 
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/" data-via="kevinjqiu" data-counturl="http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-
-
-
-<section id="comments">
-    <div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-</section>
-
-
-    			</div>
-    			<footer id="footer">
-    				<p class="credit">
-  Copyright &copy; 2015 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
-</p>
-
-
-    			</footer>
-    			
-
-<script type="text/javascript">
-      var disqus_shortname = 'reminiscential';
-      
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2014/11/27/mysql-explain-explained/">MySQL EXPLAIN explained</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/';
-        var disqus_url = 'http://kevinjqiu.github.io/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
 
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
 
+	
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-<link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
-
-
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-
-
-    		</div>
-    	</section>
-  	</div>
+  
 </body>
 </html>

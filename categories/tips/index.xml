@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tips on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/tips/</link>
+    <description>Recent content in Tips on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Jun 2010 19:45:00 +0000</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/categories/tips/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Launch Windows Explorer and goto the current working directory in shell</title>
+      <link>http://blog.idempotent.ca/2010/06/09/launch-windows-explorer-and-goto-the-current-working-directory-in-shell/</link>
+      <pubDate>Wed, 09 Jun 2010 19:45:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2010/06/09/launch-windows-explorer-and-goto-the-current-working-directory-in-shell/</guid>
+      <description>&lt;p&gt;I like working in the command prompt - it&amp;rsquo;s fast and you can do batch processing, etc, but sometimes, I need a GUI (Windows explorer) to explore files in the current directory. I know I can type &amp;ldquo;explorer.exe&amp;rdquo; on the command line to launch Windows explorer, but can it automatically go to the directory I&amp;rsquo;m working in? The answer is yes, although hardly ever &lt;a href=&#34;http://support.microsoft.com/kb/314853&#34;&gt;advertised&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, we need to find a way to find out the current working directory. On the command prompt, it&amp;rsquo;s stored in the environment variable %CD%, so combine the two:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;explorer /root,%CD%
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and it works beautifully.&lt;/p&gt;
+
+&lt;p&gt;Put this in a .bat file and put it on your path, you can launch Windows explorer anywhere and have it go directly to the folder you&amp;rsquo;re in on the command line!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

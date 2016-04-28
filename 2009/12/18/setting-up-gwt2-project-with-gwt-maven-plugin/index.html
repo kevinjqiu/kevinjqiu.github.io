@@ -1,114 +1,148 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <title>Setting up GWT2 project with gwt-maven-plugin - Qiu&#8217;s Quibble</title>
-  <meta name="author" content="Kevin Jing Qiu">
+  <title>
+    Setting up GWT2 project with gwt-maven-plugin // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Setting up GWT2 project with gwt-maven-plugin" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/" />
+
 
   
-  <meta name="description" content="GWT2 offers a lot of exciting new features: OOPHM, SOYC, code splitting, declarative UI, to name a few. This evening, I experimented setting up a &hellip;">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
   
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
 
   
-  <link rel="canonical" href="http://kevinjqiu.github.io/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Qiu's Quibble" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
 
+  
+
+  
+
+  
 </head>
 
-
 <body>
-	<div class="container">
-		<aside class="left">
-			<div class="inner-left">
-				<header>
-					
-  <img src="http://www.gravatar.com/avatar/696a8f13a7fcf0b4265fe801f18ba7b5?s=200" alt="Gravatar of Kevin Jing Qiu " title="Gravatar of Kevin Jing Qiu" class="profilepic" />
-
-<hgroup>
-  <h1><a href="/">Qiu&#8217;s Quibble</a></h1>
-  
-    <h2 class="subtitle">A blog about nothing and everything</h2>
-   
-</hgroup>
-
-<section>
-  <p style="color:white">I&#8217;m a software developer living in the Greater Toronto Area, Canada. My favourite programming language is Python while I admire the beauty of Clojure and Scala. I use console vim with tmux for most of my coding, and I use Arch Linux at home and Ubuntu at work.
-  </p>
-</section>
-
-
-				</header>
-				<footer>
-					<p>
 	
-		<a href="http://github.com/kevinjqiu" class="btn btn-dark">GitHub</a>
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
 	
-	
-		<a href="http://twitter.com/kevinjqiu" class="btn btn-dark">Twitter</a>
-	
-</p>
-				</footer>
-			</div>
-		</aside>
-    	<section class="right">
-    		<div class="inner-right">
-    			<div id="posts">
-    			  	<article class="post">
-    
-  <header>
-    
-      <h1 class="entry-title">Setting Up GWT2 Project With Gwt-maven-plugin</h1>
-    
-    
-      <p class="meta">
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
         
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-12-18T00:29:00-05:00" pubdate data-updated="true"></time>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
         
-      </p>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
     
-  </header>
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
 
+  </div>
+</div>
 
-<div class="entry-content"><p>GWT2 offers a lot of exciting new features: OOPHM, SOYC, code splitting, declarative UI, to name a few. This evening, I experimented setting up a GWT2 project using Codehaus&rsquo;s gwt-maven-plugin.</p>
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/">Setting up GWT2 project with gwt-maven-plugin</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>18</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Dec</span> <span class="post-date-year">2009</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-gwt" href="http://blog.idempotent.ca/categories/gwt">gwt</a>
+				
+					<a class="post-category post-category-java" href="http://blog.idempotent.ca/categories/java">java</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            <p>GWT2 offers a lot of exciting new features: OOPHM, SOYC, code splitting, declarative UI, to name a few. This evening, I experimented setting up a GWT2 project using Codehaus&rsquo;s gwt-maven-plugin.</p>
 
 <p>I&rsquo;m using Eclipse, so obviously, you need m2eclipse and Google Eclipse Plugin. First step is creating a Maven project:
 <code>File-&gt;New-&gt;Project...-&gt;Maven Project</code></p>
@@ -124,13 +158,10 @@
 <p>The plugin generates an archetype of GWT 1.6 project. In Eclipse, open pom.xml. As stated earlier, gwt-maven-plugin 1.1 doesn&rsquo;t work with GWT2. You need 1.2, but since 1.2 hasn&rsquo;t been released, we will use the snapshot version. The snapshot version is hosted on codehaus&rsquo;s snapshot repository, so we need to add the repository first.
 <a href="http://reminiscential.wordpress.com/files/2009/12/plugin-repo1.png"><img class="alignnone size-medium wp-image-121" title="plugin-repo1" src="http://reminiscential.wordpress.com/files/2009/12/plugin-repo1.png?w=300" alt="" width="300" height="148" /></a></p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Id: codehaus-snapshot-repository
-</span><span class='line'>Name: (anything you like)
-</span><span class='line'>URL: http://snapshots.repository.codehaus.org</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>Id: codehaus-snapshot-repository
+Name: (anything you like)
+URL: http://snapshots.repository.codehaus.org
+</code></pre>
 
 <p>Then, change the version of gwt-maven-plugin from 1.1 to 1.2-SNAPSHOT</p>
 
@@ -138,44 +169,25 @@
 
 <p>Also, you need to specify the module and runTarget in the configuration of the plugin, something similar to the following:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>gwt-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;version&gt;</span>1.2-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;execution&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;goals&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;goal&gt;</span>compile<span class="nt">&lt;/goal&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;/goals&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/execution&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;module&gt;</span>com.mycomp.demo.mygwt2.Application<span class="nt">&lt;/module&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;runTarget&gt;</span>com.mycomp.demo.mygwt2.Application/Application.html<span class="nt">&lt;/runTarget&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/plugins&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-xml">        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+                &lt;artifactId&gt;gwt-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.2-SNAPSHOT&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;compile&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+                &lt;configuration&gt;
+                    &lt;module&gt;com.mycomp.demo.mygwt2.Application&lt;/module&gt;
+                    &lt;runTarget&gt;com.mycomp.demo.mygwt2.Application/Application.html&lt;/runTarget&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+  &lt;/plugins&gt;
+</code></pre>
 
 <p>Save the pom. Eclipse will be busy fetching the dependencies and building the project.</p>
 
@@ -199,115 +211,51 @@ In the left panel, find &ldquo;Remote Java Application&rdquo;, select it and cli
 <a href="http://reminiscential.wordpress.com/files/2009/12/screenshot-debug-mygwt2-src-main-java-com-mycomp-demo-mygwt2-client-application-java-eclipse.png"><img class="alignnone size-medium wp-image-126" title="Screenshot-Debug - mygwt2-src-main-java-com-mycomp-demo-mygwt2-client-Application.java - Eclipse" src="http://reminiscential.wordpress.com/files/2009/12/screenshot-debug-mygwt2-src-main-java-com-mycomp-demo-mygwt2-client-application-java-eclipse.png?w=300" alt="" width="300" height="213" /></a></p>
 
 <p>There you have it. A sample mavenized GWT2 project. Enjoy the goodies offered by both GWT2 and Maven!</p>
-</div>
 
+	
+			
 
-</article>
+			
 
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2010/02/09/gxt-widget-expander-1.0-release/">GXT Widget Expander 1.0 release</a>
+		            </div>
+		            
 
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kevinjqiu.github.io/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/" data-via="kevinjqiu" data-counturl="http://kevinjqiu.github.io/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-
-
-
-<section id="comments">
-    <div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-</section>
-
-
-    			</div>
-    			<footer id="footer">
-    				<p class="credit">
-  Copyright &copy; 2015 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
-</p>
-
-
-    			</footer>
-    			
-
-<script type="text/javascript">
-      var disqus_shortname = 'reminiscential';
-      
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2009/11/18/solving-a-gwt-deferred-binding-mystery/">Solving a GWT deferred binding mystery</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://kevinjqiu.github.io/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/';
-        var disqus_url = 'http://kevinjqiu.github.io/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
 
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
 
+	
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-<link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
-
-
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-
-
-    		</div>
-    	</section>
-  	</div>
+  
 </body>
 </html>

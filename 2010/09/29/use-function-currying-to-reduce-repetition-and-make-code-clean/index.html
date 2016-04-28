@@ -1,357 +1,272 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <title>Use function currying to reduce repetition and make code clean - Qiu&#8217;s Quibble</title>
-  <meta name="author" content="Kevin Jing Qiu">
+  <title>
+    Use function currying to reduce repetition and make code clean // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Use function currying to reduce repetition and make code clean" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/" />
+
 
   
-  <meta name="description" content="Lately, I&rsquo;ve been writing a parser using the Scala parser-combinator framework to parse some saves from a game. As a responsible programmer (:P &hellip;">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
   
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
 
   
-  <link rel="canonical" href="http://kevinjqiu.github.io/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Qiu's Quibble" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
 
+  
+
+  
+
+  
 </head>
 
-
 <body>
-	<div class="container">
-		<aside class="left">
-			<div class="inner-left">
-				<header>
-					
-  <img src="http://www.gravatar.com/avatar/696a8f13a7fcf0b4265fe801f18ba7b5?s=200" alt="Gravatar of Kevin Jing Qiu " title="Gravatar of Kevin Jing Qiu" class="profilepic" />
-
-<hgroup>
-  <h1><a href="/">Qiu&#8217;s Quibble</a></h1>
-  
-    <h2 class="subtitle">A blog about nothing and everything</h2>
-   
-</hgroup>
-
-<section>
-  <p style="color:white">I&#8217;m a software developer living in the Greater Toronto Area, Canada. My favourite programming language is Python while I admire the beauty of Clojure and Scala. I use console vim with tmux for most of my coding, and I use Arch Linux at home and Ubuntu at work.
-  </p>
-</section>
-
-
-				</header>
-				<footer>
-					<p>
 	
-		<a href="http://github.com/kevinjqiu" class="btn btn-dark">GitHub</a>
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
 	
-	
-		<a href="http://twitter.com/kevinjqiu" class="btn btn-dark">Twitter</a>
-	
-</p>
-				</footer>
-			</div>
-		</aside>
-    	<section class="right">
-    		<div class="inner-right">
-    			<div id="posts">
-    			  	<article class="post">
-    
-  <header>
-    
-      <h1 class="entry-title">Use Function Currying to Reduce Repetition and Make Code Clean</h1>
-    
-    
-      <p class="meta">
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
         
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-29T19:56:00-04:00" pubdate data-updated="true"></time>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
         
-      </p>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
     
-  </header>
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
 
+  </div>
+</div>
 
-<div class="entry-content"><p>Lately, I&rsquo;ve been writing a parser using the Scala parser-combinator framework to parse some saves from a game. As a responsible programmer (:P), I write unit tests for each rule. However, I found myself having to write the following code over and over again:</p>
+	
+	
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="k">def</span> <span class="n">testRule1</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">parserRule</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="k">new</span> <span class="nc">CharSequence</span><span class="o">(</span><span class="s">&quot;someInput&quot;</span><span class="o">))</span> <span class="k">match</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">case</span> <span class="nc">Success</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;expected&quot;</span><span class="o">,</span> <span class="n">result</span><span class="o">)</span>
-</span><span class='line'>      <span class="cm">/* other asserts if the result is a collection of something else */</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>    <span class="k">case</span> <span class="nc">NoSuccess</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">fail</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
 
+		
+			
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/">Use function currying to reduce repetition and make code clean</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>29</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Sep</span> <span class="post-date-year">2010</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-scala" href="http://blog.idempotent.ca/categories/scala">scala</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            <p>Lately, I&rsquo;ve been writing a parser using the Scala parser-combinator framework to parse some saves from a game. As a responsible programmer (:P), I write unit tests for each rule. However, I found myself having to write the following code over and over again:</p>
+
+<pre><code class="language-scala">@Test
+def testRule1() {
+  parserRule.apply(new CharSequence(&quot;someInput&quot;)) match {
+    case Success(result, _) =&gt; {
+      assertEquals(&quot;expected&quot;, result)
+      /* other asserts if the result is a collection of something else */
+      }
+    case NoSuccess(msg, _) =&gt; fail(msg)
+  }
+}
+</code></pre>
 
 <p>It&rsquo;s worth noting that you cannot pass in a string value to a <code>Parser</code>. A parser expects a <code>CharSequence</code> <code>CharSequenceReader</code> object. Luckily, with Scala, you can define implicit conversion to turn a string into a <code>CharSequence</code> <code>CharSequenceReader</code>:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">implicit</span> <span class="k">def</span> <span class="n">str2charSeqReader</span><span class="o">(</span><span class="n">v</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">CharSequenceReader</span><span class="o">(</span><span class="n">v</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">implicit def str2charSeqReader(v:String) = new CharSequenceReader(v)
+</code></pre>
 
 <p>Another goody Scala offers is that <code>obj.apply(arg)</code> method can be invoked by <code>obj(arg)</code>, so the above code becomes:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="cm">/* ... */</span>
-</span><span class='line'><span class="n">parserRule</span><span class="o">(</span><span class="s">&quot;someInput&quot;</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-</span><span class='line'><span class="cm">/* ... */</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">/* ... */
+parserRule(&quot;someInput&quot;) match {
+/* ... */
+}
+</code></pre>
 
 <p>It&rsquo;s much cleaner.</p>
 
 <p>However, the matching part is not clean still. It&rsquo;s not that bad for a single test case, but it&rsquo;s hardly a good practice to copy/paste it all over the test code base. We need to refactor this. The first thing comes to mind is to extract the matching part into a separate method, and let the caller provide the assertion part. Because Scala is a functional language, we can declare the method takes a function as a parameter, instead of using the delegate pattern, creating another class to encapsulate the method to be called, as you would do in Java:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">tryMatch</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">pr</span><span class="k">:</span><span class="kt">ParseResult</span><span class="o">[</span><span class="kt">T</span><span class="o">],</span> <span class="n">f</span><span class="k">:</span><span class="o">(</span><span class="kt">T</span><span class="o">)=&gt;</span><span class="nc">Unit</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">pr</span> <span class="k">match</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">case</span> <span class="nc">Success</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">r</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">case</span> <span class="nc">NoSuccess</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">fail</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">def tryMatch[T](pr:ParseResult[T], f:(T)=&gt;Unit) {
+  pr match {
+    case Success(r, _) =&gt; f(r)
+    case NoSuccess(msg, _) =&gt; fail(msg)
+  }
+}
+</code></pre>
 
 <p>Now the consumer (the test code) looks like this:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="k">def</span> <span class="n">test1</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">tryMatch</span><span class="o">(</span><span class="n">rule1</span><span class="o">(</span><span class="s">&quot;input&quot;</span><span class="o">),</span> <span class="o">(</span><span class="n">result</span><span class="o">)=&gt;{</span><span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;expected&quot;</span><span class="o">,</span><span class="n">result</span><span class="o">)})</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">@Test
+def test1() {
+  tryMatch(rule1(&quot;input&quot;), (result)=&gt;{assertEquals(&quot;expected&quot;,result)})
+}
+</code></pre>
 
 <p>It&rsquo;s better, except that when you have multiple assert* methods need to be called, it quickly becomes ugly:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="k">def</span> <span class="n">test2</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">tryMatch</span><span class="o">(</span><span class="n">listRule</span><span class="o">(</span><span class="s">&quot;1,2,3,4&quot;</span><span class="o">),</span> <span class="o">(</span><span class="n">result</span><span class="o">)=&gt;{</span><span class="n">assertEquals</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="n">result</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span><span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="n">result</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span><span class="n">assertEquals</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="n">result</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span><span class="n">assertEquals</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span><span class="n">result</span><span class="o">(</span><span class="mi">3</span><span class="o">))})</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">@Test
+def test2() {
+  tryMatch(listRule(&quot;1,2,3,4&quot;), (result)=&gt;{assertEquals(1,result(0));assertEquals(2,result(1));assertEquals(3,result(2));assertEquals(4,result(3))})
+}
+</code></pre>
 
 <p>To do better, we can use <a href="http://en.wikipedia.org/wiki/Currying">function currying</a>. I read about function currying before, but not until now did it dawn on me that I can use this technique to make my code look cleaner. Basically, currying means that a function with n parameters is the same as the function being applied one parameter at a time in succession. e.g., function <code>add(x1:Int,x2:Int,...,xn:Int)</code> adds all its parameters. <code>add(1,2)=[add(1)](2)</code>, where <code>add(1)</code> becomes a partially applied function that takes an integer and returns an integer. Then the partial function is applied to the second parameter which gives the eventual result.</p>
 
 <p>This is all very theoretical, but the practical implication is that we can transform <code>tryMatch()</code> method shown above from a method with 2 parameters into a curried function. Why? Because with Scala, when you have a method that only takes a single parameter (as is the case with the partially applied function), you can replace parentheses with curly brackets! Let&rsquo;s see how it works:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">tryMatch</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">pr</span><span class="k">:</span><span class="kt">ParseResult</span><span class="o">[</span><span class="kt">T</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span><span class="o">(</span><span class="kt">T</span><span class="o">)=&gt;</span><span class="nc">Unit</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">pr</span> <span class="k">match</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">case</span> <span class="nc">Success</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">r</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">case</span> <span class="nc">NoSuccess</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">fail</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">def tryMatch[T](pr:ParseResult[T])(f:(T)=&gt;Unit) {
+  pr match {
+    case Success(r, _) =&gt; f(r)
+    case NoSuccess(msg, _) =&gt; fail(msg)
+  }
+}
+</code></pre>
 
 <p>Basically, we break the two parameter definitions. This creates a PartialFunction in Scala. No other code needs to be changed at all. Now we can call tryMatch like this:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="k">def</span> <span class="n">testList</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">tryMatch</span><span class="o">(</span><span class="n">listRule</span><span class="o">(</span><span class="s">&quot;1 2 3&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">result</span> <span class="k">=&gt;</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">assertEquals</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">result</span><span class="o">(</span><span class="mi">0</span><span class="o">))</span>
-</span><span class='line'>      <span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">result</span><span class="o">(</span><span class="mi">1</span><span class="o">))</span>
-</span><span class='line'>      <span class="n">assertEquals</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="n">result</span><span class="o">(</span><span class="mi">2</span><span class="o">))</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-scala">@Test
+def testList() {
+  tryMatch(listRule(&quot;1 2 3&quot;)) {
+    result =&gt; {
+      assertEquals(1, result(0))
+      assertEquals(2, result(1))
+      assertEquals(3, result(2))
+    }
+  }
+}
+</code></pre>
 
 <p>This is like creating your own control flow (like try-catch-finally). Ain&rsquo;t that neat?</p>
-</div>
 
+	
+			
 
-</article>
+			
 
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2010/10/07/my-impression-on-scala-so-far/">My impression on Scala so far</a>
+		            </div>
+		            
 
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kevinjqiu.github.io/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/" data-via="kevinjqiu" data-counturl="http://kevinjqiu.github.io/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-
-
-
-<section id="comments">
-    <div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-</section>
-
-
-    			</div>
-    			<footer id="footer">
-    				<p class="credit">
-  Copyright &copy; 2015 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
-</p>
-
-
-    			</footer>
-    			
-
-<script type="text/javascript">
-      var disqus_shortname = 'reminiscential';
-      
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2010/07/23/finding-happy-numbers-using-scala/">Finding Happy Numbers using Scala</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://kevinjqiu.github.io/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/';
-        var disqus_url = 'http://kevinjqiu.github.io/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
 
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
 
+	
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-<link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
-
-
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-
-
-    		</div>
-    	</section>
-  	</div>
+  
 </body>
 </html>

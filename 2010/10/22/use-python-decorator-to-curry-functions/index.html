@@ -1,125 +1,156 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <title>Use Python decorator to curry functions - Qiu&#8217;s Quibble</title>
-  <meta name="author" content="Kevin Jing Qiu">
+  <title>
+    Use Python decorator to curry functions // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Use Python decorator to curry functions" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/" />
+
 
   
-  <meta name="description" content="It&rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing &hellip;">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
   
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
 
   
-  <link rel="canonical" href="http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Qiu's Quibble" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
 
+  
+
+  
+
+  
 </head>
 
-
 <body>
-	<div class="container">
-		<aside class="left">
-			<div class="inner-left">
-				<header>
-					
-  <img src="http://www.gravatar.com/avatar/696a8f13a7fcf0b4265fe801f18ba7b5?s=200" alt="Gravatar of Kevin Jing Qiu " title="Gravatar of Kevin Jing Qiu" class="profilepic" />
-
-<hgroup>
-  <h1><a href="/">Qiu&#8217;s Quibble</a></h1>
-  
-    <h2 class="subtitle">A blog about nothing and everything</h2>
-   
-</hgroup>
-
-<section>
-  <p style="color:white">I&#8217;m a software developer living in the Greater Toronto Area, Canada. My favourite programming language is Python while I admire the beauty of Clojure and Scala. I use console vim with tmux for most of my coding, and I use Arch Linux at home and Ubuntu at work.
-  </p>
-</section>
-
-
-				</header>
-				<footer>
-					<p>
 	
-		<a href="http://github.com/kevinjqiu" class="btn btn-dark">GitHub</a>
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
 	
-	
-		<a href="http://twitter.com/kevinjqiu" class="btn btn-dark">Twitter</a>
-	
-</p>
-				</footer>
-			</div>
-		</aside>
-    	<section class="right">
-    		<div class="inner-right">
-    			<div id="posts">
-    			  	<article class="post">
-    
-  <header>
-    
-      <h1 class="entry-title">Use Python Decorator to Curry Functions</h1>
-    
-    
-      <p class="meta">
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
         
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-10-22T20:06:00-04:00" pubdate data-updated="true"></time>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
         
-      </p>
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
     
-  </header>
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
 
+  </div>
+</div>
 
-<div class="entry-content"><p>It&rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing functional programming and dynamic languages&hellip;I learned Python before I went into Computer Science, and then I learned about functional programming and through learning of Scala and Clojure, my functional programming concepts have been enriched. As I was listening, it suddenly appeared to me that there isn&rsquo;t a way in Python to <a href="http://en.wikipedia.org/wiki/Currying">curry</a> a function. Not that it&rsquo;s critical to everyday development, but wouldn&rsquo;t it be neat if I can curry a function in Python?</p>
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2010/10/22/use-python-decorator-to-curry-functions/">Use Python decorator to curry functions</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>22</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Oct</span> <span class="post-date-year">2010</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-python" href="http://blog.idempotent.ca/categories/python">python</a>
+				
+					<a class="post-category post-category-functional-programming" href="http://blog.idempotent.ca/categories/functional-programming">functional programming</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            <p>It&rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing functional programming and dynamic languages&hellip;I learned Python before I went into Computer Science, and then I learned about functional programming and through learning of Scala and Clojure, my functional programming concepts have been enriched. As I was listening, it suddenly appeared to me that there isn&rsquo;t a way in Python to <a href="http://en.wikipedia.org/wiki/Currying">curry</a> a function. Not that it&rsquo;s critical to everyday development, but wouldn&rsquo;t it be neat if I can curry a function in Python?</p>
 
 <p>Then the hosts of the podcast discussed how dynamic languages are so flexible that you can pretty much do anything to it. &ldquo;You can take a function as parameter, return a function from a function, and so on.&rdquo; Hey, isn&rsquo;t that what Python&rsquo;s <a href="http://www.artima.com/weblogs/viewpost.jsp?thread=240808">decorator</a> can do? I learned decorators before, but I haven&rsquo;t used it beyond the scope of creating properties and certainly haven&rsquo;t written any decorators. I thought this would be a good exercise for learning decorators.</p>
 
 <p>Here&rsquo;s a simple example of what function currying: suppose you have a method</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-python">def add(x,y):
+  return x+y
+</code></pre>
 
 <p>Then calling <code>add(1,2)</code> should be the same as <code>add(1)(2)</code>. <code>add(1)</code> is what they call a partially applied function. It&rsquo;s a function that takes one parameter.</p>
 
@@ -127,277 +158,148 @@
 
 <p>We&rsquo;ll start with unit tests first:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">unittest</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">CurryTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">test_with_no_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="nd">@curried</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">do_nothing</span><span class="p">():</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;&quot;</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">do_nothing</span><span class="p">())</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">test_with_int_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="nd">@curried</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">add_int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">add_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">))</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">test_with_str_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="nd">@curried</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">add_str</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&quot;ab&quot;</span><span class="p">,</span> <span class="n">add_str</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">)(</span><span class="s">&quot;b&quot;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre><code class="language-python">import unittest
 
+class CurryTest(unittest.TestCase):
+
+    def test_with_no_args(self):
+        @curried
+        def do_nothing():
+            return &quot;&quot;
+        self.assertEquals(&quot;&quot;, do_nothing())
+
+    def test_with_int_args(self):
+        @curried
+        def add_int(x,y):
+            return x+y
+        self.assertEquals(3, add_int(1)(2))
+    def test_with_str_args(self):
+        @curried
+        def add_str(x,y):
+            return &quot;%s%s&quot;%(x,y)
+        self.assertEquals(&quot;ab&quot;, add_str(&quot;a&quot;)(&quot;b&quot;))
+</code></pre>
 
 <p>So we make sure that a currying on a function takes no parameter is valid but should be a pass through, and also the &ldquo;curried&rdquo; decorator can be applied to any function with arguments (excluding positional arguments and keyword arguments)</p>
 
 <p>A decorator is simply a function that takes a function as parameter:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">curried</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-</span><span class='line'>  <span class="k">pass</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-python">def curried(fn):
+  pass
+</code></pre>
 
 <p>and <code>@curried</code> is simply a syntactic sugar for:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>
-</span><span class='line'><span class="n">fn</span><span class="o">=</span><span class="n">curried</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-python">def fn(...): ...
+fn=curried(fn)
+</code></pre>
 
 <p>So, now we can write <code>curried</code> decorator.
 To make the test for function with no argument pass, in <code>curried()</code> function, we can test to see if fn has arguments. Python&rsquo;s standard library provides <code>inspect.getargspec</code> method:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">curried</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-</span><span class='line'>  <span class="n">argspec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">fn</span>
-</span><span class='line'>  <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>    <span class="c"># later</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-python">def curried(fn):
+  argspec = inspect.getargspec(fn)
+  if len(argspec.args)==0:
+    return fn
+  else:
+    # later
+</code></pre>
 
 <p>Now the first test passes.</p>
 
 <p>For the other two cases, here&rsquo;s the strategy. In Python, when a class defines <code>__call__</code> method, the instance of that class is said to be &ldquo;callable&rdquo;. For instance:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">arg</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">f</span><span class="o">=</span><span class="n">A</span><span class="p">()</span>
-</span><span class='line'><span class="n">f</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">)</span>  <span class="c"># this gives you &quot;echo&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre><code class="language-python">class A(object):
+  def __call__(self, arg):
+    return arg
 
+f=A()
+f(&quot;echo&quot;)  # this gives you &quot;echo&quot;
+</code></pre>
 
 <p>This is very similar to Scala&rsquo;s <code>apply()</code> function. Now that we have this in our inventory, we can define a <code>PartialFunction</code> class, take all the required parameters of the original function, and allow them to be applied one at a time. So the <code>__call__</code> method of PartialFunc will look like this:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span class='line'>  <span class="c"># Xxx</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-python">def __call__(self, value):
+  # Xxx
+</code></pre>
 
 <p>If all the required parameters are passed in, <code>PartialFunc</code> should evaluate the original function with the complete argument list. Otherwise, <code>PartialFunc</code> stores the parameter in an instance variable, and returns itself.</p>
 
 <p>Here&rsquo;s the complete code:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">PartialFunc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">argspec</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">argspec</span> <span class="o">=</span> <span class="n">argspec</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
-</span><span class='line'>            <span class="n">arglist</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;self.args[</span><span class="si">%d</span><span class="s">]&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))])</span>
-</span><span class='line'>            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="s">&quot;self.fn(&quot;</span> <span class="o">+</span> <span class="n">arglist</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="bp">self</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre><code class="language-python">class PartialFunc(object):
+    def __init__(self, fn, argspec):
+        self.fn = fn
+        self.argspec = argspec
+        self.args = []
 
+    def __call__(self, value):
+        self.args.append(value)
+        if len(self.args) == len(self.argspec.args):
+            arglist = &quot;,&quot;.join([&quot;self.args[%d]&quot;%i for i in range(0, len(self.args))])
+            return eval(&quot;self.fn(&quot; + arglist + &quot;)&quot;)
+        else:
+            return self
+</code></pre>
 
 <p>and the curried decorator:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">curried</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">argspec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">fn</span>
-</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">PartialFunc</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">argspec</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="language-python">def curried(fn):
+    argspec = inspect.getargspec(fn)
+    if len(argspec.args) == 0:
+        return fn
+    else:
+        return PartialFunc(fn, argspec)
+</code></pre>
 
 <p>It&rsquo;s pretty straightforward. When the parameters are complete, I construct a python statement that calls the original function with the complete argument list, and then pass the statement into an eval statement. I know evals are evil, but I can&rsquo;t find a way in Python to dynamically change the signature of the original method and make it accept a variable length argument (varargs).</p>
 
 <p>So this is it. It&rsquo;s quite simple. Python methods can have varargs and keyword args, the situation gets a little more complicated. The thing is, both varargs and keyword args are not mandatory, so it&rsquo;s hard for the curried function to know whether the argument list has been completed&hellip;Also, if you take default values into account, it could get even more complicated.</p>
-</div>
 
+	
+			
 
-</article>
+			
 
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2011/01/02/new-years-resolution/">New Year&#39;s Resolution</a>
+		            </div>
+		            
 
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions/" data-via="kevinjqiu" data-counturl="http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-
-
-
-<section id="comments">
-    <div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-</section>
-
-
-    			</div>
-    			<footer id="footer">
-    				<p class="credit">
-  Copyright &copy; 2015 - Kevin Jing Qiu. Powered by <a href="http://octopress.org">Octopress</a>
-</p>
-
-
-    			</footer>
-    			
-
-<script type="text/javascript">
-      var disqus_shortname = 'reminiscential';
-      
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2010/10/07/my-impression-on-scala-so-far/">My impression on Scala so far</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions/';
-        var disqus_url = 'http://kevinjqiu.github.io/2010/10/22/use-python-decorator-to-curry-functions/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
 
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
 
+	
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-<link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans|Roboto:400,300' rel='stylesheet' type='text/css'>
-
-
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-32737230-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-
-
-    		</div>
-    	</section>
-  	</div>
+  
 </body>
 </html>
