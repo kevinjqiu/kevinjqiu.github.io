@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ctf on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/ctf/</link>
+    <description>Recent content in Ctf on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 19 Sep 2012 00:01:00 +0000</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/categories/ctf/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 3</title>
+      <link>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</link>
+      <pubDate>Wed, 19 Sep 2012 00:01:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</guid>
+      <description>
+
+&lt;h2 id=&#34;level-3:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Level 3&lt;/h2&gt;
+
+&lt;p&gt;Finally we get to level 3. Here&amp;rsquo;s the setup:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;After the fiasco back in Level 0, management has decided to fortify the Secret Safe into an unbreakable solution (kind of like Unbreakable Linux). The resulting product is Secret Vault, which is so secure that it requires human intervention to add new secrets.
+
+A beta version has launched with some interesting secrets (including the password to access Level 4)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the code for the server (Python finally!)
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3747632.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;and here&amp;rsquo;s the front-end:
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3747637.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;From the description, we know that we need to break into bob&amp;rsquo;s account to retrieve the password to level 4, although breaking into eve and mallory&amp;rsquo;s accounts are attempting :) Afterall, who wouldn&amp;rsquo;t want to know the proof of &lt;a href=&#34;http://en.wikipedia.org/wiki/P_versus_NP_problem&#34;&gt;P=NP&lt;/a&gt; or how to make a &lt;a href=&#34;http://en.wikipedia.org/wiki/Perpetual_motion_machine&#34;&gt;perpetual motion machine&lt;/a&gt;?&lt;/p&gt;
+
+&lt;p&gt;Anyhow, the front-end is a typical login page: you get username and password input fields, and they&amp;rsquo;re sent off (via POST) to a server script.
+The server is a simple Flask app that gets the user input, checks them against a table of username and salted password hashes.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;login()&lt;/code&gt; function is where all the action takes place. Line 86 quickly caught my eyes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;query = &amp;quot;&amp;quot;&amp;quot;SELECT id, password_hash, salt FROM users WHERE username = &#39;{0}&#39; LIMIT 1&amp;quot;&amp;quot;&amp;quot;.format(username)
+cursor.execute(query)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is an alarming pattern of formatting a string and sending it off to &lt;code&gt;cursor.execute()&lt;/code&gt;. Python&amp;rsquo;s string &lt;code&gt;format()&lt;/code&gt; method is just another way of interopolation. It&amp;rsquo;s exactly the same as &lt;code&gt;&amp;quot;&amp;quot;&amp;quot;SELECT id, password_hash, salt FROM user WHERE username = %s&amp;quot;&amp;quot;&amp;quot; % username&amp;quot;&amp;quot;&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now that we found the vulnerability, we need to find a way exploit it.&lt;/p&gt;
+
+&lt;h3 id=&#34;take-1:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 1&lt;/h3&gt;
+
+&lt;p&gt;Normally, with SQL injection, you craft an input to terminate the previous statement, and inject the statement you want it to execute. Reading the code, it&amp;rsquo;s getting the user&amp;rsquo;s password hash and salt for the given user, and check it against the input hash and salt. The hashing method is &lt;a href=&#34;http://en.wikipedia.org/wiki/SHA-2&#34;&gt;sha256&lt;/a&gt;. With Python, we can quickly pre-calculate a salted hash to inject. Here&amp;rsquo;s an example, with password &lt;code&gt;1&lt;/code&gt; and salt &lt;code&gt;a&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;python -c &amp;quot;import hashlib; print hashlib.sha256(&#39;1&#39;+&#39;a&#39;).hexdigest()&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and we get &lt;code&gt;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The statement we really want it to execute is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&#39;, &#39;a&#39; FROM users WHERE username = &#39;bob&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;so when we put &amp;lsquo;1&amp;rsquo; in the password input box, we will get the server to run sha246 on &amp;lsquo;1&amp;rsquo; + &amp;lsquo;a&amp;rsquo;, and check it against the hash that we fed in. The entire query gets executed wil look like this (with the middle line being the &lt;code&gt;username&lt;/code&gt; we feed in):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT id, password_hash, salt FROM users WHERE username = &#39;
+&#39;; SELECT id,  &#39;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&#39;, &#39;a&#39; FROM users WHERE username=&#39;bob
+&#39; LIMIT 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;How does that faire?&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, we get a stack trace in the traceback:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Traceback (most recent call last):
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1689, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1687, in wsgi_app
+    response = self.full_dispatch_request()
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1360, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1358, in full_dispatch_request
+    rv = self.dispatch_request()
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1344, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File &amp;quot;/Users/kevin/src/ctf/level03-code/secretvault.py&amp;quot;, line 91, in login
+    cursor.execute(query)Warning: You can only execute one statement at a time.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cursor&lt;/code&gt; cannot run more than one statement at a time! Smart, eh?&lt;/p&gt;
+
+&lt;h3 id=&#34;take-2:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 2&lt;/h3&gt;
+
+&lt;p&gt;So the trick here is to use exactly 1 statement to inject our crafted data. We still want this to be returning the same fields. What if I &lt;code&gt;UNION&lt;/code&gt; two queries, with the second query selecting the injected data?&lt;/p&gt;
+
+&lt;p&gt;So something like this (the middle line is the one we inject as &lt;code&gt;username&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT id, password_hash, salt FROM users WHERE username = &#39;
+bob&#39; UNION select id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&#39;, &#39;a&#39; FROM users WHERE username = &#39;bob
+&#39; LIMIT 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Submit, and boom:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Welcome back! Your secret is: &amp;quot;...&amp;quot; (Log out)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;conclusion:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;This is a canonical SQL injection. Again, NEVER trust user input. Always sanitize user input.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 2</title>
+      <link>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</link>
+      <pubDate>Wed, 12 Sep 2012 23:50:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</guid>
+      <description>
+
+&lt;h2 id=&#34;level-2:a321406c230dbace4963b77b7a2cde48&#34;&gt;Level 2&lt;/h2&gt;
+
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3711719.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;In level 2, we&amp;rsquo;re faced with a PHP app that allows you to upload a &amp;ldquo;profile picture&amp;rdquo;. The password to level 3 is contained in a &amp;ldquo;password.txt&amp;rdquo; file of the document root, as revealed in line 49. Of course, you won&amp;rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.&lt;/p&gt;
+
+&lt;p&gt;Reading through the code, it&amp;rsquo;s a clear that whatever file uploaded to the server will be under &lt;code&gt;uploads/&lt;/code&gt;, and the file is publicly accessible through &lt;code&gt;&amp;lt;base&amp;gt;/uploads/&amp;lt;your_file_name&amp;gt;&lt;/code&gt;, as seen on line 37. The file input is expecting a image file, but it doesn&amp;rsquo;t restrict the type of file it accepts. What if we upload a PHP script, read the file content &lt;code&gt;../password.txt&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;With that in mind, I quickly cooked up a PHP script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+echo file_get_contents(&#39;../password.txt&#39;);
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;uploaded it and hit it with curl. Guess what? The password is right there in the clear!&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:a321406c230dbace4963b77b7a2cde48&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s a few problems with this app:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The user shouldn&amp;rsquo;t be able to upload files of any type they want. Restrict to only image files if you&amp;rsquo;re expecting profile pictures.&lt;/li&gt;
+&lt;li&gt;The above point is necessary but not sufficient. The bigger problem is that the server is not properly configured. Files under &lt;code&gt;uploads/&lt;/code&gt; folder should be considered &amp;ldquo;user input&amp;rdquo; and thus should not be able to be executed on the server. Much more exploits can be done here and as it turns out, some later levels require the control of this machine.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 1</title>
+      <link>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</link>
+      <pubDate>Mon, 10 Sep 2012 14:14:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</guid>
+      <description>
+
+&lt;h2 id=&#34;level-1:64d353d425787014ba969d46f395c7b6&#34;&gt;Level 1&lt;/h2&gt;
+
+&lt;p&gt;Now we get to level 1. We are presented with a simple web form with the PHP code powering it.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3692642.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;The PHP script checks if the input combination matches the combination in &amp;lsquo;secret-combination.txt&amp;rsquo; file, and present the user with the password to the next level if the combinations match.  Obviously, we&amp;rsquo;re not going to guess the combination.&lt;/p&gt;
+
+&lt;p&gt;There are a few &amp;lsquo;handy&amp;rsquo; methods in PHP that are extremely dangerous. &lt;a href=&#34;http://php.net/manual/en/function.extract.php&#34;&gt;&lt;code&gt;extract&lt;/code&gt;&lt;/a&gt; is one of them. It will extract the content of the passed-in associative array, and import them into the global scope. e.g., &lt;code&gt;extract(array(&#39;foo&#39;=&amp;gt;&#39;bar&#39;));&lt;/code&gt; will make a global variable &lt;code&gt;$foo&lt;/code&gt;. What&amp;rsquo;s more dangerous is that if you already have a variable named &lt;code&gt;$foo&lt;/code&gt;, it will be overwritten with the new value in the associative array.&lt;/p&gt;
+
+&lt;p&gt;Because the secret combination&amp;rsquo;s location is stored in &lt;code&gt;$filename&lt;/code&gt; variable, we need to somehow manipulate the input to point &lt;code&gt;$filename&lt;/code&gt; to something else.  Looking at line 27:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;form action=&amp;quot;#&amp;quot; method=&amp;quot;GET&amp;quot;&amp;gt;
+&amp;lt;/form&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So the form is submitted using GET! So manipulating the variable is as easy as sending the endpoint with query param &lt;code&gt;filename=&amp;lt;xyz&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, what will the &lt;code&gt;xyz&lt;/code&gt; be? The &lt;code&gt;$filename&lt;/code&gt; variable is passed into &lt;code&gt;file_get_contents()&lt;/code&gt; function. The parameter to the function is simply a string, and PHP defined a few &amp;lsquo;handy&amp;rsquo; &lt;a href=&#34;http://php.net/manual/en/wrappers.php.php&#34;&gt;streams&lt;/a&gt;. &lt;code&gt;php://input&lt;/code&gt; caught my eyes. The doc says &lt;code&gt;php://input is a read-only stream that allows you to read raw data from the request body.&lt;/code&gt;. Hey, the form is submitted using GET, so there won&amp;rsquo;t be a request body. The input parameter is also sent using GET variable &lt;code&gt;attempt&lt;/code&gt;, so I just need to send an empty &lt;code&gt;attempt&lt;/code&gt; and point the filename to &lt;code&gt;php://input&lt;/code&gt;: &lt;code&gt;?attempt=&amp;amp;filename=php://input&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;And indeed it works!&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion:64d353d425787014ba969d46f395c7b6&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Never, ever use &lt;code&gt;extract()&lt;/code&gt; in serious applications. Historically, PHP is used to build simple websites so it included many functions that puts &amp;ldquo;convenience&amp;rdquo; over security. Global variables are a bad idea, and having the ability to pollute the global space from any input is way worse.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_get_contents()&lt;/code&gt; has the ability to take any string as parameter, including some named streams. They are handy but they pose potential threats.&lt;/li&gt;
+&lt;li&gt;Again, don&amp;rsquo;t trust user input!&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 0</title>
+      <link>http://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</link>
+      <pubDate>Sun, 09 Sep 2012 23:11:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://stripe.com&#34;&gt;Stripe&lt;/a&gt; just finished running a second &lt;a href=&#34;https://stripe-ctf.com&#34;&gt;&amp;ldquo;capture the flag&amp;rdquo;&lt;/a&gt; challenge. They ran a similar challenge this February and was more focused on system level. This time, it&amp;rsquo;s full-on web security.&lt;/p&gt;
+
+&lt;p&gt;In the next few posts, I&amp;rsquo;m going to discuss the problems in the challenge, how I solved them and what did I learn from from each challenge.&lt;/p&gt;
+
+&lt;h2 id=&#34;problem-0:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Problem 0&lt;/h2&gt;
+
+&lt;p&gt;Here are the code for level 0:&lt;/p&gt;
+
+&lt;p&gt;&lt;script src=&#34;//gist.github.com/kevinjqiu/3688655.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3688659.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;So you have a node.js server script, with an HTML front-end. The front-end allows you to submit a web form which allows you to retrieve &lt;em&gt;your&lt;/em&gt; stored secret but the secret to level 1 is also stored in the same database.&lt;/p&gt;
+
+&lt;p&gt;Reading the code, the query on line 34 jumps out at you:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    var query = &#39;SELECT * FROM secrets WHERE key LIKE ? || &amp;quot;.%&amp;quot;&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Even though I&amp;rsquo;m not too familiar with &lt;a href=&#34;http://nodejs.org&#34;&gt;nodejs&lt;/a&gt; or its db API, the part where it concatenates user input with &amp;ldquo;.%&amp;rdquo; looks suspicious. &lt;code&gt;||&lt;/code&gt; is the SQL operator for concatenation, and &amp;lsquo;%&amp;rsquo; is the SQL wildcard that matches 0 or more characters of any kind. What if my user input is &amp;ldquo;%&amp;rdquo;?&lt;/p&gt;
+
+&lt;p&gt;Voilà! That&amp;rsquo;s it! &lt;code&gt;%.%&lt;/code&gt; gives you all passwords with namespace that has a dot in the middle.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://xkcd.com/327/&#34;&gt;SQL-injection&lt;/a&gt; is a known security issue for a long time yet you&amp;rsquo;d be surprised how many sites are still subject to such exploits. The problem with level 0 code is exactly that: unsanitized user input is sent directly to the database for execution. So everytime a string concatenation is seen in a SQL statement, you have to ask yourself: is the ting being concatenated trustworthy? Use prepared statement or your database&amp;rsquo;s escape function wherever possible.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

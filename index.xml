@@ -1,0 +1,1733 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/</link>
+    <description>Recent content on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 28 Apr 2016 00:22:17 -0400</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>starred</title>
+      <link>http://blog.idempotent.ca/starred/</link>
+      <pubDate>Thu, 28 Apr 2016 00:22:17 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/starred/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>http://blog.idempotent.ca/about/me/</link>
+      <pubDate>Thu, 28 Apr 2016 00:17:04 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/about/me/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;I&amp;rsquo;m a software engineer living in the &lt;a href=&#34;https://en.wikipedia.org/wiki/Vaughan&#34;&gt;Greater Toronto Area, Canada&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;I was born and raised in &lt;a href=&#34;https://en.wikipedia.org/wiki/Shanghai&#34;&gt;Shanghai, China&lt;/a&gt;, and came to Canada at a young age.&lt;/li&gt;
+&lt;li&gt;My favourite programming language is &lt;a href=&#34;http://www.python.org&#34;&gt;Python&lt;/a&gt; while I admire the beauty of &lt;a href=&#34;http://clojure.org&#34;&gt;Clojure&lt;/a&gt; and &lt;a href=&#34;http://scala-lang.org&#34;&gt;Scala&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;I also write &lt;a href=&#34;http://golang.org&#34;&gt;Go&lt;/a&gt; code and JavaScript (of course).&lt;/li&gt;
+&lt;li&gt;I love &lt;a href=&#34;http://docker.io&#34;&gt;docker&lt;/a&gt; and everything devops.&lt;/li&gt;
+&lt;li&gt;I use console &lt;a href=&#34;http://vim.org&#34;&gt;vim&lt;/a&gt; with &lt;a href=&#34;https://tmux.github.io/&#34;&gt;tmux&lt;/a&gt; for almost all of my coding; &lt;a href=&#34;http://archlinux.org&#34;&gt;Arch Linux&lt;/a&gt; at home and &lt;a href=&#34;http://ubuntu.com&#34;&gt;Ubuntu&lt;/a&gt; at work.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Use Python bytecode to solve puzzler</title>
+      <link>http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</link>
+      <pubDate>Thu, 03 Sep 2015 22:16:36 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</guid>
+      <description>
+
+&lt;h2 id=&#34;learning-python-internals:6bf435374bd39002427720546dfc1a00&#34;&gt;Learning Python Internals&lt;/h2&gt;
+
+&lt;p&gt;Recently I stumbled upon &lt;a href=&#34;https://www.youtube.com/playlist?list=PLwyG5wA5gIzgTFj5KgJJ15lxq5Cv6lo_0&#34;&gt;this wonderful set of videos on Python interpreter internals&lt;/a&gt;. (Thanks to &lt;a href=&#34;http://pgbovine.net/&#34;&gt;Philip Guo&lt;/a&gt; for creating them and thanks to Michael Kennedy (@mkennedy) and his &lt;a href=&#34;http://talkpython.fm/&#34;&gt;Talk Python to me&lt;/a&gt; show that brought this on my radar)&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve been using Python for about ten years but I&amp;rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode. These videos may just be the extra help I needed to get me started at the internals of Python.&lt;/p&gt;
+
+&lt;p&gt;So far, I&amp;rsquo;ve only watched 2 lectures and I&amp;rsquo;m already learning a lot. I learned where to find a list of opcodes in the source code, where the main eval loop is, and what internal states the Python virtual machine keeps.&lt;/p&gt;
+
+&lt;p&gt;Then I thought to myself, why not use this new found power to solve some Python mysterious that have been puzzling me?&lt;/p&gt;
+
+&lt;h2 id=&#34;the-puzzler:6bf435374bd39002427720546dfc1a00&#34;&gt;The puzzler&lt;/h2&gt;
+
+&lt;p&gt;A few days ago, one of my former co-workers posted this puzzler:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;(a, b) = a[b] = {}, 5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What are the values of &lt;code&gt;a&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt; after the assignment? Well, it&amp;rsquo;s not obvious what the order of assignment it is going to be. Putting it in the REPL gives us this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; (a, b) = a[b] = {}, 5
+&amp;gt;&amp;gt;&amp;gt; a
+{5: ({...}, 5)}
+&amp;gt;&amp;gt;&amp;gt; a[5]
+({5: ({...}, 5)}, 5)
+&amp;gt;&amp;gt;&amp;gt; a[5][0]
+{5: ({...}, 5)}
+&amp;gt;&amp;gt;&amp;gt; a[5][0][5]
+({5: ({...}, 5)}, 5)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK, so there appears to be a circular reference going on here. The object that &lt;code&gt;a&lt;/code&gt; refers to has an element that refers to the object that &lt;code&gt;a&lt;/code&gt; refers to and so on and so forth. Now, the question is, how did the circular reference get there?&lt;/p&gt;
+
+&lt;p&gt;Well, all Python source code eventually get compiled down to bytecode and executed on the virtual machine. In order to understand what that line actually does, we need to look at the byte code.&lt;/p&gt;
+
+&lt;p&gt;It turns out that Python comes with a module to disassemble source code into byte codes (assembly for the virtual machine):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ python -m dis
+a, b = a[5] = {}, 5
+^D
+  1           0 BUILD_MAP                0
+              3 LOAD_CONST               0 (5)
+              6 BUILD_TUPLE              2
+              9 DUP_TOP
+             10 UNPACK_SEQUENCE          2
+             13 STORE_NAME               0 (a)
+             16 STORE_NAME               1 (b)
+             19 LOAD_NAME                0 (a)
+             22 LOAD_CONST               0 (5)
+             25 STORE_SUBSCR
+             26 LOAD_CONST               1 (None)
+             29 RETURN_VALUE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alright, so that humble little line of code is actually 12 instructions for the Python virtual machine. Each instruction manipulates the virtual machine&amp;rsquo;s internal state in some way. CPython is a stack-based interpreter, which means certain instructions puts values on the stack and other instructions consume them from the stack.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s go through the instructions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;0 BUILD_MAP                0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First off, it tells the interpreter to make a map object and put it on the value stack. After this instruction, our value stack looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+----+
+| {} |
++----+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next up:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;3 LOAD_CONST               0 (5)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This loads a constant (&lt;code&gt;5&lt;/code&gt;) on the stack.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+----+
+| {} |
++----+
+| 5  |
++----+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;6 BUILD_TUPLE              2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This instruction builds a &lt;code&gt;PyTuple&lt;/code&gt; object of size &lt;code&gt;2&lt;/code&gt;, which is in the argument of the opcode. It consumes the top &lt;code&gt;2&lt;/code&gt; things on the stack and make a 2-tuple using these values and put the result tuple on the value stack:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+---------+
+| ({}, 5) |
++---------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;9 DUP_TOP
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we have the &lt;code&gt;DUP_TOP&lt;/code&gt; instruction. It probably stands for &amp;ldquo;duplicate the top of the stack&amp;rdquo;, and reading the corresponding code in the eval loop, this seems to be what it&amp;rsquo;s doing: it gets the object from the top of the stack without popping it off and push the value on the stack, while incrementing the refcount of the object.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s worth noting that this only duplicates the tuple object. The elements inside the tuple are of type &lt;code&gt;*PyObject&lt;/code&gt;, which are pointers to the corresponding values (the dict and the integer), and are not duplicated by this instruction. Here&amp;rsquo;s the value stack after this instruction:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+---------+
+| ({}, 5) |
++---------+
+| ({}, 5) |
++---------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;10 UNPACK_SEQUENCE          2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next instruction is &lt;code&gt;UNPACK_SEQUENCE&lt;/code&gt; with argument &lt;code&gt;2&lt;/code&gt;. This will first pop the stack, so &lt;code&gt;({}, 5)&lt;/code&gt; is off the stack, and then push each element from the tuple on the stack in reverse order. After this instruction, the stack will be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+---------+
+| ({}, 5) |
++---------+
+|   5     |
++---------+
+|   {}    |
++---------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;13 STORE_NAME               0 (a)
+16 STORE_NAME               1 (b)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next two instructions deal with &amp;ldquo;names&amp;rdquo;, which are variables for the scope of the frame. &lt;code&gt;STORE_NAME a&lt;/code&gt; will pop the stack, and point &lt;code&gt;a&lt;/code&gt; to the value, and similarily for &lt;code&gt;STORE_NAME b&lt;/code&gt;. After this instruction, there will be two bindings in the frame: &lt;code&gt;a&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt; and the stack will be back to having only one element, the tuple:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stack:
++---------+
+| ({}, 5) |
++---------+
+
+bindings:
+a &amp;lt;- {}
+b &amp;lt;- 5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next two instructions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;19 LOAD_NAME                0 (a)
+22 LOAD_CONST               0 (5)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;LOAD_NAME a&lt;/code&gt; will push the value that the variable is bound to on the stack, so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stack:
++---------+
+| ({}, 5) |
++---------+
+|    {}   |
++---------+
+
+bindings:
+a &amp;lt;- {}
+b &amp;lt;- 5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and &lt;code&gt;LOAD_CONST 5&lt;/code&gt;, as we&amp;rsquo;ve seen before, simply pushes the constant &lt;code&gt;5&lt;/code&gt; on the stack:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stack:
++---------+
+| ({}, 5) |
++---------+
+|    {}   |
++---------+
+|     5   |
++---------+
+
+bindings:
+a &amp;lt;- {}
+b &amp;lt;- 5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;25 STORE_SUBSCR
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is where the magic happens. &lt;code&gt;STORE_SUBSCR&lt;/code&gt; is an instruction to set element on the dictionary given the index. Here&amp;rsquo;s the code that handles this opcode in the eval loop:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;TARGET_NOARG(STORE_SUBSCR)
+{
+    w = TOP();
+    v = SECOND();
+    u = THIRD();
+    STACKADJ(-3);
+    /* v[w] = u */
+    err = PyObject_SetItem(v, w, u);
+    Py_DECREF(u);
+    Py_DECREF(v);
+    Py_DECREF(w);
+    if (err == 0) DISPATCH();
+    break;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, &lt;code&gt;TOP&lt;/code&gt;, &lt;code&gt;SECOND&lt;/code&gt;, &lt;code&gt;THIRD&lt;/code&gt; are macros that take values off of the value stack. Given our state of the virtual machine:
+* &lt;code&gt;w = TOP()&lt;/code&gt; =&amp;gt; &lt;code&gt;w = 5&lt;/code&gt;
+* &lt;code&gt;v = SECOND()&lt;/code&gt; =&amp;gt; &lt;code&gt;v = {}&lt;/code&gt;
+* &lt;code&gt;w = THIRD()&lt;/code&gt; =&amp;gt; &lt;code&gt;w = ({}, 5)&lt;/code&gt;, but keep in mind, the first element in &lt;code&gt;w&lt;/code&gt; (the tuple) is actually the same object &lt;code&gt;v&lt;/code&gt; is pointing to.&lt;/p&gt;
+
+&lt;p&gt;Thus, calling &lt;code&gt;PyObject_SetItem(v, w, u)&lt;/code&gt; sets &lt;code&gt;v[w] = u&lt;/code&gt; =&amp;gt; &lt;code&gt;v[5] = (v, 5)&lt;/code&gt;, and there a circular reference is born!&lt;/p&gt;
+
+&lt;p&gt;From the sequence of operation, we can tell the order by which the assignments were executed:
+1. &lt;code&gt;a, b = {}, 5&lt;/code&gt;
+2. &lt;code&gt;a[5] = ({}, 5)&lt;/code&gt;, with &lt;code&gt;a&lt;/code&gt; refering to the dictionary&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:6bf435374bd39002427720546dfc1a00&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Diving into the Python implementation is the next level ninjary that may come in handy in some cases. Granted, no one is going to write production code like the one in the puzzler, but stepping through and visualizing the virtual machine is a pretty useful and fun experience that makes me appreciate more the language I use everyday.&lt;/p&gt;
+
+&lt;p&gt;Again, thanks to Philip Guo for the videos and Michael Kennedy for the podcast. Also, checkout Professor Guo&amp;rsquo;s &lt;a href=&#34;http://www.pythontutor.com/&#34;&gt;python tutor&lt;/a&gt; for visualizing how code is run.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Use rabbitmq DLX to implement delayed retry</title>
+      <link>http://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</link>
+      <pubDate>Thu, 30 Apr 2015 00:37:42 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
+      <description>
+
+&lt;p&gt;In this post, I&amp;rsquo;m going to describe the experience at &lt;code&gt;$DAYJOB&lt;/code&gt; regarding implementing delayed retry using &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;DLX&lt;/a&gt; combined with a TTL. The technique has been described at a few &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;places&lt;/a&gt; but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-problem:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The problem&lt;/h1&gt;
+
+&lt;p&gt;At &lt;code&gt;$DAYJOB&lt;/code&gt; we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status. Pretty straight-forward stuff. However, lately we&amp;rsquo;ve been experiencing an elevated amount of random failures from our service provider.&lt;/p&gt;
+
+&lt;p&gt;Calls to our provider to create a checkout using the client&amp;rsquo;s credit card information would time out randomly, or return an &amp;ldquo;unknown error&amp;rdquo;. When it happens, we don&amp;rsquo;t record a payment object on the invoice since we don&amp;rsquo;t know the actual status of the checkout, nor do we have the &lt;code&gt;reference_id&lt;/code&gt; for the checkout. However, as we discovered, some of these timed-out calls did go through and the clients&amp;rsquo; credit cards charged.&lt;/p&gt;
+
+&lt;p&gt;We checked with our service provider and were told that they have been experiencing increased volumes and their infrastructure currently can&amp;rsquo;t keep up. However, they suggest that we use an undocumented feature which allows a &lt;code&gt;unique_id&lt;/code&gt; to be passed in along with the checkout call. The &lt;code&gt;unique_id&lt;/code&gt; serves as an idempotent key (similar to &lt;a href=&#34;https://stripe.com/docs/api?lang=curl#idempotent_requests&#34;&gt;Stripe&amp;rsquo;s&lt;/a&gt;). Multiple calls with the same &lt;code&gt;unique_id&lt;/code&gt; won&amp;rsquo;t create multiple checkout objects on their end and thus ensuring the checkout is made but won&amp;rsquo;t double/triple charge the customer&amp;rsquo;s car.&lt;/p&gt;
+
+&lt;h1 id=&#34;architecting-the-solution:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Architecting the solution&lt;/h1&gt;
+
+&lt;p&gt;Armed with this new secret API feature, our team goes back to the drawing board. At work, we use &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt; extensively for asynchronous processing. If some operation doesn&amp;rsquo;t have to be carried out synchronously with a web request, we throw a message on the queue and have a queue consumer process that message and update states. We use a library called &lt;a href=&#34;https://github.com/ojacobson/sparkplug&#34;&gt;sparkplug&lt;/a&gt; that makes writing queue consumer super-easy. So, everything seems to fall in friendly terrotiries: we make a checkout call with a random id and when we encounter timeout or unknown error, instead of returning an error response to the user, we return &lt;code&gt;202 Accepted&lt;/code&gt; to our user and throw a message on the queue, so a consumer can grab it and retry the checkout with the same original &lt;code&gt;unique_id&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-missing-piece:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The missing piece&lt;/h1&gt;
+
+&lt;p&gt;However, we quickly realized it&amp;rsquo;s not that simple. What if the retry encountered the same error? We can put it back on the queue, but when does it get processed by the consumer again? We want to add a time delay to the subsequent retries, and the orginal retry as well.&lt;/p&gt;
+
+&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
+
+&lt;p&gt;After some research on the internet, seems like this problem has been &lt;a href=&#34;https://www.cloudamqp.com/docs/delayed-messages.html&#34;&gt;solved&lt;/a&gt; &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;before&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The idea here is that you have two queues: &lt;code&gt;Qa&lt;/code&gt; and &lt;code&gt;Qb&lt;/code&gt;.  When a checkout request times out, we put a message on a &lt;code&gt;Qa&lt;/code&gt;.  &lt;code&gt;Qa&lt;/code&gt; is declared with &lt;code&gt;x-dead-letter-exchange&lt;/code&gt;, &lt;code&gt;x-dead-letter-routing-key&lt;/code&gt; and &lt;code&gt;x-message-ttl&lt;/code&gt; (in milliseconds).  When the message is in &lt;code&gt;Qa&lt;/code&gt; for &lt;code&gt;ttl&lt;/code&gt; milliseconds, the message will be re-routed to the specified dead-letter-exchange with the routing key.  We can bind &lt;code&gt;Qb&lt;/code&gt; to the exchange with the routing key, and attach a consumer to only &lt;code&gt;Qb&lt;/code&gt; and retry the checkout call.&lt;/p&gt;
+
+&lt;p&gt;If the retry call fails for the same reason (timeout or unknown error), we re-publish the message to &lt;code&gt;Qa&lt;/code&gt; again and acknowledges the message so it&amp;rsquo;s no longer in &lt;code&gt;Qb&lt;/code&gt;.&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/dlx_1.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Flow diagram&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;The whole flow looks like this:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/dlx_2.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Flow diagram&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
+
+&lt;h2 id=&#34;implementation:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation&lt;/h2&gt;
+
+&lt;p&gt;Implementation is probably the most straight-forward phase of the project once we have the design on paper.  The only obstacle is that the library we use for writing rabbitmq consumers (sparkplug) does not support declaring queues with extra parameters, and the DLX related parameters: &lt;code&gt;x-dead-letter-exchange&lt;/code&gt; &lt;code&gt;x-dead-letter-routing-key&lt;/code&gt;, and &lt;code&gt;x-message-ttl&lt;/code&gt; are all &amp;ldquo;extra parameters&amp;rdquo; according to &lt;code&gt;amqplib&lt;/code&gt;, which is used by sparkplug. To solve this, I sent this &lt;a href=&#34;https://github.com/ojacobson/sparkplug/pull/10/files&#34;&gt;PR&lt;/a&gt; to sparkplug, so it recognizes extra parameters and pass them down to amqp library.&lt;/p&gt;
+
+&lt;p&gt;Another road block appeared when we ran the system on our dev images for the first time. The underlying amqplib would error out on startup. Upon closer investigation, it appeared the error happened while talking to rabbitmq and the amqplib can&amp;rsquo;t handle certain rabbitmq frames. So I went searching for the amqp project, only to find out that it was deprecated &lt;a href=&#34;https://pypi.python.org/pypi/amqplib&#34;&gt;long ago&lt;/a&gt;. Fortunately, there&amp;rsquo;s a fork of the library &lt;a href=&#34;https://pypi.python.org/pypi/amqp&#34;&gt;amqp&lt;/a&gt; that&amp;rsquo;s maintained by the reputable &lt;a href=&#34;http://www.celeryproject.org/&#34;&gt;Celery project&lt;/a&gt;. It&amp;rsquo;s has API compatibility with amqplib and appeared to be a drop-in replacement. We dropped it in and everything seems to work. Reading the online literature, it seems to be the case that the old library does not handle the &lt;code&gt;TTL&lt;/code&gt; amqp extension.&lt;/p&gt;
+
+&lt;h2 id=&#34;testing-strategy:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Testing Strategy&lt;/h2&gt;
+
+&lt;p&gt;So, since the 3rd party API timeout is an edge case, they did not provide a way trigger this behaviour the same way we can trigger, say, a declined transaction. We could fake the URL for the 3rd party service in DNS or &lt;code&gt;/etc/hosts&lt;/code&gt; or we can change the SDK to change the base url for their API to somewhere else and cause a timeout that way, but neither is ideal. The biggest disadvantage is that we have no way of getting a request out of the retry state.&lt;/p&gt;
+
+&lt;p&gt;Eventually, we decided to &lt;a href=&#34;http://en.wikipedia.org/wiki/Man-in-the-middle_attack&#34;&gt;MITM&lt;/a&gt; ourselves :) We can write a simple proxy server, and for the most part, it&amp;rsquo;s going to be a pass-through, but on certain requests, we intercept it and return an unknown error (500 series with specific response body).  To trigger it, we set the checkout amount to &lt;code&gt;$666&lt;/code&gt;, and in the proxy, we keep an internal counter based on the checkout&amp;rsquo;s unique id, and increment the counter every time it&amp;rsquo;s retried, and then we can set a max retry threshold in the proxy so the proxy becomes a pass through again if the max retry threshold is reached.&lt;/p&gt;
+
+&lt;p&gt;We used this small nifty library &lt;a href=&#34;https://github.com/allfro/pymiproxy&#34;&gt;pymiproxy&lt;/a&gt; as a base for our proxy server. It turns out the proxy is pretty straight-forward as well, and a big shout-out to the author of pymiproxy.&lt;/p&gt;
+
+&lt;h2 id=&#34;deployment:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Deployment&lt;/h2&gt;
+
+&lt;p&gt;Everything until now is like a cake walk. Sure, there are some problems with the underlying libraries but that requires patching but they were quite easy to identify and fix. Deployment, on the other hand, has been like riding on the &lt;a href=&#34;https://www.youtube.com/watch?v=Mgsbau5qkTE&#34;&gt;Behemoth in Canada&amp;rsquo;s Wonderland&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;First of all, while getting the code onto the testing environment, we encountered the first gremlin. The staging is running on the exact same version of rabbitmq and the exact same configuration. However, on staging, when a message is published on the DLQ (&lt;code&gt;Qa&lt;/code&gt;) in our example, after &lt;code&gt;TTL&lt;/code&gt;, the message would simply disappear and did not get routed to &lt;code&gt;Qb&lt;/code&gt;. What&amp;rsquo;s worse, sometimes even &lt;code&gt;Qa&lt;/code&gt; is completely gone after the message is dropped on the floor! This is terribly frustrating. The queue is declared as durable, and so is the exchange. I even did a side-by-side comparison of the sparkplug log output to see if anything is different. Well, there was! The declaration sequence is different between staging and dev. On dev, the dead-letter exchange is declared before &lt;code&gt;Qa&lt;/code&gt; which specifies &lt;code&gt;x-dead-letter-exchange&lt;/code&gt;. That makes sense! Reading the &lt;a href=&#34;https://github.com/ojacobson/sparkplug/blob/master/sparkplug/config/__init__.py#L57-L77&#34;&gt;sparkplug code&lt;/a&gt;, it calculates the dependencies between queues, exchanges, bindings and consumers to determine the order of which they should be declared. However, our modification that enabled sparkplug to pass down DLX, but sparkplug has no idea that the queue depends on the DLX! Based on this observation, I cooked up another &lt;a href=&#34;https://github.com/freshbooks/sparkplug/pull/2/files&#34;&gt;PR&lt;/a&gt; such that if DLX is specified, make sure we make the DLX a dependency of the queue so the exchange gets declared before it. Did a few tests locally, and hey, it appears to be working!&lt;/p&gt;
+
+&lt;p&gt;Just as I thought my shrewed observation has solved this major mystery, the second day, people reported that the queue started go AWOL again! Grumbled, I sat down and read carefully the documentation on &lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;dead-letter exchange&lt;/a&gt; and discovered this:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Note that the exchange does not have to be declared when the queue is declared, but it should exist by the time messages need to be dead-lettered; if it is missing then, the messages will be silently dropped.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This invalidates my previous hypothesis that the out-of order declaration was the root cause of the problem. There we go, I was back to square one.&lt;/p&gt;
+
+&lt;p&gt;At this time, I wanted to try a different approach. Instead of forming hypothesis from observation, I searched for evidence. I went on the server, and start to look at the logs to search for any traces that can be salvaged. The rabbitmq log is very noisy with all the connection messages. Once in a while you get something remotely interesting, but they were not relevant. Then I manually published a message on the queue, and waited for the message and queue to disappear. Lo and behold, there&amp;rsquo;s something in the logs!&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/kevinjqiu/e626bcc40eb803214968.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;There&amp;rsquo;s our smoking gun! Further gooling revealed &lt;a href=&#34;http://lists.rabbitmq.com/pipermail/rabbitmq-discuss/2012-April/019368.html&#34;&gt;this&lt;/a&gt;. That&amp;rsquo;s EXACTLY our issue! And the version of rabbitmq we&amp;rsquo;re using is EXACTLY 2.8.1! What a relief! We just need to upgrade to 2.8.2 and everything would be fine.&lt;/p&gt;
+
+&lt;p&gt;So there I was, preparing an internal repository to host the rpm (since we&amp;rsquo;re on a hopelessly old version of CentOS), and prepared puppet changes for the new version. Deployed on all the environments and sent it off to QA. QA ok&amp;rsquo;ed it just before the weekend and life is good again.&lt;/p&gt;
+
+&lt;p&gt;Except, not at all! There are a few more surprises waiting for us before the end of tunnel. First of all, our partner whose payment API we&amp;rsquo;re integrating has received an imminent DDOS threat, and fearing not having a retry mechanism would caused a huge burden for us and our support crew, we need to get this out to production ASAP. After pulling some levers and convincing our ops team that this is a relatively low risk point release upgrade (from rabbitmq 2.8.1 to 2.8.2), we got the green light and ops are on their way upgrading rabbitmq. Everything seemed to be going alone well, until, when we switched all components to point to the hosts that&amp;rsquo;s on the new rabbitmq, our app stopped working! Phone calls flooded in, alerts set off everywhere and on top of that, even the streets in front of our building had a couple of emergency vehicles passing by! Goodness, what have we done! Ops quickly rolled it back, and we were left dumbfounded by this yet another surprise.&lt;/p&gt;
+
+&lt;p&gt;Analyzing the logs from various components during the downtime, it appeared the components talking to rabbitmq have timed out trying to publish messages. We checked that the hosts can indeed reach each other, all the names can be resolved and firewall rules are not in effect. So, we hit a wall again.&lt;/p&gt;
+
+&lt;p&gt;On the second day, we regrouped, and experimented on the backup data centre. We upgraded, and tried to put a message on the queue, and guess what, it blocked! It&amp;rsquo;s great that we reproduced the issue. Since the staging environment worked just fine, I captured &lt;code&gt;strace&lt;/code&gt; on the staging environment, and ops did the same on prod, and compared the output. It&amp;rsquo;s pretty clear that the process was waiting on reading socket (syscall was &lt;code&gt;recvfrom(...)&lt;/code&gt;) and it blocked. Then I did &lt;code&gt;tcpdump&lt;/code&gt; and compared that with the output on prod, and also proven to be futile.&lt;/p&gt;
+
+&lt;p&gt;In that afternoon, our fortune suddenly took a positive turn, when one of the ops discovered this in the logs while starting the new rabbitmq:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;=INFO REPORT==== 29-Apr-2015::14:51:09 ===
+Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, this version of rabbitmq started to check free disk space, and &lt;strong&gt;blocks&lt;/strong&gt; incoming message if the disk space is deemed inadequate! Wow, this is so unexpected that we all laughed when we discovered this to be the root cause. However, for me, I need to be convinced that why it wasn&amp;rsquo;t an issue for staging environment.&lt;/p&gt;
+
+&lt;p&gt;So I cloned rabbitmq git repository, and looked for anything that&amp;rsquo;s related to &lt;code&gt;disk_free_limit&lt;/code&gt;. Finally, I found this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-erlang&#34;&gt;{disk_free_limit, {mem_relative, 1.0}},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;from &lt;a href=&#34;https://github.com/rabbitmq/rabbitmq-server/blob/rabbitmq_v2_8_2/ebin/rabbit_app.in#L22&#34;&gt;here&lt;/a&gt;. Since we&amp;rsquo;re using the default config, this is in effect, and it essentially says &amp;ldquo;stop accepting message if the disk space is not at least as big as the RAM&amp;rdquo;, and it just so happens on prod, we have 50G of RAM and therefore, require at least 50G of free space for rabbitmq to start accepting messages!&lt;/p&gt;
+
+&lt;p&gt;Reading the rabbitmq 2.8.2 release notes, and they &lt;strong&gt;did&lt;/strong&gt; &lt;a href=&#34;https://www.rabbitmq.com/release-notes/README-2.8.2.txt&#34;&gt;mention&lt;/a&gt; this &amp;ldquo;feature&amp;rdquo;, but failed to mention that it could block your connection &lt;strong&gt;forever&lt;/strong&gt; and bring your site down&amp;hellip;&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;There you go.  That&amp;rsquo;s our adventure implementing and deploying delayed retry using rabbitmq&amp;rsquo;s DLX and TTL. It&amp;rsquo;s frustrating and rewarding at the same time, and there&amp;rsquo;s definitely something we can all take home with:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Software is hard, even for experienced developers and ops&lt;/li&gt;
+&lt;li&gt;Gather all the evidences before forming hypothesis on the root cause&lt;/li&gt;
+&lt;li&gt;Certainly, read the docs thoroughly before hypothesizing&lt;/li&gt;
+&lt;li&gt;Expect problems when switching environments&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I haven&amp;rsquo;t been blogging for a while, partly because life catches up, and partly because I&amp;rsquo;ve been less than disciplined but I spent some time writing down this experience worth remembering :)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MySQL EXPLAIN explained</title>
+      <link>http://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</link>
+      <pubDate>Thu, 27 Nov 2014 00:56:59 -0500</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</guid>
+      <description>
+
+&lt;p&gt;Below is my notes from watching the &lt;a href=&#34;https://www.youtube.com/watch?v=ZoLoIFW1H6g&#34;&gt;MySQL&amp;rsquo;s EXPLAIN demystified&lt;/a&gt; webinar.  All credits go to Baron Schwartz for this excellent intro to MySQL&amp;rsquo;s query explain.&lt;/p&gt;
+
+&lt;h2 id=&#34;how-does-mysql-execute-queries:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;How does MySQL execute queries?&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;SQL =&amp;gt; Parse Tree =&amp;gt; Execution plan&lt;/li&gt;
+&lt;li&gt;The execution plan is a data structure, not byte-code&lt;/li&gt;
+&lt;li&gt;The executor makes storage engine calls&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;execution-plan:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;Execution plan&lt;/h2&gt;
+
+&lt;p&gt;&amp;ldquo;Deep left tree&amp;rdquo; &amp;ndash; always&lt;/p&gt;
+
+&lt;h2 id=&#34;explain-output-columns:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;Explain output columns&lt;/h2&gt;
+
+&lt;h3 id=&#34;id:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;id&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;which &lt;code&gt;SELECT&lt;/code&gt; the row belongs to&lt;/li&gt;
+&lt;li&gt;Labelled sequentially&lt;/li&gt;
+&lt;li&gt;complex select:
+
+&lt;ul&gt;
+&lt;li&gt;subquery: numbered according to the position in SQL text&lt;/li&gt;
+&lt;li&gt;derived: executed as a temporary table&lt;/li&gt;
+&lt;li&gt;union: fill a temp table, then read out with a &lt;code&gt;NULL&lt;/code&gt; id&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;select-type:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;select_type&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;simple: there&amp;rsquo;s only one &lt;code&gt;SELECT&lt;/code&gt; in the whole query, &lt;code&gt;select_type&lt;/code&gt; is &lt;code&gt;PRIMARY&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;complex:
+
+&lt;ul&gt;
+&lt;li&gt;subquery: numbered according to the position in SQL text&lt;/li&gt;
+&lt;li&gt;derived: executed as a temporary table&lt;/li&gt;
+&lt;li&gt;union: fill a temp table, then read out with a &lt;code&gt;NULL&lt;/code&gt; id&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;table:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;table&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;table name or alias&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;DerivedN&amp;gt;&lt;/code&gt;, &lt;code&gt;N&lt;/code&gt; correspond to &lt;code&gt;id&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;unionM,N&amp;gt;&lt;/code&gt;, &lt;code&gt;M&lt;/code&gt;, &lt;code&gt;N&lt;/code&gt; correspond to &lt;code&gt;id&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;type:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;type&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;describes how MySQL will access the rows&lt;/li&gt;
+&lt;li&gt;Possible values:
+
+&lt;ul&gt;
+&lt;li&gt;ALL: table scan&lt;/li&gt;
+&lt;li&gt;index: full index scan&lt;/li&gt;
+&lt;li&gt;range: range of an index&lt;/li&gt;
+&lt;li&gt;ref: value as a reference to look into an index if rows in the index match the value&lt;/li&gt;
+&lt;li&gt;eq_ref: like &lt;code&gt;ref&lt;/code&gt; but unique (unique index or PK)&lt;/li&gt;
+&lt;li&gt;const&lt;/li&gt;
+&lt;li&gt;system: does not require accessing a table, e.g., &lt;code&gt;MAX(col)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;NULL: no table involved, e.g., &lt;code&gt;SELECT 1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;index-related-columns-possible-kes-key-key-len:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;Index-related columns (possible_kes, key, key_len)&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;possible_keys: which indexes were considered?&lt;/li&gt;
+&lt;li&gt;key: which indexes did the optimizer choose?&lt;/li&gt;
+&lt;li&gt;key_len: how many bytes of the index will be used? if key_len less than the index (e.g., compound index), that means MySQL didn&amp;rsquo;t use the whole index&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;ref:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;ref&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The source of values used for lookups&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;const&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NULL&lt;/code&gt; means not looking for a particular value for that table&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;rows:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;rows&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Estimated rows to examine in the table/index&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;extra:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;extra&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Using index
+
+&lt;ul&gt;
+&lt;li&gt;If the query only involve columns that are in the index, MySQL can query directly against the index, without looking at the table at all&lt;/li&gt;
+&lt;li&gt;Hitting a index (&lt;code&gt;type&lt;/code&gt;) does not necessarily mean &lt;code&gt;Using index&lt;/code&gt;.  If not &lt;code&gt;Using index&lt;/code&gt;, MySQL got the indexed value but still has to go back and look it up in the table for other columns, which may result in lots of random IO (slow)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Using where
+
+&lt;ul&gt;
+&lt;li&gt;Post-filter using the where clause&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Using temporary
+
+&lt;ul&gt;
+&lt;li&gt;The query is going to create an implicit temporary table&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Using filesort
+
+&lt;ul&gt;
+&lt;li&gt;Sorting in memory, if it doesn&amp;rsquo;t fit, then write to file&lt;/li&gt;
+&lt;li&gt;Algorithm is quick sort&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>First dip into Golang&#39;s concurrency</title>
+      <link>http://blog.idempotent.ca/2013/11/20/first-dip-into-golangs-concurrency/</link>
+      <pubDate>Wed, 20 Nov 2013 11:53:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2013/11/20/first-dip-into-golangs-concurrency/</guid>
+      <description>
+
+&lt;p&gt;I have been toying with Google&amp;rsquo;s &lt;a href=&#34;http://golang.org&#34;&gt;Go&lt;/a&gt; language lately.  The native support for concurrent programming is one of Go&amp;rsquo;s major selling point.&lt;/p&gt;
+
+&lt;p&gt;Go has low-level primitives for concurrent programming such as &lt;a href=&#34;http://golang.org/pkg/sync/#Mutex&#34;&gt;mutexes&lt;/a&gt; and &lt;a href=&#34;http://golang.org/pkg/sync/atomic/&#34;&gt;atomic&lt;/a&gt;, but also provides high-level language constructs for building concurrent programs via goroutines and channels.&lt;/p&gt;
+
+&lt;p&gt;Goroutines are functions executing in the same address space as other goroutines, like threads, but unlike threads, they communicate to each other via channels, not shared variables.&lt;/p&gt;
+
+&lt;p&gt;Channels provide a lock-free mechanism for goroutines to communicate.  To me, conceptually it feels a lot like a Unix socket: you can wait on it for data, or you can send data to it.  In Go, channels are also strongly and statically typed.&lt;/p&gt;
+
+&lt;p&gt;For me, the best way to learn something is to put it to practice.  I use one problem from &lt;a href=&#34;http://projecteuler.net&#34;&gt;Project Euler&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Find the sum of all prime numbers under 2 million
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I wrote an Erlang version of this problem &lt;a href=&#34;http://blog.idempotent.ca/blog/2009/06/01/fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/&#34;&gt;before&lt;/a&gt;, but since then, Erlang kind of fell off my radar.  However, the problem and the concurrent solution is still relevant.&lt;/p&gt;
+
+&lt;h1 id=&#34;test-if-a-number-is-prime:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Test if a number is prime&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;ll briefly go over primality test function, since it&amp;rsquo;s not the focus of this blog post:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func isPrime(n int) bool {
+    if n == 1 || n == 2 {
+        return true
+    }
+
+    if math.Mod(float64(n), 2) == 0 {
+        return false
+    }
+
+    for i := 3.0; i &amp;lt;= math.Floor(math.Sqrt(float64(n))); i += 2.0 {
+        if math.Mod(float64(n), i) == 0 {
+            return false
+        }
+    }
+
+    return true
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I understand there are other faster primality tests but I opted for this basic algorithm for simplicity.&lt;/p&gt;
+
+&lt;h1 id=&#34;non-concurrent-version:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Non-concurrent version&lt;/h1&gt;
+
+&lt;p&gt;A naive way to solve this problem is to call &lt;code&gt;isPrime&lt;/code&gt; on every number below 2 million, if it&amp;rsquo;s a prime, add it to the tally.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func sumPrimesUpto(n int) int {
+    sum := 0
+    for i := 1; i &amp;lt;= n; i++ {
+        if isPrime(i) {
+            sum += i
+        }
+    }
+
+    return sum
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the main function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    upperBound, err := strconv.Atoi(os.Args[1])
+    if err != nil {
+        fmt.Println(&amp;quot;Invalid argument.&amp;quot;)
+        os.Exit(1);
+    }
+
+    result := sumPrimesUpto(upperBound)
+    fmt.Println(result)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now run it and time it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ time go run sumprimes1.go 2000000
+142913828923
+
+real    0m27.032s
+user    0m26.953s
+sys     0m0.029s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not too bad.  I remember when I ran this algorithm 4 years ago on my previous laptop (Core-2 Duo) I wasn&amp;rsquo;t able to produce any result in a tolerable timeframe.  My current machine is a 3-year old Quad Core i7.&lt;/p&gt;
+
+&lt;h1 id=&#34;concurrent-version:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Concurrent version&lt;/h1&gt;
+
+&lt;p&gt;If you are on Linux and you open system monitor while the previous program was running, you can see that only one CPU was saturated and constantly running at near 100%, but all other cores are nearly idle.  Of course this is a huge waste of our computing resource.  &lt;code&gt;isPrime&lt;/code&gt; function is what takes up the CPU load, and because we&amp;rsquo;re running testing the primality of all 2 million numbers inside a single thread, all of them have to be tested one after the other.  This is not great.  Instead, because we have more than one CPU core, we can give the other cores chances to do some of the work for us.&lt;/p&gt;
+
+&lt;p&gt;If you were writing a Java or C++ program, you&amp;rsquo;d:
+- make a variable for the sum
+- loop from 1 to 2 million
+- spawn a new thread to do the primality test
+- inside the thread, if the primality test succeeds, lock the access to the &lt;code&gt;sum&lt;/code&gt; variable, update &lt;code&gt;sum&lt;/code&gt;, unlock&lt;/p&gt;
+
+&lt;p&gt;Programs like this have a higher complexity than it should.  It may not look like it&amp;rsquo;s too complicated for this case, but synchronization using &lt;a href=&#34;http://en.wikipedia.org/wiki/Lock_(computer_science&#34;&gt;locks&lt;/a&gt;#Disadvantages) has inherent problems and is usually a source of bugs and defects.  Also, spawning as many threads as you can normally won&amp;rsquo;t give you more throughput.  On the contrary, if you hand the OS more threads at once than the number of physical cores, context switching will happen and it will decrease your performance.&lt;/p&gt;
+
+&lt;p&gt;Go&amp;rsquo;s approach is very similar to Erlang&amp;rsquo;s in concept.  In Erlang, the actor processes can&amp;rsquo;t share variables, but instead, they can send data to the other processes.  In Go, goroutines normally don&amp;rsquo;t share variables, but they communicate via the use of channels.&lt;/p&gt;
+
+&lt;h2 id=&#34;channels:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Channels&lt;/h2&gt;
+
+&lt;p&gt;For this problem, we need to have the following channels:
+- jobs: the outstanding jobs need to be performed.  Each job is a number whose primality needs to be tested.  It&amp;rsquo;s a buffered channel whose size is the number of physical cores.
+- results: the prime numbers that are already tested.  Buffered channel.  Can be as big as reasonable.
+- done: whether all workers have finished their job. Also a buffered channel whose size is the number of physical cores.&lt;/p&gt;
+
+&lt;h2 id=&#34;goroutines:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Goroutines&lt;/h2&gt;
+
+&lt;p&gt;We need the following goroutines to:
+- take the next number and put it in the &lt;code&gt;jobs&lt;/code&gt; channel
+- receive the next available job, run primality test, put the number on the &lt;code&gt;results&lt;/code&gt; channel if succeeded, and signal the &lt;code&gt;done&lt;/code&gt; channel.
+- receive the signal from the &lt;code&gt;done&lt;/code&gt; channel.  If no signals are received, we have done all the primality test.&lt;/p&gt;
+
+&lt;p&gt;Finally, we need to have a function to sum up all results.&lt;/p&gt;
+
+&lt;h2 id=&#34;data-structures:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Data structures&lt;/h2&gt;
+
+&lt;p&gt;We want an abstraction of a &lt;code&gt;Job&lt;/code&gt;.  In Go, that&amp;rsquo;s a struct:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Job struct {
+    n int
+    results chan&amp;lt;-int
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A job knows what number to test, and the results channel to which we can send the result.&lt;/p&gt;
+
+&lt;p&gt;A job also knows how to &lt;code&gt;Do&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (job *Job) Do() {
+    if isPrime(job.n) {
+        job.results &amp;lt;- job.n
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Go, a function with a receiver is practically a method on a struct and is able to be called with &lt;code&gt;receiver.method&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;rewrite-sumprimesupto:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Rewrite sumPrimesUpto&lt;/h2&gt;
+
+&lt;p&gt;Now, rewrite the &lt;code&gt;sumPrimesUpto&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var workers = runtime.NumCPU()
+
+func sumPrimesUpto(n int) int {
+    jobs := make(chan Job, workers)
+    results := make(chan int, n)
+    done := make(chan struct{}, workers)
+
+    go addJobs(jobs, results, n)
+
+    for i := 0; i &amp;lt; workers; i++ {
+        go doJobs(done, jobs)
+    }
+
+    go wait(done, results)
+
+    return tally(results)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First, we need to know how many CPU cores the underlying platform knows about.  We only make the channel as big as the number of CPU cores.&lt;/p&gt;
+
+&lt;p&gt;Then, we make the channels.  One thing to note is that the &lt;code&gt;done&lt;/code&gt; channel receives an empty &lt;code&gt;struct&lt;/code&gt;, because we use that only for signaling.  We don&amp;rsquo;t really care what value of the signal is.  We could define a surrogate type: &lt;code&gt;type Signal struct{}&lt;/code&gt;, but an anonymous type will do just fine.&lt;/p&gt;
+
+&lt;p&gt;After that, we call &lt;code&gt;addJobs&lt;/code&gt; as a goroutine.  The line &lt;code&gt;jobs &amp;lt;- Job{i, results}&lt;/code&gt; will block if the channel is already full.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func addJobs(jobs chan&amp;lt;-Job, results chan&amp;lt;-int, n int) {
+    for i := 1; i &amp;lt;= n; i++ {
+        jobs &amp;lt;- Job{i, results}
+    }
+    close(jobs)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In a separate goroutine, we take the jobs from the &lt;code&gt;jobs&lt;/code&gt; channel and process them in &lt;code&gt;doJobs&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func doJobs(done chan&amp;lt;-struct{}, jobs &amp;lt;-chan Job) {
+    for job := range jobs {
+        job.Do()
+    }
+    done &amp;lt;- struct{}{}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We also signal the &lt;code&gt;done&lt;/code&gt; channel when the job is done.  &lt;code&gt;struct{}{}&lt;/code&gt; creates an instance of the anonymous type we use as the signal.&lt;/p&gt;
+
+&lt;p&gt;In another separate goroutine, we wait until there&amp;rsquo;s no more signals on the &lt;code&gt;done&lt;/code&gt; channel.  This means that we have finished processing all jobs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func wait(done &amp;lt;-chan struct{}, results chan int) {
+    for i := 0; i &amp;lt; workers; i++ {
+        &amp;lt;-done
+    }
+    close(results)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At this point, we can safely close the &lt;code&gt;results&lt;/code&gt; channel as there won&amp;rsquo;t be any new results coming in.&lt;/p&gt;
+
+&lt;p&gt;Finally, we can run &lt;code&gt;tally&lt;/code&gt; on the results channel.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func tally(results &amp;lt;-chan int) int {
+    retval := 0
+    for result := range results {
+        retval += result
+    }
+
+    return retval
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One thing worth mentioning is that even though the channels we made are all bi-directional channels, in the specific functions, we can make them more restrictive by making them send-only (chan&amp;lt;- Type) or receive-only (&amp;lt;-chan Type) according to their actual usage in the local function to avoid accidents.&lt;/p&gt;
+
+&lt;p&gt;The full gist can be found &lt;a href=&#34;https://gist.github.com/kevinjqiu/7568264#file-sumprimes-go&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;performance:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Performance&lt;/h2&gt;
+
+&lt;p&gt;So how does this concurrent version faire?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $ time go run sumprimes.go 2000000
+ CPUS=4
+ 142913828923
+
+ real    0m12.534s
+ user    0m44.289s
+ sys     0m0.175s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On my Quad Core i7, it takes 12 seconds, almost twice as fast as the non-concurrent version!  And if you open System Monitor, you can see all 4 cores are running near 100%.&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;So there&amp;rsquo;s my first dip into Go&amp;rsquo;s concurrency with an old problem. I like the concurrency primitives Go provides, even though it takes some getting used to.  Conceptually, goroutines are very similar to Erlang&amp;rsquo;s actors.  Go has the advantage of a C-ish syntax that doesn&amp;rsquo;t look like Prolog and it doesn&amp;rsquo;t require a separate runtime as Erlang does.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 3</title>
+      <link>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</link>
+      <pubDate>Wed, 19 Sep 2012 00:01:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</guid>
+      <description>
+
+&lt;h2 id=&#34;level-3:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Level 3&lt;/h2&gt;
+
+&lt;p&gt;Finally we get to level 3. Here&amp;rsquo;s the setup:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;After the fiasco back in Level 0, management has decided to fortify the Secret Safe into an unbreakable solution (kind of like Unbreakable Linux). The resulting product is Secret Vault, which is so secure that it requires human intervention to add new secrets.
+
+A beta version has launched with some interesting secrets (including the password to access Level 4)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the code for the server (Python finally!)
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3747632.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;and here&amp;rsquo;s the front-end:
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3747637.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;From the description, we know that we need to break into bob&amp;rsquo;s account to retrieve the password to level 4, although breaking into eve and mallory&amp;rsquo;s accounts are attempting :) Afterall, who wouldn&amp;rsquo;t want to know the proof of &lt;a href=&#34;http://en.wikipedia.org/wiki/P_versus_NP_problem&#34;&gt;P=NP&lt;/a&gt; or how to make a &lt;a href=&#34;http://en.wikipedia.org/wiki/Perpetual_motion_machine&#34;&gt;perpetual motion machine&lt;/a&gt;?&lt;/p&gt;
+
+&lt;p&gt;Anyhow, the front-end is a typical login page: you get username and password input fields, and they&amp;rsquo;re sent off (via POST) to a server script.
+The server is a simple Flask app that gets the user input, checks them against a table of username and salted password hashes.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;login()&lt;/code&gt; function is where all the action takes place. Line 86 quickly caught my eyes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;query = &amp;quot;&amp;quot;&amp;quot;SELECT id, password_hash, salt FROM users WHERE username = &#39;{0}&#39; LIMIT 1&amp;quot;&amp;quot;&amp;quot;.format(username)
+cursor.execute(query)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is an alarming pattern of formatting a string and sending it off to &lt;code&gt;cursor.execute()&lt;/code&gt;. Python&amp;rsquo;s string &lt;code&gt;format()&lt;/code&gt; method is just another way of interopolation. It&amp;rsquo;s exactly the same as &lt;code&gt;&amp;quot;&amp;quot;&amp;quot;SELECT id, password_hash, salt FROM user WHERE username = %s&amp;quot;&amp;quot;&amp;quot; % username&amp;quot;&amp;quot;&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now that we found the vulnerability, we need to find a way exploit it.&lt;/p&gt;
+
+&lt;h3 id=&#34;take-1:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 1&lt;/h3&gt;
+
+&lt;p&gt;Normally, with SQL injection, you craft an input to terminate the previous statement, and inject the statement you want it to execute. Reading the code, it&amp;rsquo;s getting the user&amp;rsquo;s password hash and salt for the given user, and check it against the input hash and salt. The hashing method is &lt;a href=&#34;http://en.wikipedia.org/wiki/SHA-2&#34;&gt;sha256&lt;/a&gt;. With Python, we can quickly pre-calculate a salted hash to inject. Here&amp;rsquo;s an example, with password &lt;code&gt;1&lt;/code&gt; and salt &lt;code&gt;a&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;python -c &amp;quot;import hashlib; print hashlib.sha256(&#39;1&#39;+&#39;a&#39;).hexdigest()&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and we get &lt;code&gt;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The statement we really want it to execute is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&#39;, &#39;a&#39; FROM users WHERE username = &#39;bob&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;so when we put &amp;lsquo;1&amp;rsquo; in the password input box, we will get the server to run sha246 on &amp;lsquo;1&amp;rsquo; + &amp;lsquo;a&amp;rsquo;, and check it against the hash that we fed in. The entire query gets executed wil look like this (with the middle line being the &lt;code&gt;username&lt;/code&gt; we feed in):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT id, password_hash, salt FROM users WHERE username = &#39;
+&#39;; SELECT id,  &#39;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&#39;, &#39;a&#39; FROM users WHERE username=&#39;bob
+&#39; LIMIT 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;How does that faire?&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, we get a stack trace in the traceback:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Traceback (most recent call last):
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1689, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1687, in wsgi_app
+    response = self.full_dispatch_request()
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1360, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1358, in full_dispatch_request
+    rv = self.dispatch_request()
+  File &amp;quot;/Library/Python/2.6/site-packages/Flask-0.9-py2.6.egg/flask/app.py&amp;quot;, line 1344, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File &amp;quot;/Users/kevin/src/ctf/level03-code/secretvault.py&amp;quot;, line 91, in login
+    cursor.execute(query)Warning: You can only execute one statement at a time.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cursor&lt;/code&gt; cannot run more than one statement at a time! Smart, eh?&lt;/p&gt;
+
+&lt;h3 id=&#34;take-2:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 2&lt;/h3&gt;
+
+&lt;p&gt;So the trick here is to use exactly 1 statement to inject our crafted data. We still want this to be returning the same fields. What if I &lt;code&gt;UNION&lt;/code&gt; two queries, with the second query selecting the injected data?&lt;/p&gt;
+
+&lt;p&gt;So something like this (the middle line is the one we inject as &lt;code&gt;username&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT id, password_hash, salt FROM users WHERE username = &#39;
+bob&#39; UNION select id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5cc89e65&#39;, &#39;a&#39; FROM users WHERE username = &#39;bob
+&#39; LIMIT 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Submit, and boom:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Welcome back! Your secret is: &amp;quot;...&amp;quot; (Log out)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;conclusion:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;This is a canonical SQL injection. Again, NEVER trust user input. Always sanitize user input.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 2</title>
+      <link>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</link>
+      <pubDate>Wed, 12 Sep 2012 23:50:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</guid>
+      <description>
+
+&lt;h2 id=&#34;level-2:a321406c230dbace4963b77b7a2cde48&#34;&gt;Level 2&lt;/h2&gt;
+
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3711719.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;In level 2, we&amp;rsquo;re faced with a PHP app that allows you to upload a &amp;ldquo;profile picture&amp;rdquo;. The password to level 3 is contained in a &amp;ldquo;password.txt&amp;rdquo; file of the document root, as revealed in line 49. Of course, you won&amp;rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.&lt;/p&gt;
+
+&lt;p&gt;Reading through the code, it&amp;rsquo;s a clear that whatever file uploaded to the server will be under &lt;code&gt;uploads/&lt;/code&gt;, and the file is publicly accessible through &lt;code&gt;&amp;lt;base&amp;gt;/uploads/&amp;lt;your_file_name&amp;gt;&lt;/code&gt;, as seen on line 37. The file input is expecting a image file, but it doesn&amp;rsquo;t restrict the type of file it accepts. What if we upload a PHP script, read the file content &lt;code&gt;../password.txt&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;With that in mind, I quickly cooked up a PHP script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+echo file_get_contents(&#39;../password.txt&#39;);
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;uploaded it and hit it with curl. Guess what? The password is right there in the clear!&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:a321406c230dbace4963b77b7a2cde48&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s a few problems with this app:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The user shouldn&amp;rsquo;t be able to upload files of any type they want. Restrict to only image files if you&amp;rsquo;re expecting profile pictures.&lt;/li&gt;
+&lt;li&gt;The above point is necessary but not sufficient. The bigger problem is that the server is not properly configured. Files under &lt;code&gt;uploads/&lt;/code&gt; folder should be considered &amp;ldquo;user input&amp;rdquo; and thus should not be able to be executed on the server. Much more exploits can be done here and as it turns out, some later levels require the control of this machine.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 1</title>
+      <link>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</link>
+      <pubDate>Mon, 10 Sep 2012 14:14:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</guid>
+      <description>
+
+&lt;h2 id=&#34;level-1:64d353d425787014ba969d46f395c7b6&#34;&gt;Level 1&lt;/h2&gt;
+
+&lt;p&gt;Now we get to level 1. We are presented with a simple web form with the PHP code powering it.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3692642.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;The PHP script checks if the input combination matches the combination in &amp;lsquo;secret-combination.txt&amp;rsquo; file, and present the user with the password to the next level if the combinations match.  Obviously, we&amp;rsquo;re not going to guess the combination.&lt;/p&gt;
+
+&lt;p&gt;There are a few &amp;lsquo;handy&amp;rsquo; methods in PHP that are extremely dangerous. &lt;a href=&#34;http://php.net/manual/en/function.extract.php&#34;&gt;&lt;code&gt;extract&lt;/code&gt;&lt;/a&gt; is one of them. It will extract the content of the passed-in associative array, and import them into the global scope. e.g., &lt;code&gt;extract(array(&#39;foo&#39;=&amp;gt;&#39;bar&#39;));&lt;/code&gt; will make a global variable &lt;code&gt;$foo&lt;/code&gt;. What&amp;rsquo;s more dangerous is that if you already have a variable named &lt;code&gt;$foo&lt;/code&gt;, it will be overwritten with the new value in the associative array.&lt;/p&gt;
+
+&lt;p&gt;Because the secret combination&amp;rsquo;s location is stored in &lt;code&gt;$filename&lt;/code&gt; variable, we need to somehow manipulate the input to point &lt;code&gt;$filename&lt;/code&gt; to something else.  Looking at line 27:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;form action=&amp;quot;#&amp;quot; method=&amp;quot;GET&amp;quot;&amp;gt;
+&amp;lt;/form&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So the form is submitted using GET! So manipulating the variable is as easy as sending the endpoint with query param &lt;code&gt;filename=&amp;lt;xyz&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, what will the &lt;code&gt;xyz&lt;/code&gt; be? The &lt;code&gt;$filename&lt;/code&gt; variable is passed into &lt;code&gt;file_get_contents()&lt;/code&gt; function. The parameter to the function is simply a string, and PHP defined a few &amp;lsquo;handy&amp;rsquo; &lt;a href=&#34;http://php.net/manual/en/wrappers.php.php&#34;&gt;streams&lt;/a&gt;. &lt;code&gt;php://input&lt;/code&gt; caught my eyes. The doc says &lt;code&gt;php://input is a read-only stream that allows you to read raw data from the request body.&lt;/code&gt;. Hey, the form is submitted using GET, so there won&amp;rsquo;t be a request body. The input parameter is also sent using GET variable &lt;code&gt;attempt&lt;/code&gt;, so I just need to send an empty &lt;code&gt;attempt&lt;/code&gt; and point the filename to &lt;code&gt;php://input&lt;/code&gt;: &lt;code&gt;?attempt=&amp;amp;filename=php://input&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;And indeed it works!&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion:64d353d425787014ba969d46f395c7b6&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Never, ever use &lt;code&gt;extract()&lt;/code&gt; in serious applications. Historically, PHP is used to build simple websites so it included many functions that puts &amp;ldquo;convenience&amp;rdquo; over security. Global variables are a bad idea, and having the ability to pollute the global space from any input is way worse.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_get_contents()&lt;/code&gt; has the ability to take any string as parameter, including some named streams. They are handy but they pose potential threats.&lt;/li&gt;
+&lt;li&gt;Again, don&amp;rsquo;t trust user input!&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stripe Capture The Flag 2.0 - Problem 0</title>
+      <link>http://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</link>
+      <pubDate>Sun, 09 Sep 2012 23:11:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://stripe.com&#34;&gt;Stripe&lt;/a&gt; just finished running a second &lt;a href=&#34;https://stripe-ctf.com&#34;&gt;&amp;ldquo;capture the flag&amp;rdquo;&lt;/a&gt; challenge. They ran a similar challenge this February and was more focused on system level. This time, it&amp;rsquo;s full-on web security.&lt;/p&gt;
+
+&lt;p&gt;In the next few posts, I&amp;rsquo;m going to discuss the problems in the challenge, how I solved them and what did I learn from from each challenge.&lt;/p&gt;
+
+&lt;h2 id=&#34;problem-0:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Problem 0&lt;/h2&gt;
+
+&lt;p&gt;Here are the code for level 0:&lt;/p&gt;
+
+&lt;p&gt;&lt;script src=&#34;//gist.github.com/kevinjqiu/3688655.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3688659.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;So you have a node.js server script, with an HTML front-end. The front-end allows you to submit a web form which allows you to retrieve &lt;em&gt;your&lt;/em&gt; stored secret but the secret to level 1 is also stored in the same database.&lt;/p&gt;
+
+&lt;p&gt;Reading the code, the query on line 34 jumps out at you:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    var query = &#39;SELECT * FROM secrets WHERE key LIKE ? || &amp;quot;.%&amp;quot;&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Even though I&amp;rsquo;m not too familiar with &lt;a href=&#34;http://nodejs.org&#34;&gt;nodejs&lt;/a&gt; or its db API, the part where it concatenates user input with &amp;ldquo;.%&amp;rdquo; looks suspicious. &lt;code&gt;||&lt;/code&gt; is the SQL operator for concatenation, and &amp;lsquo;%&amp;rsquo; is the SQL wildcard that matches 0 or more characters of any kind. What if my user input is &amp;ldquo;%&amp;rdquo;?&lt;/p&gt;
+
+&lt;p&gt;Voilà! That&amp;rsquo;s it! &lt;code&gt;%.%&lt;/code&gt; gives you all passwords with namespace that has a dot in the middle.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://xkcd.com/327/&#34;&gt;SQL-injection&lt;/a&gt; is a known security issue for a long time yet you&amp;rsquo;d be surprised how many sites are still subject to such exploits. The problem with level 0 code is exactly that: unsanitized user input is sent directly to the database for execution. So everytime a string concatenation is seen in a SQL statement, you have to ask yourself: is the ting being concatenated trustworthy? Use prepared statement or your database&amp;rsquo;s escape function wherever possible.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Statically Yours</title>
+      <link>http://blog.idempotent.ca/2012/06/18/statically-yours/</link>
+      <pubDate>Mon, 18 Jun 2012 16:54:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/06/18/statically-yours/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;Migrating from wordpress to octopress&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m not an avid blogger but like everyone else, I have a &lt;a href=&#34;http://reminiscential.wordpress.com&#34;&gt;blog&lt;/a&gt; which I casually write about life and programming. Being hosted by &lt;a href=&#34;http://wordpress.org&#34;&gt;wordpress&lt;/a&gt;, it was an out-of-the-box solution and comes with a lot of bells and whistles. However, for a programming blog, it has some significant shortcomings:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Conflation of content and style.
+A Wordpress post is written in a weird combination of HTML markups and custom wordpress macros, which means you have to rely on their WYSIWYG editor to generate the correct markups, which means you can&amp;rsquo;t use your favourite editor to write a blog post.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Limited versioning.
+Everytime you save a blog post, it creates a revision, but to view the diff is not as easy as &lt;code&gt;git diff&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Embedding a code snippet sucks
+Wordpress uses a syntax highlighting macro, but the language it supports is very limited. There&amp;rsquo;s third-party plugin that allows you to embed code snippet from &lt;a href=&#34;http://gist.github.com&#34;&gt;gist&lt;/a&gt;, but you have to subscribe to their premium plan.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Static site generators are becoming increasingly popular among developers. Developer blogs don&amp;rsquo;t need a ton of visuals, so content with basic styling is more than enough. Most importantly, it has to do code embedding well. A bit of research, it turns out that &lt;a href=&#34;octopress.org&#34;&gt;Octopress&lt;/a&gt; seems to be ubiquitous.&lt;/p&gt;
+
+&lt;p&gt;After a day of setting up, here&amp;rsquo;s what I found:&lt;/p&gt;
+
+&lt;h2 id=&#34;installation:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;m primarily a Python developer, so setting up a Ruby project is a bit foreign to me, especially since Octopress only works with Ruby 1.9+, I need to setup &lt;a href=&#34;http://rvm.io&#34;&gt;RVM&lt;/a&gt;, and even though it&amp;rsquo;s well documented, it&amp;rsquo;s not without speed bumps on my Ubuntu system. In particular, you need to install &lt;code&gt;libssl-dev&lt;/code&gt; before you let RVM compile and install Ruby, otherwise you will get something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;no such file to load -- openssl (LoadError)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I had to&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install libssl-dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and re-install Ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rvm reinstall 1.9
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;setting-up-tld:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Setting up TLD&lt;/h2&gt;
+
+&lt;p&gt;After the first deploy, the pages are already accessible via &lt;code&gt;&amp;lt;yourname&amp;gt;.github.com&lt;/code&gt;, but pointing your domain to the page is just as easy. I followed &lt;a href=&#34;https://help.github.com/articles/setting-up-a-custom-domain-with-pages&#34;&gt;this&lt;/a&gt; official article from Github.&lt;/p&gt;
+
+&lt;h2 id=&#34;static-sweetness:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Static sweetness&lt;/h2&gt;
+
+&lt;p&gt;There we go! Sweet static pages:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Page views are extremely fast&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://daringfireball.net/projects/markdown/syntax&#34;&gt;Markdown&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Version controlled blog posts&lt;/li&gt;
+&lt;li&gt;Embedding code is &lt;a href=&#34;http://octopress.org/docs/blogging/code/&#34;&gt;easy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Use Python&#39;s sys.settrace() for fun and for profit</title>
+      <link>http://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</link>
+      <pubDate>Tue, 17 Apr 2012 16:58:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</guid>
+      <description>
+
+&lt;h2 id=&#34;the-itch-to-scratch:c0963e613fb36e35763da3ad0b838456&#34;&gt;The itch to scratch&lt;/h2&gt;
+
+&lt;p&gt;Everyone in the software industry knows Kent Beck, the pioneers of extreme programming and test-driven development and the co-author of JUnit. One of his lesser known project was &lt;a href=&#34;http://junitmax.com&#34;&gt;JUnitMax&lt;/a&gt;, which aims to reduce the time developers have to wait while tests are running. One of the ideas behind that is that when code changes, only the test cases that exercise the code need to be run, instead of running the entire suite. The idea makes a lot of sense to me, but at the time, I (and the development shop I was in) wasn&amp;rsquo;t practising enough TDD, so unit test time wasn&amp;rsquo;t a big problem for me back then.&lt;/p&gt;
+
+&lt;p&gt;Fast-forward a few years, now as the project in my current company gets bigger, the time it takes to run tests is slowly becoming an impeding factor of my productivity. I remembered JUnitMax and say to myself, wouldn&amp;rsquo;t it be neat if something like JUnitMax were available? As the name suggests, JUnitMax is for Java while my project is in Python. Java, being a statically-typed language, has the blessings of statical analysis, which means a tool like JUnitMax can figure out which test cases cover which lines of code simply by type analysis. Python, however, being a dynamic language, doesn&amp;rsquo;t have this ability.&lt;/p&gt;
+
+&lt;p&gt;A few days ago, while I was running unit tests with coverage, it dawned on me that if the coverage tool knows which lines of the source code is covered by unit tests, couldn&amp;rsquo;t the same technique be used to figure out which lines are covered by which test cases?&lt;/p&gt;
+
+&lt;p&gt;So, I started looking into &lt;a href=&#34;http://nedbatchelder.com/code/coverage/&#34;&gt;coveragepy&lt;/a&gt;&amp;rsquo;s source code, and watching its author &lt;a href=&#34;http://nedbatchelder.com/blog/&#34;&gt;Ned Batchelder&lt;/a&gt;&amp;rsquo;s excellent PyCon2011 &lt;a href=&#34;http://blip.tv/pycon-us-videos-2009-2010-2011/pycon-2011-python-aware-python-4896752&#34;&gt;video&lt;/a&gt; on &lt;code&gt;sys.settrace&lt;/code&gt;. I wanted to build a proof-of-concept tool that integrates with the de-facto Python unit-test tool &lt;a href=&#34;https://github.com/nose-devs/nose&#34;&gt;nose&lt;/a&gt;, that, when run, gathers the information about which lines in the files in the source folder are covered by which test cases, and hence &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;nostrils&lt;/a&gt; is born.&lt;/p&gt;
+
+&lt;h2 id=&#34;here-comes-sys-settrace:c0963e613fb36e35763da3ad0b838456&#34;&gt;Here comes &lt;code&gt;sys.settrace()&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Python&amp;rsquo;s motto is &amp;ldquo;batteries included&amp;rdquo;. This is manifested in many Python&amp;rsquo;s stanndard library modules, such as ast (source code parsing) and dis (bytecode disassembly). One of which is the ability to make the Python interpreter call an external function whenever a line of code is being executed. You can do a lot of fun stuff with it, for example, Coverage.py uses this to build code coverage data; pdb uses it to insert breakpoints into a running application and change the way a Python program is executed.&lt;/p&gt;
+
+&lt;h2 id=&#34;how-can-it-be-used:c0963e613fb36e35763da3ad0b838456&#34;&gt;How can it be used?&lt;/h2&gt;
+
+&lt;p&gt;For &lt;em&gt;nostrils&lt;/em&gt;, we need to write a nose plugin that installs the trace function when a test is encountered. The trace function records the line numbers and the current test case name. After all tests are run, we have our map.&lt;/p&gt;
+
+&lt;h2 id=&#34;a-simple-use-case:c0963e613fb36e35763da3ad0b838456&#34;&gt;A simple use case&lt;/h2&gt;
+
+&lt;p&gt;To start, we need a simple use case:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# worker.py
+# this is the code-under-test
+def add(x, y):
+    z = x + y
+    return z
+
+def subtract(x, y):
+    z = x - y
+    return z
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# test_worker.py
+# test cases
+
+import worker
+
+def test_add():
+    assert 1 == worker.add(1, 0)
+
+def test_add___negative():
+    assert 0 == worker.add(-1, 1)
+
+def test_subtract():
+    assert 0 == worker.subtract(0, 0)
+
+class TestFoo(object):
+
+    def test_add(self):
+        assert 5 == worker.add(5, 0)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, we have 4 tests and 2 methods-under-test. Our goal is that when running &lt;code&gt;nosetests --with-nostrils&lt;/code&gt; (&lt;code&gt;--with-nostrils&lt;/code&gt; is the switch to turn on the nostrils plugin), we get the following mappings:&lt;/p&gt;
+
+&lt;p&gt;```python worker.py
+def add(x, y):
+  z = x + y # test_add, test_add_negative, TestFoo.test_add
+  return z  # test_add, test_add_negative, TestFoo.test_add&lt;/p&gt;
+
+&lt;p&gt;def subtract(x, y):
+  z = x - y # test_subtract
+  return z  # test_subtract&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+## Nose plugin
+
+I won&#39;t go into the details about how to create a plugin for nose. You can read it [here](http://readthedocs.org/docs/nose/en/latest/plugins/writing.html, and you can take a look at my sample setup [here](https://raw.github.com/kevinjqiu/nostrils/master/setup.py). In a nutshell, every plugin has a name, and when nose is supplied with --with-*plugin_name*, your plugin is activated. Nose provides a test lifecycle &amp;quot;hooks&amp;quot; that plugins can implement. For example, `startTest` is called when a test case is discovered and adapted into a nose [TestCase](http://readthedocs.org/docs/nose/en/latest/api/test_cases.html). `addSuccess` is called when a test case succeeded. `finalize` is called when all tests are finished.
+
+Here&#39;s how my plugin looks like:
+
+```python
+class Nostrils(Plugin):
+    name = &#39;nostrils&#39;
+
+    def addError(self, test, err, *args):
+        self._restore_tracefn()
+
+    def addFailure(self, test, err, *args):
+        self._restore_tracefn()
+
+    def addSkip(self, test, err):
+        self._restore_tracefn()
+
+    def addSuccess(self, test, err):
+        self._restore_tracefn()
+
+    def startTest(self, test):
+        self._current_test = test
+        self._install_tracefn()
+
+    def finalize(self, result):
+        self._print()
+
+    def _install_tracefn(self):
+        self._orig_tracefn = sys.gettrace()
+        sys.settrace(self._trace) # See below
+
+    def _restore_tracefn(self):
+        sys.settrace(self._orig_tracefn)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The idea is that we install the trace function when test starts, and restore the trace function back to what it was. We also keeps track of what&amp;rsquo;s the current test in &lt;code&gt;self._current_test&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;trace-function:c0963e613fb36e35763da3ad0b838456&#34;&gt;Trace function&lt;/h2&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s have a look at the trace function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Nostrils(Plugin):
+  # ...
+  def _trace(self, frame, event, arg):
+    if event == &#39;line&#39;:
+      self._trace_down(frame)
+    return self._trace
+
+  def _trace_down(self, frame):
+    while frame is not None:
+      if frame.f_code == test.__call__.func_code:
+        break
+
+      self._collect(frame)
+      frame = frame.f_back
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A trace function should take 3 parameters:
+* frame: the current &lt;a href=&#34;http://docs.python.org/reference/datamodel.html#types&#34;&gt;frame&lt;/a&gt; object
+* event: what type of event that triggered the trace function? See &lt;a href=&#34;http://docs.python.org/library/sys.html#sys.settrace&#34;&gt;here&lt;/a&gt;
+* &lt;code&gt;*args&lt;/code&gt;: any additional arguments&lt;/p&gt;
+
+&lt;p&gt;Here, I&amp;rsquo;m only interested in the &lt;code&gt;line&lt;/code&gt; event, which is triggered when a new line of code is being executed. When this happens, we invoke &lt;code&gt;_trace_down&lt;/code&gt;, which walks the frame stack by recursing on &lt;code&gt;frame.f_back&lt;/code&gt;. When it&amp;rsquo;s &lt;code&gt;None&lt;/code&gt;, we&amp;rsquo;re at the bottom of the stack. Because we&amp;rsquo;re tracing the execution of tests, we can probably stop traversing when the code object of the frame is the entry point of the test case (&lt;code&gt;if frame.f_code == test.__call__.func_code&lt;/code&gt;). This way, we save ourselves some unnecessary traversals.&lt;/p&gt;
+
+&lt;h2 id=&#34;data-collection:c0963e613fb36e35763da3ad0b838456&#34;&gt;Data Collection&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s are few things we need to collect: filename, line number of the code being executed and the test case name that covers the code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Nostrils(Plugin):
+  def __init__(self):
+    super(Nostrils, self).__init__()
+    self._data = defaultdict(
+      lambda : defaultdict(
+        lambda : set([])
+      )
+    )
+
+  def _collect(self, frame):
+    filename, lineno = frame.f_code.co_filename, frame.f_lineno
+    self._data[filename][lineno].add(&amp;quot;%s:%s.%s&amp;quot; % self._current_test.address())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The data structure we use here is a dictionary of dictionary. At the top level, the keys are filenames, and the values are dictionaries of with keys the line numbers and the values the set of test case names. The data structure looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &#39;foo.py&#39;:{
+      1 : set([&#39;test_foo.py:test_foo_case1&#39;, &#39;test_foo.py:test_foo_case2&#39;]),
+      2 : set([&#39;test_foo.py:test_foo_case1&#39;, &#39;test_foo.py:test_foo_case2&#39;]),
+      3 : set([&#39;test_foo.py:test_foo_case2&#39;])
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There we have it! We have a prototype of what could become a PyUnitMax ;)&lt;/p&gt;
+
+&lt;h2 id=&#34;potential-problems:c0963e613fb36e35763da3ad0b838456&#34;&gt;Potential Problems&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Scale: Now I&amp;rsquo;m only running nostrils on trivial code base. Profiling and optimization is needed if nostrils were to be used in real-world cases.&lt;/li&gt;&lt;/li&gt;
+&lt;li&gt;Multi-threading: No consideration was given to multi-threading at this stage.&lt;/li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;collaborators-welcome:c0963e613fb36e35763da3ad0b838456&#34;&gt;Collaborators welcome!&lt;/h2&gt;
+
+&lt;p&gt;I have since refactored the code, revised the data structure and published it on &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;github&lt;/a&gt;. Please provide me with feedbacks and suggestions.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Realtime notification delivery using rabbitmq</title>
+      <link>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
+      <pubDate>Sat, 07 Apr 2012 16:50:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
+      <description>
+
+&lt;p&gt;Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this &lt;a href=&#34;http://en.wikipedia.org/wiki/WebSocket&#34;&gt;websocket&lt;/a&gt; buzz for a while now and would like to build something interesting with it.&lt;/p&gt;
+
+&lt;h2 id=&#34;websocket:3652469de01842bf96882033c0b91b72&#34;&gt;WebSocket&lt;/h2&gt;
+
+&lt;p&gt;Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&amp;rsquo;s still the same model: the client asks the server whether there&amp;rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.freshbooks.com/&#34;&gt;Our company&lt;/a&gt; provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &amp;ldquo;events&amp;rdquo; which gets sent to &lt;a href=&#34;http://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.&lt;/p&gt;
+
+&lt;h2 id=&#34;proof-of-concept:3652469de01842bf96882033c0b91b72&#34;&gt;Proof of concept&lt;/h2&gt;
+
+&lt;p&gt;For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2012/04/websocket-1.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2012/04/websocket-1.png?w=300&#34; alt=&#34;&#34; title=&#34;architecture&#34; width=&#34;300&#34; height=&#34;181&#34; class=&#34;aligncenter size-medium wp-image-292&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve heard good things about &lt;a href=&#34;http://www.tornadoweb.org&#34;&gt;Tornado&lt;/a&gt;. Having read their docs on &lt;a href=&#34;http://www.tornadoweb.org/documentation/websocket.html&#34;&gt;websocket request handler&lt;/a&gt;, I felt it&amp;rsquo;s straightforward enough for me, so I chose Tornado as my backend.&lt;/p&gt;
+
+&lt;h2 id=&#34;pika:3652469de01842bf96882033c0b91b72&#34;&gt;Pika&lt;/h2&gt;
+
+&lt;p&gt;One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as &lt;a href=&#34;http://pypi.python.org/pypi/sparkplug/&#34;&gt;sparkplug&lt;/a&gt; and &lt;a href=&#34;http://pypi.python.org/pypi/stormed-amqp/0.1&#34;&gt;stormed-amqp&lt;/a&gt;, neither seem to be a good hit here. Finally, I stumbled on &lt;a href=&#34;https://github.com/pika/pika&#34;&gt;Pika&lt;/a&gt;. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.&lt;/p&gt;
+
+&lt;p&gt;The entry point looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;application = tornado.web.Application([
+    (r&#39;/ws&#39;, handlers.MyWebSocketHandler),
+])
+
+def main():
+    pika.log.setup(color=True)
+
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    # PikaClient is our rabbitmq consumer
+    pc = client.PikaClient(io_loop)
+    application.pc = pc
+    application.pc.connect()
+
+    application.listen(8888)
+    io_loop.start()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
+
+    def open(self, *args, **kwargs):
+        pika.log.info(&amp;quot;WebSocket opened&amp;quot;)
+
+    def on_close(self):
+        pika.log.info(&amp;quot;WebSocket closed&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That was straightforward. However, I&amp;rsquo;m faced with the problem of how to make the amqp consumer notify websocket handlers when we receive a message from the message queue. We cannot get the handler instances from the tornado application object. Note, each websocket connection has a corresponding &lt;code&gt;MyWebSocketHandler&lt;/code&gt; instance. The instances are not available from the application object. Maybe there&amp;rsquo;s a way to get them by other means, but I&amp;rsquo;m not familiar with the tornado API enough to know that.&lt;/p&gt;
+
+&lt;p&gt;However, from the handler, we do get the &lt;code&gt;application&lt;/code&gt; object, and because we attached pika_client (our amqp consumer) to the application, we have access to it inside our socket handler. Hey, how about registering the handler with the client when the websocket is connected, and let the client &amp;ldquo;notify&amp;rdquo; the handler when events are received? Hey, isn&amp;rsquo;t that the &lt;a href=&#34;http://en.wikipedia.org/wiki/Observer_pattern&#34;&gt;observer pattern&lt;/a&gt;?&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyWebSocketHandler(websocket.WebSocketHandler):
+
+    def open(self, *args, **kwargs):
+        self.application.pc.add_event_listener(self)
+        pika.log.info(&amp;quot;WebSocket opened&amp;quot;)
+
+    def on_close(self):
+        pika.log.info(&amp;quot;WebSocket closed&amp;quot;)
+        self.application.pc.remove_event_listener(self)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, our &lt;code&gt;PikaClient&lt;/code&gt; object need to support &lt;code&gt;add_event_listener()&lt;/code&gt; and &lt;code&gt;remove_event_listener()&lt;/code&gt; methods.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class PikaClient(object):
+
+    def __init__(self, io_loop):
+        pika.log.info(&#39;PikaClient: __init__&#39;)
+        self.io_loop = io_loop
+
+        self.connected = False
+        self.connecting = False
+        self.connection = None
+        self.channel = None
+
+        self.event_listeners = set([])
+
+    def connect(self):
+        if self.connecting:
+            pika.log.info(&#39;PikaClient: Already connecting to RabbitMQ&#39;)
+            return
+
+        pika.log.info(&#39;PikaClient: Connecting to RabbitMQ&#39;)
+        self.connecting = True
+
+        cred = pika.PlainCredentials(&#39;guest&#39;, &#39;guest&#39;)
+        param = pika.ConnectionParameters(
+            host=&#39;localhost&#39;,
+            port=5672,
+            virtual_host=&#39;/&#39;,
+            credentials=cred
+        )
+
+        self.connection = TornadoConnection(param,
+            on_open_callback=self.on_connected)
+        self.connection.add_on_close_callback(self.on_closed)
+
+    def on_connected(self, connection):
+        pika.log.info(&#39;PikaClient: connected to RabbitMQ&#39;)
+        self.connected = True
+        self.connection = connection
+        self.connection.channel(self.on_channel_open)
+
+    def on_channel_open(self, channel):
+        pika.log.info(&#39;PikaClient: Channel open, Declaring exchange&#39;)
+        self.channel = channel
+        # declare exchanges, which in turn, declare
+        # queues, and bind exchange to queues
+
+    def on_closed(self, connection):
+        pika.log.info(&#39;PikaClient: rabbit connection closed&#39;)
+        self.io_loop.stop()
+
+    def on_message(self, channel, method, header, body):
+        pika.log.info(&#39;PikaClient: message received: %s&#39; % body)
+        self.notify_listeners(event_factory(body))
+
+    def notify_listeners(self, event_obj):
+        # here we assume the message the sourcing app
+        # post to the message queue is in JSON format
+        event_json = json.dumps(event_ostener in self.event_listeners:
+            listener.write_message(event_json)
+            pika.log.info(&#39;PikaClient: notified %s&#39; % repr(listener))
+
+    def add_event_listener(self, listener):
+        self.event_listeners.add(listener)
+        pika.log.info(&#39;PikaClient: listener %s added&#39; % repr(listener))
+
+    def remove_event_listener(self, listener):
+        try:
+            self.event_listeners.remove(listener)
+            pika.log.info(&#39;PikaClient: listener %s removed&#39; % repr(listener))
+        except KeyError:
+            pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I left out the queue setup code here for brevity. &lt;code&gt;on_message&lt;/code&gt; callback is called when the consumer gets a message from the queue. The client, in turn, notifies all registered websocket handlers. Obviously, in real applications, you may want to do some kind of credentials and filtering, so the right message get to the right receiver. Then we simply call &lt;code&gt;handler.write_message()&lt;/code&gt;, so the message gets relayed to the front-end&amp;rsquo;s websocket.onmessage callback.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s some front-end code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($){
+    $(document).ready(function() {
+        var ws = new WebSocket(&#39;ws://localhost:8888/ws&#39;);
+        ws.onmessage = function(evt){
+            alert(evt.data);
+        }
+    });
+})(jQuery);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:3652469de01842bf96882033c0b91b72&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;This is my first stab at websocket and the tornado web framework. I&amp;rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.&lt;/p&gt;
+
+&lt;p&gt;I think websocket is a very interesting technology. It opens a wide range of possibilities for more interactive and engaging web applications. Our web application is of traditional architecture: server renders most of the page, and every request involves page loads. Having a websocket may not be very beneficial as the application doesn&amp;rsquo;t have that much of user interaction. My hackoff is more of a proof of concept. However, if the application is a one-page web app (no full page reloads), the websocket model works very well.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Writing a Simple Clojure Library</title>
+      <link>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</link>
+      <pubDate>Sat, 03 Mar 2012 20:25:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</guid>
+      <description>
+
+&lt;p&gt;I&amp;rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&amp;rsquo;t a deterrent for me at all, in fact, I&amp;rsquo;m quite fond of it and consider it very &lt;a href=&#34;http://en.wikipedia.org/wiki/Homoiconicity&#34;&gt;elegant&lt;/a&gt;. However, it does take some time to get used to. I don&amp;rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.&lt;/p&gt;
+
+&lt;h2 id=&#34;terminal-colours:917765c0791e064a1896921b9ddadd44&#34;&gt;Terminal colours&lt;/h2&gt;
+
+&lt;p&gt;Ever wonder how some console applications can output coloured text? Most terminals and terminal emulators (think iTerm or konsole) support colour through a system of &lt;a href=&#34;http://en.wikipedia.org/wiki/ANSI_escape_code&#34;&gt;escape sequences&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;An Escape Sequence starts with the ASCII code for the escape character (0x1b or 33). There a list of control characters you can specify after the escape character that controls the colour and style of the text after it. For example, sending &amp;ldquo;[31mfoo&amp;rdquo; to a terminal means &amp;ldquo;output red coloured text from now on&amp;rdquo;. Everything the terminal output will be coloured red, until the terminal reads another escape sequence, including &amp;ldquo;[ESC]0m&amp;rdquo;, which tells the terminal to reset the styles to the default.&lt;/p&gt;
+
+&lt;p&gt;So I had this idea to implement this in Clojure as a library so that console application authors can use it to output stylized text from their application using idiomatic Clojure, and here comes &lt;a href=&#34;https://github.com/kevinjqiu/lumiere&#34;&gt;Lumiere&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;implementing-it-in-clojure:917765c0791e064a1896921b9ddadd44&#34;&gt;Implementing it in Clojure&lt;/h2&gt;
+
+&lt;h3 id=&#34;design-the-interface:917765c0791e064a1896921b9ddadd44&#34;&gt;Design the interface&lt;/h3&gt;
+
+&lt;p&gt;What&amp;rsquo;s our end goal here? We would like to output colour sequence wrapped text with Clojure function calls such as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(red &amp;quot;foo&amp;quot;) ; output foo in red colour
+(bg-green &amp;quot;bar&amp;quot;) ;&amp;quot;bar&amp;quot; with green background colour
+(bold (magenta &amp;quot;nyan cat&amp;quot;)) ; bold and magenta
+(-&amp;gt; &amp;quot;nyan cat&amp;quot; red bg-white bold) ; use Clojure&#39;s &amp;quot;thread macro&amp;quot; to combine these functions, resulting in red foreground, white background and bold &amp;quot;nyan cat&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toolchain:917765c0791e064a1896921b9ddadd44&#34;&gt;Toolchain&lt;/h3&gt;
+
+&lt;p&gt;I wrote a &lt;a href=&#34;http://blog.idempotent.ca/2011/02/11/cake-the-yummy-clojure-build-system/&#34;&gt;blog post&lt;/a&gt; a year ago about how I liked Cake the Clojure build system alternative to the defacto Leiningen. The recent news on this is that Cake and Leiningen are merging. This time, I decided to use Leiningen from the start. Even though Leiningen hasn&amp;rsquo;t ported some of the Cake goodies, but I&amp;rsquo;m hoping they will get ported soon.&lt;/p&gt;
+
+&lt;h3 id=&#34;first-working-version:917765c0791e064a1896921b9ddadd44&#34;&gt;First working version:&lt;/h3&gt;
+
+&lt;p&gt;With &lt;code&gt;lein new lumiere&lt;/code&gt;, Leiningen generates the default project layout. By default, Leiningen generates &lt;code&gt;src/lumiere/core.clj&lt;/code&gt; and &lt;code&gt;test/lumiere/core.clj&lt;/code&gt;. Because Lumiere is such a small script, we don&amp;rsquo;t need the &lt;code&gt;&#39;lumiere.core&lt;/code&gt; namespace, rather I&amp;rsquo;d like the functions to be in the &lt;code&gt;&#39;lumiere&lt;/code&gt; namespace. The easiest way is to delete &lt;code&gt;src/lumiere/&lt;/code&gt; folder and create &lt;code&gt;lumiere.clj&lt;/code&gt; under src. Same goes for the test file.&lt;/p&gt;
+
+&lt;p&gt;Following the spirit of TDD, off I went to write my first test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(ns lumiere.test
+  (:use [lumiere])
+  (:use [clojure.test]))
+
+(deftest test-only-foreground
+  (is (= &amp;quot;&amp;amp;#092;&amp;amp;#048;33[30msome black text&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; (black &amp;quot;some black test&amp;quot;))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This tests that the correct sequences of characters are generated by the call to &lt;code&gt;(black &amp;quot;...&amp;quot;)&lt;/code&gt;. 33 is the ASCII code for .&lt;/p&gt;
+
+&lt;p&gt;To make this test pass, I added this in &lt;code&gt;src/lumiere.clj&lt;/code&gt;,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(ns lumiere)
+(defn black [text]
+  (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; 30 text)) ; 30 is the code for black foreground.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This passes the tests, but obviously there&amp;rsquo;s room for abstraction:
+* the red foreground code is 31, green 32, etc&amp;hellip;
+* the black background code is 40, red 41, green 42, etc&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;So here we go:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- colour ; defn- makes this function private to the current namespace.
+  ([code is-bg?] (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[%dm&amp;quot; (+ (if is-bg? 40 30) code)))
+  ([code] (colour code false)))
+
+(defn black [text] (colour 0))
+(defn red [text] (colour 1))
+(defn bg-black [text] (colour 0 true))
+(defn bg-red [text] (colour 1 true))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Clojure supports &amp;ldquo;default&amp;rdquo; arguments through method overloading. Here we adjust the offset based on whether or not that colour is a foreground or background.&lt;/p&gt;
+
+&lt;h3 id=&#34;second-take-use-macro-to-define-declaratively-create-colour-functions:917765c0791e064a1896921b9ddadd44&#34;&gt;Second take: use macro to define declaratively create colour functions&lt;/h3&gt;
+
+&lt;p&gt;One advantage of lispy syntax is the convergence of programming with meta-programming. If you read the core Clojure library code, you&amp;rsquo;ll find that Clojure defines a few special forms and most control structures are written in macros. In my case, however, I&amp;rsquo;m using macros to define colour/style functions in a declarative way. Some may argue it doesn&amp;rsquo;t justify using macro for this purpose, but I just want to practice writing macros, and it does make the public interface of the library a bit prettier.&lt;/p&gt;
+
+&lt;p&gt;First off, again, we need to define what the end result should look like. I would still like the functions to remain the same, e.g., red, bg-red, black, bg-black, etc. However, defining these functions takes a lot of boilerplate code. I&amp;rsquo;d like to simply call &lt;code&gt;(defcolour BLACK 0)&lt;/code&gt; or the like to generate the &lt;code&gt;black&lt;/code&gt; and &lt;code&gt;bg-black&lt;/code&gt; functions for me.&lt;/p&gt;
+
+&lt;p&gt;Disclaimer: I&amp;rsquo;m a novice macro writer. Advanced readers, please hold your nose and tell me what I did wrong or any improvements could be made :)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(def RESET &amp;quot;&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot;)
+(defmacro defcolour [colour-func-name bg-colour-func-name colour-code]
+  `(do
+    (defn ~colour-func-name [text#]
+      (format &amp;quot;%s%s%s&amp;quot; (colour ~colour-code) text# RESET))
+    (defn ~bg-colour-func-name [text#]
+      (format &amp;quot;%s%s%s&amp;quot; (colour ~bg-colour-code true) text# RESET))))
+
+(defcolour black bg-black 0)
+(defcolour red bg-red 1)
+(defcolour green bg-green 2)
+; etc...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A few special reader macros you need to know about when writing a macro:
+* tick (`) indicates the following code should be quoted and treated as a template.
+* tilda (~) indicates that the symbol should not be quoted (unquote), and should be replaced with the value in the current context.
+* hash (#) indicates that the macro system should generate a unique name for this symbol so it doesn&amp;rsquo;t conflict. Otherwise, it will be expanded to its fully qualified name.&lt;/p&gt;
+
+&lt;p&gt;Run tests and because we didn&amp;rsquo;t change our public interface, everything all tests should still pass.&lt;/p&gt;
+
+&lt;h3 id=&#34;take-3-combining-styles:917765c0791e064a1896921b9ddadd44&#34;&gt;Take 3: combining styles&lt;/h3&gt;
+
+&lt;p&gt;Alright, now that we have a fully functional style system, we can cascade the styles, e.g., &lt;code&gt;(red (bg-green &amp;quot;foo&amp;quot;))&lt;/code&gt;. It work as expected when trying it in a REPL, but the character sequence it generates is &amp;ldquo;33[31m33[42mfoo33[0m33[0m&amp;rdquo; and surely it isn&amp;rsquo;t optimal. If we want to add styles such as bold, it&amp;rsquo;s going to get even worse.&lt;/p&gt;
+
+&lt;p&gt;So, we need some abstraction here. When you call &lt;code&gt;(red &amp;quot;some text&amp;quot;)&lt;/code&gt; it shouldn&amp;rsquo;t generate the character sequence right away. Instead, the caller should decide when the sequence should be generated. We need some data structure to represent a &amp;ldquo;luminated&amp;rdquo; text. In Clojure we can define a &amp;ldquo;record&amp;rdquo;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defrecord Lumiere [text opts])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;opts&lt;/code&gt; is a map with keys &lt;code&gt;:fg&lt;/code&gt;, &lt;code&gt;:bg&lt;/code&gt;, &lt;code&gt;:styles&lt;/code&gt;. We also want to override the &lt;code&gt;toString()&lt;/code&gt; method so when the user calls &lt;code&gt;(str lumiered-text)&lt;/code&gt;, he will get the character sequence ready to be printed to the console. The downside of this is that we modified the interface, so we need to go back and change the tests so they call &lt;code&gt;(str (red &amp;quot;foo&amp;quot;))&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;  (is (= &amp;quot;&amp;amp;#092;&amp;amp;#048;33[30msome black text&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; (str (black &amp;quot;some black test&amp;quot;)))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To override &lt;code&gt;toString()&lt;/code&gt;, we need to extend our Lumiere type to conform to the &lt;code&gt;IObject&lt;/code&gt; protocol:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- ansi-escape-seq [&amp;amp; codes]
+  (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[%sm&amp;quot; (join &amp;quot;;&amp;quot; (filter #(not= % nil) codes))))
+
+(defrecord Lumiere [text fg bg styles]
+  Object
+  (toString [this]
+    (let [prefix (ansi-escape-seq (:fg this) (:bg this) (:styles this))]
+      (format &amp;quot;%s%s%s&amp;quot; prefix (:text this) RESET))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we need to let the colour/style functions return Lumiere object, rather than plain character sequence. There are two situations we need to adapt:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;When we first start decorating a text, text input is going to be a plain string. In this case, we need to create a Lumiere object with the text and options.&lt;/li&gt;
+&lt;li&gt;When the return of a colour/style function is chained into another colour/style function, we need to modify the options of the Lumiere object.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- adapt-lum [text option value]
+  (let [local-option-map (merge {:fg nil :bg nil :styles nil} {option value})]
+    (cond
+      (instance? String text) (Lumiere. text (:fg local-option-map) (:bg local-option-map) (:styles local-option-map))
+      (instance? Lumiere text) (assoc text option value)
+      :else (throw (java.lang.IllegalArgumentException.)))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and we need to modify the macros so &lt;code&gt;adapt-lum&lt;/code&gt; helper is used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defmacro defcolour [colour-func-name bg-colour-func-name ^Integer colour-code]
+  `(do
+     (defn ~colour-func-name [text#]
+       (adapt-lum text# :fg ~colour-name))
+     (defn ~bg-colour-func-name [text#]
+       (adapt-lum text# :bg ~bg-colour-name))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;publish-to-clojar-org:917765c0791e064a1896921b9ddadd44&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
+
+&lt;p&gt;Now that the library is in a relatively stable state. I&amp;rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do &lt;code&gt;lein pom &amp;amp;&amp;amp; lein deploy&lt;/code&gt;, voilà!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Google Reader plugin using Chrome extension</title>
+      <link>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</link>
+      <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</guid>
+      <description>
+
+&lt;p&gt;OK, ok, I understand. The title is a bit misleading. &lt;a href=&#34;http://reader.google.com&#34;&gt;Google Reader&lt;/a&gt; isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-we-going-to-achieve:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;What are we going to achieve?&lt;/h2&gt;
+
+&lt;p&gt;Anyone uses Google Reader to read &lt;a href=&#34;http://www.dzone.com&#34;&gt;DZone&lt;/a&gt; feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following. I don&amp;rsquo;t know about you but for me, sometimes I just want to read the original story without going to the DZone page. It&amp;rsquo;d be nice if they have a &amp;ldquo;click through&amp;rdquo; action (like the following) on the action bar that brings you to the original story.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png?w=300&#34; alt=&#34;End goal&#34; title=&#34;Screenshot-Google Reader (539) - Chromium&#34; width=&#34;300&#34; height=&#34;100&#34; class=&#34;aligncenter size-medium wp-image-262&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-strategy:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Basic strategy&lt;/h2&gt;
+
+&lt;p&gt;So, how are we going to implement this feature? Chrome Extension code can be injected into the running page, and have full access to its DOM. Therefore, we can write code such that if the currently opened entry is a DZone entry, we insert &amp;lsquo;Click Through&amp;rsquo; action into the entry action bar (action bar is the bar underneath the main entry, where &amp;lsquo;Add Star&amp;rsquo;, &amp;lsquo;Like&amp;rsquo;, &amp;lsquo;Share&amp;rsquo; actions are). The &amp;lsquo;Click Through&amp;rsquo; action, when clicked, will read the feed URL, fetch it in the background, parse it and get the URL of the original story, and open the original URL in a separate tab.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-261&#34; title=&#34;strategy&#34; src=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png?w=300&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;231&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;create-a-manifest:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Create a manifest&lt;/h3&gt;
+
+&lt;p&gt;A Chrome extension must have a manifest.json file containing the metadata of the extension.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{
+    &amp;quot;name&amp;quot;:&amp;quot;GReader&amp;quot;,
+    &amp;quot;version&amp;quot;:&amp;quot;1.0&amp;quot;,
+    &amp;quot;description&amp;quot;:&amp;quot;Enhanced Google Reader experience&amp;quot;,
+    &amp;quot;permissions&amp;quot;: [
+        &amp;quot;http://*.dzone.com/&amp;quot;
+    ],
+    &amp;quot;background_page&amp;quot;:&amp;quot;background.html&amp;quot;,
+    &amp;quot;content_scripts&amp;quot;:[{
+        &amp;quot;matches&amp;quot;:[
+            &amp;quot;*://www.google.com/reader/view/*&amp;quot;
+        ],
+        &amp;quot;js&amp;quot;:[
+            &amp;quot;lib/jquery-1.6.4.min.js&amp;quot;,
+            &amp;quot;src/greader.js&amp;quot;
+        ],
+        &amp;quot;run_at&amp;quot;:&amp;quot;document_idle&amp;quot;
+    }]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;specify that the extension needs to access any URL on dzone.com including its subdomains.&lt;/li&gt;
+&lt;li&gt;specify the background page&lt;/li&gt;
+&lt;li&gt;specify the content script&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &amp;ldquo;run_at&amp;rdquo; property will dictate when the content script is going to be run. Because Google Reader is a full AJAX application, we want our script to be run when the document is fully rendered.&lt;/p&gt;
+
+&lt;p&gt;We also specify the &amp;ldquo;matches&amp;rdquo; property, so our content script is only activated when the URL matches.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-content-script:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;The content script&lt;/h3&gt;
+
+&lt;p&gt;We start with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($) {
+
+})(jQuery);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates a function scope, which separates our &lt;code&gt;$&lt;/code&gt; variable apart from the current page&amp;rsquo;s &lt;code&gt;$&lt;/code&gt; variable. Google Reader (I assume, is using Google&amp;rsquo;s own closure library), already defines $ and it&amp;rsquo;s not the jQuery object. This idiom gives &lt;code&gt;$&lt;/code&gt; as jQuery.&lt;/p&gt;
+
+&lt;p&gt;We want to insert the &amp;ldquo;Click through&amp;rdquo; action in the entry action bar. To achieve this, we will need to listen on &lt;code&gt;DOMNodeInserted&lt;/code&gt; event, and when such event happens and the node inserted is of the right CSS class name (&amp;ldquo;entry-action&amp;rdquo; here), we proceed to manipulate the DOM to add our customized actions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    $(&amp;quot;#entries&amp;quot;).live(&#39;DOMNodeInserted&#39;, function(e) {
+        if (!e.target.className.match(/entry\-actions/))
+            return;
+
+        var entryAction = new EntryAction($(e.target));
+        if (entryAction.entry.url.match(/^http\:\/\/feeds\.dzone\.com/)) {
+            entryAction.addAction({
+                &#39;name&#39;:&#39;Click Through&#39;,
+                &#39;fn&#39;:function(entry) {
+                    chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;fetch_entry&amp;quot;, &amp;quot;url&amp;quot;:entry.url}, function(response) {
+                        var matched = /&amp;lt;div class=&amp;quot;ldTitle&amp;quot;&amp;gt;(.*?)&amp;lt;\/div&amp;gt;/.exec(response.data);
+                        var href = ($(matched[1]).attr(&amp;quot;href&amp;quot;));
+                        if (href !== null) {
+                            chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;open_tab&amp;quot;, &amp;quot;url&amp;quot;:href}, function(response) {
+                                // TODO: do something afterwards?
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here I built a little bit of abstraction around the raw entry action bar. It&amp;rsquo;s encapsulated in EntryAction class, which I&amp;rsquo;ll show in a moment. Basically, if the current displaying entry&amp;rsquo;s feed URL starts with feed.dzone.com, I&amp;rsquo;ll build the &amp;ldquo;click through&amp;rdquo; action, and set the click handler. It sends the feed URL to the background script. The background script will do the cross-site request to fetch the feed content and send it back. Then the content script will regex match the content to get the original story&amp;rsquo;s URL, and ask chrome to open the URL in a new tab.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the code for &lt;code&gt;EntryAction&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    var EntryAction = function(element) {
+        this.element = element;
+        var entryElmt = this.element.parent(&amp;quot;.entry&amp;quot;);
+        var url = $(entryElmt).find(&amp;quot;.entry-title-link&amp;quot;).attr(&#39;href&#39;);
+        this.entry = {
+            &amp;quot;url&amp;quot; : url
+        };
+    };
+
+    EntryAction.prototype.addAction = function(action) {
+        var that = this;
+        var onclick = function(e) {
+            var actionFunc = action[&#39;fn&#39;];
+            actionFunc(that.entry);
+        }
+
+        this.element.append($(&amp;quot;&amp;lt;span&amp;gt;&amp;quot;)
+            .addClass(&amp;quot;link unselectable&amp;quot;)
+            .text(action[&#39;name&#39;])
+            .click(onclick));
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I won&amp;rsquo;t delve too much into this code. It makes assumptions about the structure of the DOM that Google Reader renders into. This does make the extension brittle but that&amp;rsquo;s the reality we have to deal with for client-side scripting. Luckily, Google Reader markup doesn&amp;rsquo;t change very often. For people new to object-oriented Javascript, this is one way to create a &amp;ldquo;class&amp;rdquo; (prototype) and put &amp;ldquo;instance&amp;rdquo; methods on a &amp;ldquo;class&amp;rdquo;.&lt;/p&gt;
+
+&lt;h3 id=&#34;background-html:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Background.html&lt;/h3&gt;
+
+&lt;p&gt;Unlike content scripts, which is injected and runs in the target page, the background page runs in its own process (the extension&amp;rsquo;s process) and keeps running while the extension is active. It&amp;rsquo;s comparable to the &amp;ldquo;server&amp;rdquo; side of the extension. For our extension&amp;rsquo;s purpose, we&amp;rsquo;re using the background script to make requests to 3rd party web sites (DZone).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;html&amp;gt;
+&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;lib/jquery-1.6.4.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script&amp;gt;
+    (function($) {
+        chrome.extension.onRequest.addListener(
+            function(request, sender, sendResponse) {
+                if (request.type === &#39;fetch_entry&#39;) {
+                    $.get(request.url, function(data) {
+                        sendResponse({&amp;quot;data&amp;quot;:data});
+                    });
+                } else if (request.type === &#39;open_tab&#39;) {
+                    chrome.tabs.create({&#39;url&#39;:request.url});
+                    sendResponse({&amp;quot;status&amp;quot;:&amp;quot;ok&amp;quot;});
+                }
+            }
+        );
+    })(jQuery);
+&amp;lt;/script&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We register handlers for events that our &amp;ldquo;client&amp;rdquo; (the content script) is able to raise. Here we deal with 2 kinds of events: fetch_entry and open_tab.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Although Chrome 13 allows cross-site requests from content scripts, I&amp;rsquo;m actually quite fond of this pattern of delegating requests to the background page.&lt;/li&gt;
+&lt;li&gt;chrome.tabs isn&amp;rsquo;t accessible in the content script. That&amp;rsquo;s why open_tab is an event the client (the content script) can raise and delegate chrome specific API calls to the background script.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;after-thoughts:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;After Thoughts&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s it! That&amp;rsquo;s my first Chrome extension. It&amp;rsquo;s not earth shattering or anything but I learned quite a lot. I like Chrome extension development &amp;ndash; it&amp;rsquo;s straightforward and simple. The architecture is quite simple yet powerful. The code is on &lt;a href=&#34;https://github.com/kevinjqiu/greader&#34;&gt;Github&lt;/a&gt; and I plan to expand it to a framework for customizing Google Reader experience. Here are a few things we can do with the extension:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Link &amp;ldquo;Share&amp;rdquo; action to twitter/Google+&lt;/li&gt;
+&lt;li&gt;Click on &amp;ldquo;Like&amp;rdquo; action to automatically vote up on DZone (or any other news aggregator)&lt;/li&gt;
+&lt;li&gt;Share with comment on Google Reader puts the comment on the entry on DZone (or any other news aggregator)&lt;/li&gt;
+&lt;li&gt;endless opportunities&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

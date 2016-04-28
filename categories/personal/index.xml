@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Personal on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/personal/</link>
+    <description>Recent content in Personal on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 02 Jan 2011 19:47:00 +0000</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/categories/personal/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>New Year&#39;s Resolution</title>
+      <link>http://blog.idempotent.ca/2011/01/02/new-years-resolution/</link>
+      <pubDate>Sun, 02 Jan 2011 19:47:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2011/01/02/new-years-resolution/</guid>
+      <description>
+
+&lt;p&gt;2011 here we come! In the spirit of continual learning, I&amp;rsquo;m going to write down the technology I&amp;rsquo;d love to learn this year.&lt;/p&gt;
+
+&lt;h2 id=&#34;haskell-http-haskell-org:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;&lt;a href=&#34;http://haskell.org&#34;&gt;Haskell&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Now that I&amp;rsquo;m more interested in functional languages, I&amp;rsquo;d love to look into this &amp;ldquo;pure&amp;rdquo; functional language that inspired countless other ones of its kind.&lt;/p&gt;
+
+&lt;h2 id=&#34;lift-http-liftweb-net:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;&lt;a href=&#34;http://liftweb.net&#34;&gt;Lift&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Last year I scratched the surface of &lt;a href=&#34;http://www.scala-lang.org&#34;&gt;Scala&lt;/a&gt;, a hybrid JVM language. I&amp;rsquo;m very fond of it, and think it has tremendous potential. Twitter and FourSquare are already using Scala, so it has been put to the test of some pretty high-profile usages.  Lift is the most popular web framework built on top of Scala. It claims to have the rapid application development benefits from Rails and the benefits from statically typed language.&lt;/p&gt;
+
+&lt;h2 id=&#34;more-advanced-features-of-clojure-http-clojure-org:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;More advanced features of &lt;a href=&#34;http://clojure.org&#34;&gt;Clojure&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;In the past two years, I explored Clojure and on off. I love the Lisp idea of &lt;a href=&#34;http://en.wikipedia.org/wiki/Homoiconicity&#34;&gt;homoiconicity&lt;/a&gt; which unifies programming and meta-programming. That said, I haven&amp;rsquo;t been using macro in Clojure too much, and there are other cool ideas of Clojure I haven&amp;rsquo;t been able to explore deeply, such as protocols and &lt;a href=&#34;http://en.wikipedia.org/wiki/Software_transactional_memory&#34;&gt;software transactional memory&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ruby-http-www-ruby-lang-org-en-and-rails-http-rubyonrails-org:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;&lt;a href=&#34;http://www.ruby-lang.org/en/&#34;&gt;Ruby&lt;/a&gt; and &lt;a href=&#34;http://rubyonrails.org/&#34;&gt;Rails&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;For the past few years, I&amp;rsquo;ve been refraining myself from learning Ruby, because I&amp;rsquo;m already quite adept at Python, and I feel I should be learning languages that are different from what I already know. However, the more I heard about Ruby and its ideas, the more interesting it appears to me. On top of that, Rails 3 has come out, and it appears to have improved significantly. Moreover, there are a lot of advancement in the Ruby VM world such as JRuby, which means Ruby applications don&amp;rsquo;t have to run on the old and dreadful (hear-say) MRI. I wouldn&amp;rsquo;t mind taking Ruby and Rails out for a spin this year.&lt;/p&gt;
+
+&lt;h2 id=&#34;android-http-www-android-com:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;&lt;a href=&#34;http://www.android.com/&#34;&gt;Android&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Last year I got an HTC Legend Android phone, with the intention of developing for Android at some point of time. It didn&amp;rsquo;t work out that way, though, but Android continues to be a very interesting and fast growing platform. Mobile &lt;em&gt;is&lt;/em&gt; the future, and I&amp;rsquo;d like to poke into the Android world this year, primarily because it&amp;rsquo;s open source. iOS is equally interesting technically, but I don&amp;rsquo;t own a Mac and I don&amp;rsquo;t like the idea of paying Apple $99 for SDK even though I don&amp;rsquo;t intend to publish on AppStore.&lt;/p&gt;
+
+&lt;p&gt;I think that&amp;rsquo;s enough for a year&amp;hellip;or is it? There&amp;rsquo;s a few more technologies I wish to learn or keep up with:&lt;/p&gt;
+
+&lt;h2 id=&#34;gwt-and-google-app-engine:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;GWT and Google App Engine&lt;/h2&gt;
+
+&lt;p&gt;2 years of professional GWT development made me a firm fan of this Google technology. I got out of GWT for different reasons, but I love the engineering effort they put into GWT. It may not take over the world but it&amp;rsquo;s definitely a solid player in the front-end web development arena. Especially now they integrated with the Spring framework and made deploying to App Engine easy, it may pick up more traction this year. I think the Java language is both the pros and cons of GWT. I&amp;rsquo;d love to see an alternative language (Scala) being implemented for GWT, but it may not happen any time soon.&lt;/p&gt;
+
+&lt;h2 id=&#34;a-nosql-database:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;A &amp;ldquo;NoSQL&amp;rdquo; database&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s face it, &amp;ldquo;NoSQL&amp;rdquo; is a terrible name, but it grabs people&amp;rsquo;s attention. I flirted with &lt;a href=&#34;http://couchdb.apache.org/&#34;&gt;CouchDB&lt;/a&gt; briefly last year, and would love to continue this journey this year. Also, &lt;a href=&#34;http://www.mongodb.org/&#34;&gt;MongoDB&lt;/a&gt; seems interesting too.&lt;/p&gt;
+
+&lt;h2 id=&#34;node-js:7059b0fa5c1d727e33d4ad11dc445b85&#34;&gt;Node.js&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s the least I think I&amp;rsquo;d learn this year. It&amp;rsquo;s hot in the geekdom right now, and it has its value, for example, having both the server and client side written in Javascript eliminates the need to implement the validation logic in two different languages. However, I&amp;rsquo;m just not a big fan of Javascript. I think it&amp;rsquo;s a language that&amp;rsquo;s by a chain of serendipitous events became the world&amp;rsquo;s most widely used language. It carries a huge historical burden, and although it has cool features, some other modern languages have them too and do better. Regardless, given the stardom status of Node.js, it deserves some looking into :)&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

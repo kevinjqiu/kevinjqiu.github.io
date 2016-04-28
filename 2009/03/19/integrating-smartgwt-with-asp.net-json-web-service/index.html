@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Integrating SmartGWT with ASP.NET JSON web service // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Integrating SmartGWT with ASP.NET JSON web service" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2009/03/19/integrating-smartgwt-with-asp.net-json-web-service/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2009/03/19/integrating-smartgwt-with-asp.net-json-web-service/">Integrating SmartGWT with ASP.NET JSON web service</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>19</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Mar</span> <span class="post-date-year">2009</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-java" href="http://blog.idempotent.ca/categories/java">java</a>
+				
+					<a class="post-category post-category-gwt" href="http://blog.idempotent.ca/categories/gwt">gwt</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            <p>Many web API authors are using third party libraries like JayRock to convert ASP.NET web service method return values to JSON.  ASP.NET does have the ability to return JSON objects for web methods.  It’s not a very well-known feature (I guess) as there are only a few <a href="http://encosia.com/2008/03/27/using-jquery-to-consume-aspnet-json-web-services/">places</a> mentioning it.</p>
+
+<p>For example, suppose the web method we are calling is <code>/ItemService.asmx/GetList</code>, and it’s expecting a parameter “uid”. For JSON web service to work, we have to set the request content type to “application/json” and provide the request parameter as a JSON object and send it through HTTP POST data (<code>{uid:'12345'}</code>).</p>
+
+<p>In the current project I&rsquo;m working on, I&rsquo;m hooking up <a href="http://code.google.com/p/smartgwt/">SmartGWT</a>&rsquo;s Data source to use JSON web service of ASP.NET. SmartGWT’s data source allows OperationBinding to be set for each of the four CRUD operations. For ItemDS, my fetch operation looks like the following:</p>
+
+<pre><code class="language-java">    OperationBinding createFetchOperation() {
+
+        final OperationBinding retval = new OperationBinding(DSOperationType.FETCH, Urls.ISSUE_FETCH);
+        retval.setDataFormat(DSDataFormat.JSON);
+
+        retval.setDataProtocol(DSProtocol.POSTPARAMS);
+
+        retval.setRecordXPath(&quot;/result&quot;);
+
+        return retval;
+
+    }
+</code></pre>
+
+<p>Since we&rsquo;re doing a bunch of customized stuff, we’re bound to override <code>transformRequest()</code> method in the <code>DataSource</code> class:</p>
+
+<pre><code class="language-java">class ItemDS extends RestDataSource {
+    /* data source setup */
+    @Override
+    protected void transformRequest(DSRequest req) {
+        // TODO
+    }
+}
+</code></pre>
+
+<p>We need to do two things in transformRequest:
+1. set request header to <code>application/json; charset=utf-8</code>
+2. set the request payload to be the JSON object that contains parameters to the web service
+So here we go:</p>
+
+<pre><code class="language-java">protected void transformRequest(DSRequest req) {
+    dsRequest.setContentType(&quot;application/json; charset=utf-8&quot;);
+    final JavaScriptObject params = JSOHelper.createObject();
+    JSOHelper.setAttribute(params, &quot;uid&quot;, &quot;12345&quot;);
+    req.setData(params);
+    return req.getData();
+}
+</code></pre>
+
+<p>Does that work? A simple test proved that it didn&rsquo;t. Because remember we set data protocol on the fetch operation to <code>POSTPARAMS</code>? It turns out that even though <code>req.data</code> is sent via POST body, it’s URL form-encoded, not JSON encoded as you would expect since we already set data format to JSON. A bit digging on the SmartGWT forum turned out that data format setting only affects the parsing of the return value, not the outbound parameters.</p>
+
+<p>Okay…let me try again…This time, I’m setting <code>DSProtocol</code> to <code>POSTMESSAGE</code>, as this seems to be a more logical choice (as the parameters are going to be sent out as POST message/body). Does it work? I wish…From the DevConsole, it turns out that SmartGWT’s RPC Manager sends out “[Object]” in POST body…Whaaat? Looking at SmartGWT’s API, it doesn’t allow setting request data as a simple string. It has to be a <code>JavaScriptObject</code> instance. I digged inside SmartGWT’s source code, setting the attribute <code>data</code> directly to the JSON object that I want to use, but GWT shell complains it cannot cast from <code>java.lang.String</code> to <code>JavaScriptObject</code>…Sighhhh</p>
+
+<p>It starts to get frustrating. This evening, as I was going through some JavaScript stuff, it dawns to me that the notion <code>[Object]</code> seems to be the string representation of a generic JavaScript object. (i.e., the return of an object’s <code>toString()</code> method). Looking at <code>JavaScriptObject</code> class in GWT confirms this. So, what if I just override <code>toString()</code> method and just return a JSON object?</p>
+
+<p>This is like an epiphany! I went over some articles on how to do GWT JSNI and quickly come up with this:</p>
+
+<pre><code class="language-java">/* Modify OperationBinding, set to use POSTMESSAGE protocol */
+setDataProtocol(DSProtocol.POSTPARAMS);
+
+/* in ItemDS */
+static native void setValue(JavaScriptObject jso, String val) /*-{
+        jso.toString = function() {
+                    return val;
+                        }
+}-*/;
+/* in transformRequest */
+/* ... setup content type ... */
+final JavaScriptObject data = JSOHelper.createObject();
+setValue(data, &quot;{uid:'12345'}&quot;);
+req.setData(data);
+return data;
+</code></pre>
+
+<p>Et voilà!!! The DevConsole shows that RPC manager sends out {uid:12345} as the HTTP POST data and I got right what I want.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2009/06/01/fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/">Fast and elegant way to sum primes in a gigantic range</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2008/09/03/hexspeak-and-generator/">Hexspeak and Generator</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>
