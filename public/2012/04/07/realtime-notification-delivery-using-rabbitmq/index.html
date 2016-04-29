@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Realtime notification delivery using rabbitmq // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Realtime notification delivery using rabbitmq" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#websocket:3652469de01842bf96882033c0b91b72">WebSocket</a></li>
+<li><a href="#proof-of-concept:3652469de01842bf96882033c0b91b72">Proof of concept</a></li>
+<li><a href="#pika:3652469de01842bf96882033c0b91b72">Pika</a></li>
+<li><a href="#conclusion:3652469de01842bf96882033c0b91b72">Conclusion</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2012/04/07/realtime-notification-delivery-using-rabbitmq/">Realtime notification delivery using rabbitmq</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>7</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Apr</span> <span class="post-date-year">2012</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-websocket" href="http://blog.idempotent.ca/categories/websocket">websocket</a>
+				
+					<a class="post-category post-category-rabbitmq" href="http://blog.idempotent.ca/categories/rabbitmq">rabbitmq</a>
+				
+					<a class="post-category post-category-python" href="http://blog.idempotent.ca/categories/python">python</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<p>Our company has &ldquo;hack-off&rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this <a href="http://en.wikipedia.org/wiki/WebSocket">websocket</a> buzz for a while now and would like to build something interesting with it.</p>
+
+<h2 id="websocket:3652469de01842bf96882033c0b91b72">WebSocket</h2>
+
+<p>Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&rsquo;s still the same model: the client asks the server whether there&rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.</p>
+
+<p><a href="http://www.freshbooks.com/">Our company</a> provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &ldquo;events&rdquo; which gets sent to <a href="http://www.rabbitmq.com/">RabbitMQ</a>. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.</p>
+
+<h2 id="proof-of-concept:3652469de01842bf96882033c0b91b72">Proof of concept</h2>
+
+<p>For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.</p>
+
+<p><a href="http://reminiscential.files.wordpress.com/2012/04/websocket-1.png"><img src="http://reminiscential.files.wordpress.com/2012/04/websocket-1.png?w=300" alt="" title="architecture" width="300" height="181" class="aligncenter size-medium wp-image-292" /></a></p>
+
+<p>I&rsquo;ve heard good things about <a href="http://www.tornadoweb.org">Tornado</a>. Having read their docs on <a href="http://www.tornadoweb.org/documentation/websocket.html">websocket request handler</a>, I felt it&rsquo;s straightforward enough for me, so I chose Tornado as my backend.</p>
+
+<h2 id="pika:3652469de01842bf96882033c0b91b72">Pika</h2>
+
+<p>One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as <a href="http://pypi.python.org/pypi/sparkplug/">sparkplug</a> and <a href="http://pypi.python.org/pypi/stormed-amqp/0.1">stormed-amqp</a>, neither seem to be a good hit here. Finally, I stumbled on <a href="https://github.com/pika/pika">Pika</a>. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.</p>
+
+<p>The entry point looks like this:</p>
+
+<pre><code class="language-python">application = tornado.web.Application([
+    (r'/ws', handlers.MyWebSocketHandler),
+])
+
+def main():
+    pika.log.setup(color=True)
+
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    # PikaClient is our rabbitmq consumer
+    pc = client.PikaClient(io_loop)
+    application.pc = pc
+    application.pc.connect()
+
+    application.listen(8888)
+    io_loop.start()
+</code></pre>
+
+<pre><code class="language-python">class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
+
+    def open(self, *args, **kwargs):
+        pika.log.info(&quot;WebSocket opened&quot;)
+
+    def on_close(self):
+        pika.log.info(&quot;WebSocket closed&quot;)
+</code></pre>
+
+<p>That was straightforward. However, I&rsquo;m faced with the problem of how to make the amqp consumer notify websocket handlers when we receive a message from the message queue. We cannot get the handler instances from the tornado application object. Note, each websocket connection has a corresponding <code>MyWebSocketHandler</code> instance. The instances are not available from the application object. Maybe there&rsquo;s a way to get them by other means, but I&rsquo;m not familiar with the tornado API enough to know that.</p>
+
+<p>However, from the handler, we do get the <code>application</code> object, and because we attached pika_client (our amqp consumer) to the application, we have access to it inside our socket handler. Hey, how about registering the handler with the client when the websocket is connected, and let the client &ldquo;notify&rdquo; the handler when events are received? Hey, isn&rsquo;t that the <a href="http://en.wikipedia.org/wiki/Observer_pattern">observer pattern</a>?</p>
+
+<p>Here&rsquo;s the code:</p>
+
+<pre><code class="language-python">class MyWebSocketHandler(websocket.WebSocketHandler):
+
+    def open(self, *args, **kwargs):
+        self.application.pc.add_event_listener(self)
+        pika.log.info(&quot;WebSocket opened&quot;)
+
+    def on_close(self):
+        pika.log.info(&quot;WebSocket closed&quot;)
+        self.application.pc.remove_event_listener(self)
+</code></pre>
+
+<p>Now, our <code>PikaClient</code> object need to support <code>add_event_listener()</code> and <code>remove_event_listener()</code> methods.</p>
+
+<pre><code class="language-python">class PikaClient(object):
+
+    def __init__(self, io_loop):
+        pika.log.info('PikaClient: __init__')
+        self.io_loop = io_loop
+
+        self.connected = False
+        self.connecting = False
+        self.connection = None
+        self.channel = None
+
+        self.event_listeners = set([])
+
+    def connect(self):
+        if self.connecting:
+            pika.log.info('PikaClient: Already connecting to RabbitMQ')
+            return
+
+        pika.log.info('PikaClient: Connecting to RabbitMQ')
+        self.connecting = True
+
+        cred = pika.PlainCredentials('guest', 'guest')
+        param = pika.ConnectionParameters(
+            host='localhost',
+            port=5672,
+            virtual_host='/',
+            credentials=cred
+        )
+
+        self.connection = TornadoConnection(param,
+            on_open_callback=self.on_connected)
+        self.connection.add_on_close_callback(self.on_closed)
+
+    def on_connected(self, connection):
+        pika.log.info('PikaClient: connected to RabbitMQ')
+        self.connected = True
+        self.connection = connection
+        self.connection.channel(self.on_channel_open)
+
+    def on_channel_open(self, channel):
+        pika.log.info('PikaClient: Channel open, Declaring exchange')
+        self.channel = channel
+        # declare exchanges, which in turn, declare
+        # queues, and bind exchange to queues
+
+    def on_closed(self, connection):
+        pika.log.info('PikaClient: rabbit connection closed')
+        self.io_loop.stop()
+
+    def on_message(self, channel, method, header, body):
+        pika.log.info('PikaClient: message received: %s' % body)
+        self.notify_listeners(event_factory(body))
+
+    def notify_listeners(self, event_obj):
+        # here we assume the message the sourcing app
+        # post to the message queue is in JSON format
+        event_json = json.dumps(event_ostener in self.event_listeners:
+            listener.write_message(event_json)
+            pika.log.info('PikaClient: notified %s' % repr(listener))
+
+    def add_event_listener(self, listener):
+        self.event_listeners.add(listener)
+        pika.log.info('PikaClient: listener %s added' % repr(listener))
+
+    def remove_event_listener(self, listener):
+        try:
+            self.event_listeners.remove(listener)
+            pika.log.info('PikaClient: listener %s removed' % repr(listener))
+        except KeyError:
+            pass
+</code></pre>
+
+<p>I left out the queue setup code here for brevity. <code>on_message</code> callback is called when the consumer gets a message from the queue. The client, in turn, notifies all registered websocket handlers. Obviously, in real applications, you may want to do some kind of credentials and filtering, so the right message get to the right receiver. Then we simply call <code>handler.write_message()</code>, so the message gets relayed to the front-end&rsquo;s websocket.onmessage callback.</p>
+
+<p>Here&rsquo;s some front-end code:</p>
+
+<pre><code class="language-javascript">(function($){
+    $(document).ready(function() {
+        var ws = new WebSocket('ws://localhost:8888/ws');
+        ws.onmessage = function(evt){
+            alert(evt.data);
+        }
+    });
+})(jQuery);
+</code></pre>
+
+<p>Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.</p>
+
+<h2 id="conclusion:3652469de01842bf96882033c0b91b72">Conclusion</h2>
+
+<p>This is my first stab at websocket and the tornado web framework. I&rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.</p>
+
+<p>I think websocket is a very interesting technology. It opens a wide range of possibilities for more interactive and engaging web applications. Our web application is of traditional architecture: server renders most of the page, and every request involves page loads. Having a websocket may not be very beneficial as the application doesn&rsquo;t have that much of user interaction. My hackoff is more of a proof of concept. However, if the application is a one-page web app (no full page reloads), the websocket model works very well.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/">Use Python&#39;s sys.settrace() for fun and for profit</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2012/03/03/writing-a-simple-clojure-library/">Writing a Simple Clojure Library</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

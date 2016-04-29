@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Use Python bytecode to solve puzzler // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Use Python bytecode to solve puzzler" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#learning-python-internals:6bf435374bd39002427720546dfc1a00">Learning Python Internals</a></li>
+<li><a href="#the-puzzler:6bf435374bd39002427720546dfc1a00">The puzzler</a></li>
+<li><a href="#conclusion:6bf435374bd39002427720546dfc1a00">Conclusion</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2015/09/03/use-python-bytecode-to-solve-puzzler/">Use Python bytecode to solve puzzler</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>3</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Sep</span> <span class="post-date-year">2015</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-python" href="http://blog.idempotent.ca/categories/python">python</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<h2 id="learning-python-internals:6bf435374bd39002427720546dfc1a00">Learning Python Internals</h2>
+
+<p>Recently I stumbled upon <a href="https://www.youtube.com/playlist?list=PLwyG5wA5gIzgTFj5KgJJ15lxq5Cv6lo_0">this wonderful set of videos on Python interpreter internals</a>. (Thanks to <a href="http://pgbovine.net/">Philip Guo</a> for creating them and thanks to Michael Kennedy (@mkennedy) and his <a href="http://talkpython.fm/">Talk Python to me</a> show that brought this on my radar)</p>
+
+<p>I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode. These videos may just be the extra help I needed to get me started at the internals of Python.</p>
+
+<p>So far, I&rsquo;ve only watched 2 lectures and I&rsquo;m already learning a lot. I learned where to find a list of opcodes in the source code, where the main eval loop is, and what internal states the Python virtual machine keeps.</p>
+
+<p>Then I thought to myself, why not use this new found power to solve some Python mysterious that have been puzzling me?</p>
+
+<h2 id="the-puzzler:6bf435374bd39002427720546dfc1a00">The puzzler</h2>
+
+<p>A few days ago, one of my former co-workers posted this puzzler:</p>
+
+<pre><code class="language-python">(a, b) = a[b] = {}, 5
+</code></pre>
+
+<p>What are the values of <code>a</code> and <code>b</code> after the assignment? Well, it&rsquo;s not obvious what the order of assignment it is going to be. Putting it in the REPL gives us this:</p>
+
+<pre><code>&gt;&gt;&gt; (a, b) = a[b] = {}, 5
+&gt;&gt;&gt; a
+{5: ({...}, 5)}
+&gt;&gt;&gt; a[5]
+({5: ({...}, 5)}, 5)
+&gt;&gt;&gt; a[5][0]
+{5: ({...}, 5)}
+&gt;&gt;&gt; a[5][0][5]
+({5: ({...}, 5)}, 5)
+</code></pre>
+
+<p>OK, so there appears to be a circular reference going on here. The object that <code>a</code> refers to has an element that refers to the object that <code>a</code> refers to and so on and so forth. Now, the question is, how did the circular reference get there?</p>
+
+<p>Well, all Python source code eventually get compiled down to bytecode and executed on the virtual machine. In order to understand what that line actually does, we need to look at the byte code.</p>
+
+<p>It turns out that Python comes with a module to disassemble source code into byte codes (assembly for the virtual machine):</p>
+
+<pre><code>$ python -m dis
+a, b = a[5] = {}, 5
+^D
+  1           0 BUILD_MAP                0
+              3 LOAD_CONST               0 (5)
+              6 BUILD_TUPLE              2
+              9 DUP_TOP
+             10 UNPACK_SEQUENCE          2
+             13 STORE_NAME               0 (a)
+             16 STORE_NAME               1 (b)
+             19 LOAD_NAME                0 (a)
+             22 LOAD_CONST               0 (5)
+             25 STORE_SUBSCR
+             26 LOAD_CONST               1 (None)
+             29 RETURN_VALUE
+</code></pre>
+
+<p>Alright, so that humble little line of code is actually 12 instructions for the Python virtual machine. Each instruction manipulates the virtual machine&rsquo;s internal state in some way. CPython is a stack-based interpreter, which means certain instructions puts values on the stack and other instructions consume them from the stack.</p>
+
+<p>Let&rsquo;s go through the instructions:</p>
+
+<pre><code>0 BUILD_MAP                0
+</code></pre>
+
+<p>First off, it tells the interpreter to make a map object and put it on the value stack. After this instruction, our value stack looks like this:</p>
+
+<pre><code>+----+
+| {} |
++----+
+</code></pre>
+
+<p>Next up:</p>
+
+<pre><code>3 LOAD_CONST               0 (5)
+</code></pre>
+
+<p>This loads a constant (<code>5</code>) on the stack.</p>
+
+<pre><code>+----+
+| {} |
++----+
+| 5  |
++----+
+</code></pre>
+
+<p>Next:</p>
+
+<pre><code>6 BUILD_TUPLE              2
+</code></pre>
+
+<p>This instruction builds a <code>PyTuple</code> object of size <code>2</code>, which is in the argument of the opcode. It consumes the top <code>2</code> things on the stack and make a 2-tuple using these values and put the result tuple on the value stack:</p>
+
+<pre><code>+---------+
+| ({}, 5) |
++---------+
+</code></pre>
+
+<pre><code>9 DUP_TOP
+</code></pre>
+
+<p>Next we have the <code>DUP_TOP</code> instruction. It probably stands for &ldquo;duplicate the top of the stack&rdquo;, and reading the corresponding code in the eval loop, this seems to be what it&rsquo;s doing: it gets the object from the top of the stack without popping it off and push the value on the stack, while incrementing the refcount of the object.</p>
+
+<p>It&rsquo;s worth noting that this only duplicates the tuple object. The elements inside the tuple are of type <code>*PyObject</code>, which are pointers to the corresponding values (the dict and the integer), and are not duplicated by this instruction. Here&rsquo;s the value stack after this instruction:</p>
+
+<pre><code>+---------+
+| ({}, 5) |
++---------+
+| ({}, 5) |
++---------+
+</code></pre>
+
+<pre><code>10 UNPACK_SEQUENCE          2
+</code></pre>
+
+<p>The next instruction is <code>UNPACK_SEQUENCE</code> with argument <code>2</code>. This will first pop the stack, so <code>({}, 5)</code> is off the stack, and then push each element from the tuple on the stack in reverse order. After this instruction, the stack will be:</p>
+
+<pre><code>+---------+
+| ({}, 5) |
++---------+
+|   5     |
++---------+
+|   {}    |
++---------+
+</code></pre>
+
+<pre><code>13 STORE_NAME               0 (a)
+16 STORE_NAME               1 (b)
+</code></pre>
+
+<p>The next two instructions deal with &ldquo;names&rdquo;, which are variables for the scope of the frame. <code>STORE_NAME a</code> will pop the stack, and point <code>a</code> to the value, and similarily for <code>STORE_NAME b</code>. After this instruction, there will be two bindings in the frame: <code>a</code> and <code>b</code> and the stack will be back to having only one element, the tuple:</p>
+
+<pre><code>stack:
++---------+
+| ({}, 5) |
++---------+
+
+bindings:
+a &lt;- {}
+b &lt;- 5
+</code></pre>
+
+<p>The next two instructions:</p>
+
+<pre><code>19 LOAD_NAME                0 (a)
+22 LOAD_CONST               0 (5)
+</code></pre>
+
+<p><code>LOAD_NAME a</code> will push the value that the variable is bound to on the stack, so:</p>
+
+<pre><code>stack:
++---------+
+| ({}, 5) |
++---------+
+|    {}   |
++---------+
+
+bindings:
+a &lt;- {}
+b &lt;- 5
+</code></pre>
+
+<p>and <code>LOAD_CONST 5</code>, as we&rsquo;ve seen before, simply pushes the constant <code>5</code> on the stack:</p>
+
+<pre><code>stack:
++---------+
+| ({}, 5) |
++---------+
+|    {}   |
++---------+
+|     5   |
++---------+
+
+bindings:
+a &lt;- {}
+b &lt;- 5
+</code></pre>
+
+<p>Finally:</p>
+
+<pre><code>25 STORE_SUBSCR
+</code></pre>
+
+<p>This is where the magic happens. <code>STORE_SUBSCR</code> is an instruction to set element on the dictionary given the index. Here&rsquo;s the code that handles this opcode in the eval loop:</p>
+
+<pre><code>TARGET_NOARG(STORE_SUBSCR)
+{
+    w = TOP();
+    v = SECOND();
+    u = THIRD();
+    STACKADJ(-3);
+    /* v[w] = u */
+    err = PyObject_SetItem(v, w, u);
+    Py_DECREF(u);
+    Py_DECREF(v);
+    Py_DECREF(w);
+    if (err == 0) DISPATCH();
+    break;
+}
+</code></pre>
+
+<p>Here, <code>TOP</code>, <code>SECOND</code>, <code>THIRD</code> are macros that take values off of the value stack. Given our state of the virtual machine:
+* <code>w = TOP()</code> =&gt; <code>w = 5</code>
+* <code>v = SECOND()</code> =&gt; <code>v = {}</code>
+* <code>w = THIRD()</code> =&gt; <code>w = ({}, 5)</code>, but keep in mind, the first element in <code>w</code> (the tuple) is actually the same object <code>v</code> is pointing to.</p>
+
+<p>Thus, calling <code>PyObject_SetItem(v, w, u)</code> sets <code>v[w] = u</code> =&gt; <code>v[5] = (v, 5)</code>, and there a circular reference is born!</p>
+
+<p>From the sequence of operation, we can tell the order by which the assignments were executed:
+1. <code>a, b = {}, 5</code>
+2. <code>a[5] = ({}, 5)</code>, with <code>a</code> refering to the dictionary</p>
+
+<h2 id="conclusion:6bf435374bd39002427720546dfc1a00">Conclusion</h2>
+
+<p>Diving into the Python implementation is the next level ninjary that may come in handy in some cases. Granted, no one is going to write production code like the one in the puzzler, but stepping through and visualizing the virtual machine is a pretty useful and fun experience that makes me appreciate more the language I use everyday.</p>
+
+<p>Again, thanks to Philip Guo for the videos and Michael Kennedy for the podcast. Also, checkout Professor Guo&rsquo;s <a href="http://www.pythontutor.com/">python tutor</a> for visualizing how code is run.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/">Use Python bytecode to solve puzzler</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

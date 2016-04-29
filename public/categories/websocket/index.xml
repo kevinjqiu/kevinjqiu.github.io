@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Websocket on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/websocket/</link>
+    <description>Recent content in Websocket on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 07 Apr 2012 16:50:00 +0000</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/categories/websocket/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Realtime notification delivery using rabbitmq</title>
+      <link>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
+      <pubDate>Sat, 07 Apr 2012 16:50:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
+      <description>
+
+&lt;p&gt;Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this &lt;a href=&#34;http://en.wikipedia.org/wiki/WebSocket&#34;&gt;websocket&lt;/a&gt; buzz for a while now and would like to build something interesting with it.&lt;/p&gt;
+
+&lt;h2 id=&#34;websocket:3652469de01842bf96882033c0b91b72&#34;&gt;WebSocket&lt;/h2&gt;
+
+&lt;p&gt;Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&amp;rsquo;s still the same model: the client asks the server whether there&amp;rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.freshbooks.com/&#34;&gt;Our company&lt;/a&gt; provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &amp;ldquo;events&amp;rdquo; which gets sent to &lt;a href=&#34;http://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.&lt;/p&gt;
+
+&lt;h2 id=&#34;proof-of-concept:3652469de01842bf96882033c0b91b72&#34;&gt;Proof of concept&lt;/h2&gt;
+
+&lt;p&gt;For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2012/04/websocket-1.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2012/04/websocket-1.png?w=300&#34; alt=&#34;&#34; title=&#34;architecture&#34; width=&#34;300&#34; height=&#34;181&#34; class=&#34;aligncenter size-medium wp-image-292&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve heard good things about &lt;a href=&#34;http://www.tornadoweb.org&#34;&gt;Tornado&lt;/a&gt;. Having read their docs on &lt;a href=&#34;http://www.tornadoweb.org/documentation/websocket.html&#34;&gt;websocket request handler&lt;/a&gt;, I felt it&amp;rsquo;s straightforward enough for me, so I chose Tornado as my backend.&lt;/p&gt;
+
+&lt;h2 id=&#34;pika:3652469de01842bf96882033c0b91b72&#34;&gt;Pika&lt;/h2&gt;
+
+&lt;p&gt;One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as &lt;a href=&#34;http://pypi.python.org/pypi/sparkplug/&#34;&gt;sparkplug&lt;/a&gt; and &lt;a href=&#34;http://pypi.python.org/pypi/stormed-amqp/0.1&#34;&gt;stormed-amqp&lt;/a&gt;, neither seem to be a good hit here. Finally, I stumbled on &lt;a href=&#34;https://github.com/pika/pika&#34;&gt;Pika&lt;/a&gt;. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.&lt;/p&gt;
+
+&lt;p&gt;The entry point looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;application = tornado.web.Application([
+    (r&#39;/ws&#39;, handlers.MyWebSocketHandler),
+])
+
+def main():
+    pika.log.setup(color=True)
+
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    # PikaClient is our rabbitmq consumer
+    pc = client.PikaClient(io_loop)
+    application.pc = pc
+    application.pc.connect()
+
+    application.listen(8888)
+    io_loop.start()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
+
+    def open(self, *args, **kwargs):
+        pika.log.info(&amp;quot;WebSocket opened&amp;quot;)
+
+    def on_close(self):
+        pika.log.info(&amp;quot;WebSocket closed&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That was straightforward. However, I&amp;rsquo;m faced with the problem of how to make the amqp consumer notify websocket handlers when we receive a message from the message queue. We cannot get the handler instances from the tornado application object. Note, each websocket connection has a corresponding &lt;code&gt;MyWebSocketHandler&lt;/code&gt; instance. The instances are not available from the application object. Maybe there&amp;rsquo;s a way to get them by other means, but I&amp;rsquo;m not familiar with the tornado API enough to know that.&lt;/p&gt;
+
+&lt;p&gt;However, from the handler, we do get the &lt;code&gt;application&lt;/code&gt; object, and because we attached pika_client (our amqp consumer) to the application, we have access to it inside our socket handler. Hey, how about registering the handler with the client when the websocket is connected, and let the client &amp;ldquo;notify&amp;rdquo; the handler when events are received? Hey, isn&amp;rsquo;t that the &lt;a href=&#34;http://en.wikipedia.org/wiki/Observer_pattern&#34;&gt;observer pattern&lt;/a&gt;?&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyWebSocketHandler(websocket.WebSocketHandler):
+
+    def open(self, *args, **kwargs):
+        self.application.pc.add_event_listener(self)
+        pika.log.info(&amp;quot;WebSocket opened&amp;quot;)
+
+    def on_close(self):
+        pika.log.info(&amp;quot;WebSocket closed&amp;quot;)
+        self.application.pc.remove_event_listener(self)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, our &lt;code&gt;PikaClient&lt;/code&gt; object need to support &lt;code&gt;add_event_listener()&lt;/code&gt; and &lt;code&gt;remove_event_listener()&lt;/code&gt; methods.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class PikaClient(object):
+
+    def __init__(self, io_loop):
+        pika.log.info(&#39;PikaClient: __init__&#39;)
+        self.io_loop = io_loop
+
+        self.connected = False
+        self.connecting = False
+        self.connection = None
+        self.channel = None
+
+        self.event_listeners = set([])
+
+    def connect(self):
+        if self.connecting:
+            pika.log.info(&#39;PikaClient: Already connecting to RabbitMQ&#39;)
+            return
+
+        pika.log.info(&#39;PikaClient: Connecting to RabbitMQ&#39;)
+        self.connecting = True
+
+        cred = pika.PlainCredentials(&#39;guest&#39;, &#39;guest&#39;)
+        param = pika.ConnectionParameters(
+            host=&#39;localhost&#39;,
+            port=5672,
+            virtual_host=&#39;/&#39;,
+            credentials=cred
+        )
+
+        self.connection = TornadoConnection(param,
+            on_open_callback=self.on_connected)
+        self.connection.add_on_close_callback(self.on_closed)
+
+    def on_connected(self, connection):
+        pika.log.info(&#39;PikaClient: connected to RabbitMQ&#39;)
+        self.connected = True
+        self.connection = connection
+        self.connection.channel(self.on_channel_open)
+
+    def on_channel_open(self, channel):
+        pika.log.info(&#39;PikaClient: Channel open, Declaring exchange&#39;)
+        self.channel = channel
+        # declare exchanges, which in turn, declare
+        # queues, and bind exchange to queues
+
+    def on_closed(self, connection):
+        pika.log.info(&#39;PikaClient: rabbit connection closed&#39;)
+        self.io_loop.stop()
+
+    def on_message(self, channel, method, header, body):
+        pika.log.info(&#39;PikaClient: message received: %s&#39; % body)
+        self.notify_listeners(event_factory(body))
+
+    def notify_listeners(self, event_obj):
+        # here we assume the message the sourcing app
+        # post to the message queue is in JSON format
+        event_json = json.dumps(event_ostener in self.event_listeners:
+            listener.write_message(event_json)
+            pika.log.info(&#39;PikaClient: notified %s&#39; % repr(listener))
+
+    def add_event_listener(self, listener):
+        self.event_listeners.add(listener)
+        pika.log.info(&#39;PikaClient: listener %s added&#39; % repr(listener))
+
+    def remove_event_listener(self, listener):
+        try:
+            self.event_listeners.remove(listener)
+            pika.log.info(&#39;PikaClient: listener %s removed&#39; % repr(listener))
+        except KeyError:
+            pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I left out the queue setup code here for brevity. &lt;code&gt;on_message&lt;/code&gt; callback is called when the consumer gets a message from the queue. The client, in turn, notifies all registered websocket handlers. Obviously, in real applications, you may want to do some kind of credentials and filtering, so the right message get to the right receiver. Then we simply call &lt;code&gt;handler.write_message()&lt;/code&gt;, so the message gets relayed to the front-end&amp;rsquo;s websocket.onmessage callback.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s some front-end code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($){
+    $(document).ready(function() {
+        var ws = new WebSocket(&#39;ws://localhost:8888/ws&#39;);
+        ws.onmessage = function(evt){
+            alert(evt.data);
+        }
+    });
+})(jQuery);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion:3652469de01842bf96882033c0b91b72&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;This is my first stab at websocket and the tornado web framework. I&amp;rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.&lt;/p&gt;
+
+&lt;p&gt;I think websocket is a very interesting technology. It opens a wide range of possibilities for more interactive and engaging web applications. Our web application is of traditional architecture: server renders most of the page, and every request involves page loads. Having a websocket may not be very beneficial as the application doesn&amp;rsquo;t have that much of user interaction. My hackoff is more of a proof of concept. However, if the application is a one-page web app (no full page reloads), the websocket model works very well.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

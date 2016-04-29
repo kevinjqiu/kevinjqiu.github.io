@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    My impression on Scala so far // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="My impression on Scala so far" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2010/10/07/my-impression-on-scala-so-far/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#0-it-s-statically-typed-language:ca642cfe973ff485150ec7ab550d1a93">0) It&rsquo;s statically-typed language.</a></li>
+<li><a href="#1-the-ability-to-combine-functional-programming-style-with-oop:ca642cfe973ff485150ec7ab550d1a93">1) The ability to combine functional programming style with OOP.</a></li>
+<li><a href="#2-the-ability-to-create-your-own-control-flow-well-sort-of:ca642cfe973ff485150ec7ab550d1a93">2) The ability to create your own control flow (well, sort of).</a></li>
+<li><a href="#3-object-instead-of-static:ca642cfe973ff485150ec7ab550d1a93">3) Object instead of static</a></li>
+<li><a href="#4-operator-overloading-well-sort-of:ca642cfe973ff485150ec7ab550d1a93">4) Operator overloading (well, sort of).</a></li>
+<li><a href="#5-traits:ca642cfe973ff485150ec7ab550d1a93">5) Traits</a></li>
+<li><a href="#6-built-in-parser-combinator-library:ca642cfe973ff485150ec7ab550d1a93">6) Built-in parser-combinator library</a></li>
+<li><a href="#1-the-generics-still-is-obtrusive-sometimes:ca642cfe973ff485150ec7ab550d1a93">1) The generics still is obtrusive sometimes.</a></li>
+<li><a href="#2-the-collection-library:ca642cfe973ff485150ec7ab550d1a93">2) The collection library.</a></li>
+<li><a href="#3-start-up-time:ca642cfe973ff485150ec7ab550d1a93">3) Start up time</a></li>
+<li><a href="#4-lack-of-good-tooling:ca642cfe973ff485150ec7ab550d1a93">4) Lack of good tooling</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2010/10/07/my-impression-on-scala-so-far/">My impression on Scala so far</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>7</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Oct</span> <span class="post-date-year">2010</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-scala" href="http://blog.idempotent.ca/categories/scala">scala</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<p>I&rsquo;ve been exploring Scala on and off for some time now. Here&rsquo;s my highly subjective and very limited impression of Scala.</p>
+
+<p>What I like about Scala:</p>
+
+<h2 id="0-it-s-statically-typed-language:ca642cfe973ff485150ec7ab550d1a93">0) It&rsquo;s statically-typed language.</h2>
+
+<p>That&rsquo;s right! I don&rsquo;t care what you ninjas say. As much as I love dynamic languages, I just prefer statically typed language for big projects. The benefit of having type information is enormous for a project with a large code base. I know you have to write unit tests for it anyways, but when 80% of your unit test code is checking types, it&rsquo;s just counter-productive.</p>
+
+<h2 id="1-the-ability-to-combine-functional-programming-style-with-oop:ca642cfe973ff485150ec7ab550d1a93">1) The ability to combine functional programming style with OOP.</h2>
+
+<p>This is what Scala is known for - a hybrid language that boasts the better in both OOP world and FP world. I&rsquo;m not a functional programming purist, but I think Scala did a good job blending the functional programming elements into OOP. Writing Scala programs, I find myself much more empowered to be able to choose from both styles where I see fit. The ability to pass functions around and apply high order functions can significantly reduce boilerplate code and visual clutter.</p>
+
+<h2 id="2-the-ability-to-create-your-own-control-flow-well-sort-of:ca642cfe973ff485150ec7ab550d1a93">2) The ability to create your own control flow (well, sort of).</h2>
+
+<p>I had a <a href="http://reminiscential.wordpress.com/2010/09/29/scala-use-function-currying/">blog post</a> about how to use function curry to create a customized control flow. This is very empowering and yet, it&rsquo;s not an one-off syntactic sugar that&rsquo;s sprinkled randomly into the language like some other language would do. Customization of control flow is a result of combining generic language features (such as currying, by-name parameter, implicit conversion, etc).</p>
+
+<h2 id="3-object-instead-of-static:ca642cfe973ff485150ec7ab550d1a93">3) Object instead of static</h2>
+
+<p>Scala does away with the Java static keyword. Instead, it provides &ldquo;object&rdquo; keyword to define a class that only has one instance. It has the same power as singleton design pattern, without the extra boilerplate code. (if you think implementing singleton in Java is simple, think again. Especially in the multi-threaded context). Also, you can use the same construct to define &ldquo;companion&rdquo; objects, which can be used to implement the factory pattern, and put in miscellaneous methods, implicit conversion methods and so on. Extremely powerful yet elegant.</p>
+
+<h2 id="4-operator-overloading-well-sort-of:ca642cfe973ff485150ec7ab550d1a93">4) Operator overloading (well, sort of).</h2>
+
+<p>OK, it&rsquo;s not exactly operator overloading - Scala allows many non-alpha-numeric characters in the method name, so operators are essentially methods. duh! if you think about it&hellip;why should + be treated any different from <code>add()</code>? Being able to use special characters in method names makes code easy to understand. However, I&rsquo;m a bit disappointed that question mark <code>?</code> cannot be used in method names&hellip;One of the things I liked about LISP is you can define a function <code>(odd? (x) (...))</code> and readers immediately know this function returns a boolean. I don&rsquo;t have to ponder whether I should name it <code>isOdd()</code> or <code>hasChildren()</code>. Anyway&hellip;</p>
+
+<h2 id="5-traits:ca642cfe973ff485150ec7ab550d1a93">5) Traits</h2>
+
+<p>In most cases, multiple inheritance is manageable. Seems Java threw the baby out with the bath water - rejecting multiple inheritance completely. It&rsquo;s ironic that the AOP guys cracks open Java classes in the byte code level to do the &ldquo;mixins&rdquo;&hellip;With Scala, this seems to be natural.</p>
+
+<h2 id="6-built-in-parser-combinator-library:ca642cfe973ff485150ec7ab550d1a93">6) Built-in parser-combinator library</h2>
+
+<p>It&rsquo;s easy to do some non-mission critical parsing using the Scala standard library. The library itself is implemented as an internal DSL such that writing parser rules feels like writing EBNF directly.</p>
+
+<p>Here&rsquo;s what&rsquo;s not so hot for me so far:</p>
+
+<h2 id="1-the-generics-still-is-obtrusive-sometimes:ca642cfe973ff485150ec7ab550d1a93">1) The generics still is obtrusive sometimes.</h2>
+
+<p>That said, however, it&rsquo;s vastly superior than Java&rsquo;s generics system with far better type inferencing. But sometimes, you still have to write down a lot of types especially on a parameterized method. What&rsquo;s worse is because Scala is more strict than Java wrt types, you cannot ignore generic types the way you can in Java code. Moreover, because Scala runs on JVM, and because of type-erasure, you still can&rsquo;t write code such as val t = new T()&hellip;although we can&rsquo;t blame this on Scala.</p>
+
+<h2 id="2-the-collection-library:ca642cfe973ff485150ec7ab550d1a93">2) The collection library.</h2>
+
+<p>For each collection data structure, Scala has the mutable implementation, immutable implementation, and the native Java Collection Library. If you&rsquo;re writing code that calls Java library, very often you have to wrap JCL lists/maps/sets into the Scala ones, because you want to use the nice functional features Scala provides. I&rsquo;m not smart enough to know a better solution to this, I&rsquo;m just merely pointing out a sore spot. Clojure has a very clever and elegant way of integrating JCL data structures into Clojure code, but since Clojure and Scala are vastly different, I don&rsquo;t know how relevant this is.</p>
+
+<h2 id="3-start-up-time:ca642cfe973ff485150ec7ab550d1a93">3) Start up time</h2>
+
+<p>One of Scala&rsquo;s goal is to be able to both scale up and scale down. Scala programs can be run as scripts by the interpreter, but it can&rsquo;t compete with Python or Ruby in terms of development turn-around time in terms of scripting. Again, this is because of the dreadful JVM startup process.</p>
+
+<h2 id="4-lack-of-good-tooling:ca642cfe973ff485150ec7ab550d1a93">4) Lack of good tooling</h2>
+
+<p>The best Scala development environment I found so far is the Scala plugin for IntelliJ. It&rsquo;s still not great for debugging, but for coding and integration with Maven and such, it&rsquo;s great. The Eclipse plugin lags significantly, despite having built a brand new website and seemingly having more resource pour into it&hellip;I know I shouldn&rsquo;t be overly critical of a community effort, but it&rsquo;s just frustrating that it can&rsquo;t even do auto import of classes&hellip;</p>
+
+<p>Overall, I think Scala really has the potential to become a big name in the programming language landscape. It can do everything Java can and does better. It has so much features that Java doesn&rsquo;t dare to add to keep backward compatibility or keep the language dead simple or politics or whatever reason&hellip;</p>
+
+<p>Scala is not a hype, but in order to be adopted more rapidly, I think it needs to</p>
+
+<ol>
+<li><p>Stablize the language and core library.</p></li>
+
+<li><p>Tooling, tooling, tooling! Seriously.</p></li>
+</ol>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2010/10/22/use-python-decorator-to-curry-functions/">Use Python decorator to curry functions</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/">Use function currying to reduce repetition and make code clean</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Design Patterns on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/design-patterns/</link>
+    <description>Recent content in Design Patterns on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 Mar 2010 19:32:00 +0000</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/categories/design-patterns/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Use delegation to write map/filter in Java</title>
+      <link>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</link>
+      <pubDate>Mon, 01 Mar 2010 19:32:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</guid>
+      <description>
+
+&lt;h2 id=&#34;the-problem:de74c716e6ede38442b3fad3c394ab9f&#34;&gt;The problem&lt;/h2&gt;
+
+&lt;p&gt;In Java, imagine you have a list of &lt;code&gt;User&lt;/code&gt; objects, each encapsulates the user&amp;rsquo;s &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;first name&lt;/code&gt;, &lt;code&gt;last name&lt;/code&gt; and &lt;code&gt;age&lt;/code&gt;. Then you want to call a web service &lt;code&gt;UserService.deleteUsersByIds(List&amp;lt;Integer&amp;gt; userIds)&lt;/code&gt; to delete the users from your data store. It doesn&amp;rsquo;t sound too hard, does it? All you need to do is to transform you &lt;code&gt;List&amp;lt;User&amp;gt;&lt;/code&gt; to &lt;code&gt;List&amp;lt;Integer&amp;gt;&lt;/code&gt;. So you go ahead and write the following code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;List&amp;lt;Integer&amp;gt; ids = new ArrayList&amp;lt;Integer&amp;gt;(users.size());
+for (User user : users) {
+  ids.append(user.getId());
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then you go ahead and use your &lt;code&gt;ids&lt;/code&gt; list, and everything is fine and dandy.&lt;/p&gt;
+
+&lt;p&gt;However, two minutes later, you find yourself having to provide another API method with a list of user&amp;rsquo;s names in String. So, again, you exercise your &lt;em&gt;CSC101&lt;/em&gt; skill:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;List&amp;lt;String&amp;gt; names = new ArrayList&amp;lt;String&amp;gt;(users.size());
+for (User user : users) {
+  names.append(new StringBuilder(user.getFirstName()).append(&amp;quot; &amp;quot;).append(&amp;quot;user.getLastName()));
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, something else comes along and you need to write a piece of code that returns a list of names that belong to people who are under 21 years of age in the list&amp;hellip;You get the idea. Well, things get boring pretty quickly.&lt;/p&gt;
+
+&lt;p&gt;As it turns out, these are two very important functions in &lt;a href=&#34;http://en.wikipedia.org/wiki/Functional_programming&#34;&gt;functional programming&lt;/a&gt; map and filter.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;map(coll, f)&lt;/code&gt; &amp;ldquo;loops&amp;rdquo; over the collection, calls the function f on each element, and add the return of the &lt;code&gt;f(element)&lt;/code&gt; to the return collection.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;filter(coll, f)&lt;/code&gt; &amp;ldquo;loops&amp;rdquo; over the collection, calls &lt;code&gt;f(element)&lt;/code&gt;, and only add element to the return list when &lt;code&gt;f(element)&lt;/code&gt; returns &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;use-delegation-for-generic-ity:de74c716e6ede38442b3fad3c394ab9f&#34;&gt;Use delegation for generic-ity&lt;/h2&gt;
+
+&lt;p&gt;Now we take our first step in designing our generic map function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;&amp;lt;FromType, ToType&amp;gt; List&amp;lt;ToType&amp;gt; map(ArrayList&amp;lt;FromType&amp;gt; list) {
+  List&amp;lt;ToType&amp;gt; retval = new ArrayList&amp;lt;ToType&amp;gt;(list.size());
+  for (FromType item : list) {
+    [...]
+  }
+  return retval;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What we left out in the above code snippet is how the input is mapped to the output. This is where delegates come in. Unfortunately, Java doesn&amp;rsquo;t have the language-level delegate. We need to design an interface for this delegate.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;interface MapDelegate&amp;lt;FromType, ToType&amp;gt; {
+  ToType map(FromType obj);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The delegate is parameterized (to provide more type safety) with &lt;code&gt;FromType&lt;/code&gt; and &lt;code&gt;ToType&lt;/code&gt;. &lt;code&gt;FromType&lt;/code&gt; is the type of the objects in the original list, and &lt;code&gt;ToType&lt;/code&gt; is the type of objects in the mapped list. Now we need to change our method signature to incorporate the delegate.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;&amp;lt;FromType, ToType&amp;gt; List&amp;lt;ToType&amp;gt; map(ArrayList&amp;lt;FromType&amp;gt; list, MapDelegate&amp;lt;FromType, ToType&amp;gt; mapDelegate) {
+  List&amp;lt;ToType&amp;gt; retval = new ArrayList&amp;lt;ToType&amp;gt;(list.size());
+  for (FromType item : list) {
+    retval.add(mapDelegate.map(item));
+  }
+  return retval;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the client code will look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;List&amp;lt;User&amp;gt; users = getUserListFromSomeWhere();
+List&amp;lt;String&amp;gt; ids = map(users, new MapDelegate&amp;lt;User,String&amp;gt;() {
+  public String map(User obj) {
+    return new StringBuilder(user.getFirstName()).append(&amp;quot; &amp;quot;).append(&amp;quot;user.getLastName()).toString();
+  }
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Similarly, we can write a filter function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;&amp;lt;T&amp;gt; List&amp;lt;T&amp;gt; filter(List&amp;lt;T&amp;gt; list, FilterDelegate&amp;lt;T&amp;gt; filterDelegate) {
+  List&amp;lt;T&amp;gt; retval = new ArrayList&amp;lt;T&amp;gt;(list.size());
+  for (T item : list) {
+    if (filterDelegate.filter(item)
+      retval.add(item);
+  return retval;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;interface FilterDelegate&amp;lt;T&amp;gt; {
+  boolean filter(T item);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;what-about-return-value-creation:de74c716e6ede38442b3fad3c394ab9f&#34;&gt;What about return value creation?&lt;/h2&gt;
+
+&lt;p&gt;Use delegation, we can separate the parts of an algorithm in terms of their interfaces and leave the implementation to the caller. However, given the above filter and map methods, what if I don&amp;rsquo;t want the return type to be &lt;code&gt;ArrayList&lt;/code&gt;? What if I want a &lt;code&gt;LinkedList&lt;/code&gt; or a &lt;code&gt;HashSet&lt;/code&gt;? Doesn&amp;rsquo;t the statement&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;  List&amp;lt;T&amp;gt; retval = new ArrayList&amp;lt;T&amp;gt;(list.size());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;an implementation by itself?&lt;/p&gt;
+
+&lt;p&gt;Absolutely! For more flexibility, the &amp;ldquo;new&amp;rdquo; statement in the implementation body has to be delegated out as well. We introduce a &lt;code&gt;ReturnDelegate&lt;/code&gt; interface:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;interface ReturnDelegate&amp;lt;R extends Collection&amp;lt;?&amp;gt;&amp;gt; {
+  R createReturnCollection();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and plug in the return delegate to the map method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;&amp;lt;FromType, ToType, R extends Collection&amp;lt;?&amp;gt;&amp;gt; R map(Collection&amp;lt;FromType&amp;gt; coll, MapDelegate&amp;lt;FromType, ToType&amp;gt; mapDelegate, ReturnDelegate&amp;lt;R&amp;gt; returnDelegate) {
+  R retval = returnDelegate.createReturnCollection();
+  for (FromType item : list) {
+    retval.add(mapDelegate.map(item));
+  }
+  return retval;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the actual implementation has been completely separated. I know you can probably achieve flexibility without return delegate with the use of reflection, but on some systems (like GWT, which is what I&amp;rsquo;m working on and what this code is originally designed for), reflection is off limits.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
