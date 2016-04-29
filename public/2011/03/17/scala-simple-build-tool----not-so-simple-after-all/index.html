@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Scala Simple Build Tool -- Not so simple after all // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Scala Simple Build Tool -- Not so simple after all" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/">Scala Simple Build Tool -- Not so simple after all</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>17</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Mar</span> <span class="post-date-year">2011</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-scala" href="http://blog.idempotent.ca/categories/scala">scala</a>
+				
+					<a class="post-category post-category-sbt" href="http://blog.idempotent.ca/categories/sbt">sbt</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            <p><strong>Update:</strong> I got sbt working by building directly from the master branch from their github repo. The current version is 0.7.5. The tagged 0.9.4 version is actually an older version. Anyway, tried it and kinda loved it.</p>
+
+<p>This is just another late night rambling&hellip;I was trying to get a proper scala build system setup. I was using Maven scala plugin for a while, but longing for something simpler and more scalanic (is there such a word?). I was pretty <a href="2011/02/11/cake-the-yummy-clojure-build-system/">happy</a> with <a href="https://github.com/ninjudd/cake">Cake</a>, the Clojure build system and expected SBT to allow me to break away from using Maven to build Scala projects&hellip;boy, was I wrong&hellip;</p>
+
+<p>First off, when you google &lsquo;simple build tool&rsquo;, you get a link to the SBT <a href="http://code.google.com/p/simple-build-tool/">Google code home page</a>. Well, nothing wrong there, except the &ldquo;latest&rdquo; version on Google code was 0.7.4 and it was half a year ago&hellip;Maybe it&rsquo;s not that outdated, so I downloaded it, followed <a href="http://code.google.com/p/simple-build-tool/wiki/Setup">this</a> instruction and setup my <code>~/bin/sbt</code> script. Running it, it asked me to setup projects, and it only supported up until Scala 2.7.7&hellip;Hrm, 2.8 was out for a while now, so obviously, SBT 0.7.4 isn&rsquo;t the latest. Reading their home page more carefully, they&rsquo;re moving the repository to <a href="https://github.com/harrah/xsbt">Github</a>. Awesome! I&rsquo;d pick Github over Google Code any time too.</p>
+
+<p>Heading over to their Github repo, and found the latest stable version is 0.9.2. Good! So it should support Scala 2.8 now! Downloaded the zip, unzipped it, and of course it wasn&rsquo;t executable. You need to build it. There&rsquo;s a README.md, so quickly I less&rsquo;ed it. For step 1, it asked me to go to the setup wiki page on Google Code (!), which is the steps I did setting up 0.7.4&hellip;I guess they&rsquo;re using 0.7.4 as a bootstrapping build&hellip;Anyways, I did that. Step 2 was to run <code>sbt update &quot;project Launcher&quot; proguard &quot;project Simple Build Tool&quot; &quot;publish-local&quot;</code>. Of course it didn&rsquo;t work. It&rsquo;s complained 0.7.4 version of sbt-launch can&rsquo;t download Scala 2.7.7 from any of the repository&hellip;bummer! But hey, I can download Scala 2.7.7 lib from Maven! So I quickly updated pom.xml of one of my projects to use Scala 2.7.7 and did an upgrade. Now 2.7.7 is happily in my local Maven repo. Ran that command again, hooray! It started to build, and judging by the number of packages it&rsquo;s building, &ldquo;simple&rdquo; isn&rsquo;t the first adjective that comes into my mind. Anyway, it&rsquo;s building at least, so even if it&rsquo;s a little complicated, so be it&hellip;Except&hellip;of course it broke half way&hellip; and why?</p>
+
+<pre><code>[info]   Post-analysis: 107 classes.
+[info] == Precompiled 2.7.7 / compile ==
+[info]
+[info]    Precompiled 2.8.0 / compile ...
+[info]
+[info] == Precompiled 2.8.0 / compile ==
+[info]   Source analysis: 9 new/modified, 0 indirectly invalidated, 0 removed.
+[info] Compiling main sources...
+[warn] there were deprecation warnings; re-run with -deprecation for details
+[warn] one warning found
+[info] Compilation successful.
+[info]   Post-analysis: 108 classes.
+[info] == Precompiled 2.8.0 / compile ==
+java.lang.OutOfMemoryError: PermGen space
+        at java.lang.ClassLoader.defineClass1(Native Method)
+        at java.lang.ClassLoader.defineClassCond(ClassLoader.java:632)
+        at java.lang.ClassLoader.defineClass(ClassLoader.java:616)
+</code></pre>
+
+<p>You&rsquo;ve gotta be kidding me! I set <code>-Xmx512M</code> and it&rsquo;s not enough? And why is it building every version of Scala <strong>from source</strong>?? Is there something called a&hellip;JAR?</p>
+
+<p>Anyway, increased <code>-Xmx</code> from 512 to 1024M, ran again, wait, and same thing happened again! Out of PermGen space&hellip;urrgh&hellip;</p>
+
+<p>I decided to give up, at least for the day&hellip; SBT is anything but simple, at least from my experience. I know it&rsquo;s open source and people put efforts into it without compensation, so I shouldn&rsquo;t be critical about it. I&rsquo;ll give it a try again, and hopefully it&rsquo;s worth the time investment.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2011/04/20/spectrum.vim---my-first-vim-plugin/">Spectrum.vim - My first Vim plugin</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2011/03/02/write-sudoku-solver-in-clojure/">Write sudoku solver in Clojure</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>
