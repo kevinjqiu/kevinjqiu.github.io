@@ -6,8 +6,170 @@
     <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Sep 2015 22:16:36 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 28 Apr 2016 22:12:59 -0400</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Software Engineering Podcasts Review</title>
+      <link>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</link>
+      <pubDate>Thu, 28 Apr 2016 22:12:59 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</guid>
+      <description>
+
+&lt;p&gt;As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.&lt;/p&gt;
+
+&lt;h1 id=&#34;disclaimer:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Disclaimer&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;m not affiliated with any of the podcasts. Any comments I have on the podcasts are highly subjective. I&amp;rsquo;m mostly a backend web developer interested in devops, distributed systems and scalability, so I don&amp;rsquo;t subscribe to podcasts that are dedicated to iOS/Android development.&lt;/p&gt;
+
+&lt;h1 id=&#34;software-engineering-daily:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Software Engineering Daily&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/sed.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://softwareengineeringdaily.com/&#34;&gt;http://softwareengineeringdaily.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Frequency:&lt;/strong&gt; everyday&lt;/p&gt;
+
+&lt;p&gt;This has been a revelation for me since I discovered it at the end of last year (2015). It brings an episode of in-depth interview every day without fail, which speaks volume to the host &lt;a href=&#34;https://twitter.com/the_prion&#34;&gt;Jeff Meyerson&lt;/a&gt;&amp;rsquo;s passion for technology. The topics are wide-ranged, from distributed systems to operations (e.g., production monitoring) tobig data and everything in between. It&amp;rsquo;s very-well prepared and the guests are usually highly knowledgable of the subject.&lt;/p&gt;
+
+&lt;p&gt;I highly recommend this podcast.&lt;/p&gt;
+
+&lt;h1 id=&#34;software-engineering-radio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Software Engineering Radio&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/se-radio-logo.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://www.se-radio.net/&#34;&gt;http://www.se-radio.net/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; Semi-monthly&lt;/p&gt;
+
+&lt;p&gt;This is one of the first podcasts I subscribed to. It&amp;rsquo;s published by IEEE computer society so it has a high profile. Sometimes the show gets a little too academic that it disconnects with what programmers do on a day-to-day basis. Don&amp;rsquo;t get me wrong, this is an awesome show, and very insightful. However, depending on the topics or the guests, you may or may not get as much out of the show. That said, however, this is still a very solid show with interesting topics and in-depth discussions.&lt;/p&gt;
+
+&lt;h1 id=&#34;security-now:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Security Now&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/sn1400.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;https://twit.tv/shows/security-now&#34;&gt;https://twit.tv/shows/security-now&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; Weekly&lt;/p&gt;
+
+&lt;p&gt;Another long-time tech podcast and a prominent one from the popular twit.tv network. It&amp;rsquo;s going on for more than 10 years filling a unique niche. I learned a lot from Steve Gibson, the host. He has a knack of explaining security topics in plain words. His series on &lt;a href=&#34;https://twit.tv/shows/security-now/episodes/309&#34;&gt;How the Internet works&lt;/a&gt; is highly recommended. However, nowadays, the show tends to have trouble staying on topic, with so many non-security related chitchats. However, it&amp;rsquo;s still a good source to stay informed on security news.&lt;/p&gt;
+
+&lt;h1 id=&#34;coderradio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;CoderRadio&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/coderradio.jpeg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://www.jupiterbroadcasting.com/show/coderradio/&#34;&gt;http://www.jupiterbroadcasting.com/show/coderradio/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; Weekly&lt;/p&gt;
+
+&lt;p&gt;I started listening to Coder Radio after I discovered &lt;a href=&#34;http://www.jupiterbroadcasting.com/&#34;&gt;Jupiter Broadcasting&lt;/a&gt; by way of &lt;a href=&#34;http://www.jupiterbroadcasting.com/show/linuxactionshow/&#34;&gt;Linux Action Show&lt;/a&gt;. The host Michael Dominic is an independent developer, so he has some insight on how to run a consulting business and how to do contract negotiation. While I don&amp;rsquo;t fancy being a software contractor at this point of my career, I do appreciate the information. However, this show gets facetious, snarky and dismissive really quickly. I don&amp;rsquo;t mind that occasionally but sometimes I feel the host is over-doing it.&lt;/p&gt;
+
+&lt;p&gt;I do get some value out of the show but it&amp;rsquo;s not known for its depth.&lt;/p&gt;
+
+&lt;h1 id=&#34;turing-incomplete:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Turing-InComplete&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/turing.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://turing.cool/&#34;&gt;http://turing.cool/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; No fixed schedule&lt;/p&gt;
+
+&lt;p&gt;This is mostly a talk show among 4 software engineer friends. They have a good diversity: frontend/backend, devops, contractor and so on. They are all enthusiastic about software. The most I get out of the show is inspiration. They&amp;rsquo;re always experimenting with new technology: elixir, clojurescript, new hashicorp tools etc. Listening to their podcast makes me want to learn and be a better software engineer. In the first dozen of episodes, they have a single topic for each show such as TDD, code review, pair programming etc, but as time goes on, the show becomes a grabbag of everything and it gets chatty without a ton of substance. It&amp;rsquo;s a casual conversation among friends having fun, and I guess that could be viewed as a strength.&lt;/p&gt;
+
+&lt;h1 id=&#34;talk-python-to-me:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Talk Python to Me&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/talkpython.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;https://talkpython.fm/&#34;&gt;https://talkpython.fm/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; weekly&lt;/p&gt;
+
+&lt;p&gt;This is a Python-specific podcast hosted by Michael Kennedy. Being primarily a Python developer, I followed the podcast since its infancy. The show started off with a couple really strong interviews with interviewees like Mike Bayer, Kenneith Reitz, Armin Ronacher and David Beazley. The show has good depth, although sometimes it could be a bit stronger. There are gems like the one &lt;a href=&#34;https://talkpython.fm/episodes/show/22/cpython-internals-and-learning-python-with-pythontutor.com&#34;&gt;episode&lt;/a&gt; with Philip Guo which lead me to Philip&amp;rsquo;s excellent CPython internals video series. Overall, a really solid podcast.&lt;/p&gt;
+
+&lt;h1 id=&#34;podcast-init:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Podcast.__init__&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/podcast_init_logo.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://podcastinit.com/&#34;&gt;http://podcastinit.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; weekly&lt;/p&gt;
+
+&lt;p&gt;Another Python specific podcast started around the same time as Talk Python to Me. Another solid show and I do find it&amp;rsquo;s a little bit more in-depth than TalkPython but it might just be my impression.&lt;/p&gt;
+
+&lt;h1 id=&#34;scale-your-code:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Scale Your Code&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/scaleyourcode.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;https://scaleyourcode.com/&#34;&gt;https://scaleyourcode.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; semi-monthly&lt;/p&gt;
+
+&lt;p&gt;I learned about this podcast on an &lt;a href=&#34;http://softwareengineeringdaily.com/2016/04/27/scale-code-christophe-limpalair/&#34;&gt;episode&lt;/a&gt; of another podcast software engineering daily. The host Christophe Limpalair is a super energetic and passionate guy. It&amp;rsquo;s inspiring to hear his journey. I&amp;rsquo;ve only discovered it not too long ago, but the topics are very relevant to what I do and what I interest in. I can&amp;rsquo;t wait to dive into its archive of back episodes.&lt;/p&gt;
+
+&lt;h1 id=&#34;fullstack-radio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;FullStack Radio&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/fullstack.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://www.fullstackradio.com/&#34;&gt;http://www.fullstackradio.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; semi-monthly&lt;/p&gt;
+
+&lt;p&gt;Another podcast I discovered recently. I&amp;rsquo;ve only listened to one &lt;a href=&#34;http://www.fullstackradio.com/38&#34;&gt;episode&lt;/a&gt; so far but I&amp;rsquo;m very impressed by the depth of the show. It&amp;rsquo;s like listening to a technical discussion between two colleagues. The host is not simply an echoing chamber but he&amp;rsquo;s able to provide many counter points, such as discussion about trade-offs. Great stuff!&lt;/p&gt;
+
+&lt;p&gt;What are your favourite or most often listened to software podcasts?&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Use Python bytecode to solve puzzler</title>
@@ -1893,176 +2055,6 @@ def main():
 &lt;h2 id=&#34;publish-to-clojar-org:917765c0791e064a1896921b9ddadd44&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
 
 &lt;p&gt;Now that the library is in a relatively stable state. I&amp;rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do &lt;code&gt;lein pom &amp;amp;&amp;amp; lein deploy&lt;/code&gt;, voilà!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Building a Google Reader plugin using Chrome extension</title>
-      <link>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</link>
-      <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
-      
-      <guid>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</guid>
-      <description>
-
-&lt;p&gt;OK, ok, I understand. The title is a bit misleading. &lt;a href=&#34;http://reader.google.com&#34;&gt;Google Reader&lt;/a&gt; isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-we-going-to-achieve:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;What are we going to achieve?&lt;/h2&gt;
-
-&lt;p&gt;Anyone uses Google Reader to read &lt;a href=&#34;http://www.dzone.com&#34;&gt;DZone&lt;/a&gt; feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following. I don&amp;rsquo;t know about you but for me, sometimes I just want to read the original story without going to the DZone page. It&amp;rsquo;d be nice if they have a &amp;ldquo;click through&amp;rdquo; action (like the following) on the action bar that brings you to the original story.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png?w=300&#34; alt=&#34;End goal&#34; title=&#34;Screenshot-Google Reader (539) - Chromium&#34; width=&#34;300&#34; height=&#34;100&#34; class=&#34;aligncenter size-medium wp-image-262&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;basic-strategy:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Basic strategy&lt;/h2&gt;
-
-&lt;p&gt;So, how are we going to implement this feature? Chrome Extension code can be injected into the running page, and have full access to its DOM. Therefore, we can write code such that if the currently opened entry is a DZone entry, we insert &amp;lsquo;Click Through&amp;rsquo; action into the entry action bar (action bar is the bar underneath the main entry, where &amp;lsquo;Add Star&amp;rsquo;, &amp;lsquo;Like&amp;rsquo;, &amp;lsquo;Share&amp;rsquo; actions are). The &amp;lsquo;Click Through&amp;rsquo; action, when clicked, will read the feed URL, fetch it in the background, parse it and get the URL of the original story, and open the original URL in a separate tab.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-261&#34; title=&#34;strategy&#34; src=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png?w=300&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;231&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;create-a-manifest:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Create a manifest&lt;/h3&gt;
-
-&lt;p&gt;A Chrome extension must have a manifest.json file containing the metadata of the extension.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{
-    &amp;quot;name&amp;quot;:&amp;quot;GReader&amp;quot;,
-    &amp;quot;version&amp;quot;:&amp;quot;1.0&amp;quot;,
-    &amp;quot;description&amp;quot;:&amp;quot;Enhanced Google Reader experience&amp;quot;,
-    &amp;quot;permissions&amp;quot;: [
-        &amp;quot;http://*.dzone.com/&amp;quot;
-    ],
-    &amp;quot;background_page&amp;quot;:&amp;quot;background.html&amp;quot;,
-    &amp;quot;content_scripts&amp;quot;:[{
-        &amp;quot;matches&amp;quot;:[
-            &amp;quot;*://www.google.com/reader/view/*&amp;quot;
-        ],
-        &amp;quot;js&amp;quot;:[
-            &amp;quot;lib/jquery-1.6.4.min.js&amp;quot;,
-            &amp;quot;src/greader.js&amp;quot;
-        ],
-        &amp;quot;run_at&amp;quot;:&amp;quot;document_idle&amp;quot;
-    }]
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here we&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;specify that the extension needs to access any URL on dzone.com including its subdomains.&lt;/li&gt;
-&lt;li&gt;specify the background page&lt;/li&gt;
-&lt;li&gt;specify the content script&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &amp;ldquo;run_at&amp;rdquo; property will dictate when the content script is going to be run. Because Google Reader is a full AJAX application, we want our script to be run when the document is fully rendered.&lt;/p&gt;
-
-&lt;p&gt;We also specify the &amp;ldquo;matches&amp;rdquo; property, so our content script is only activated when the URL matches.&lt;/p&gt;
-
-&lt;h3 id=&#34;the-content-script:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;The content script&lt;/h3&gt;
-
-&lt;p&gt;We start with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($) {
-
-})(jQuery);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This creates a function scope, which separates our &lt;code&gt;$&lt;/code&gt; variable apart from the current page&amp;rsquo;s &lt;code&gt;$&lt;/code&gt; variable. Google Reader (I assume, is using Google&amp;rsquo;s own closure library), already defines $ and it&amp;rsquo;s not the jQuery object. This idiom gives &lt;code&gt;$&lt;/code&gt; as jQuery.&lt;/p&gt;
-
-&lt;p&gt;We want to insert the &amp;ldquo;Click through&amp;rdquo; action in the entry action bar. To achieve this, we will need to listen on &lt;code&gt;DOMNodeInserted&lt;/code&gt; event, and when such event happens and the node inserted is of the right CSS class name (&amp;ldquo;entry-action&amp;rdquo; here), we proceed to manipulate the DOM to add our customized actions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    $(&amp;quot;#entries&amp;quot;).live(&#39;DOMNodeInserted&#39;, function(e) {
-        if (!e.target.className.match(/entry\-actions/))
-            return;
-
-        var entryAction = new EntryAction($(e.target));
-        if (entryAction.entry.url.match(/^http\:\/\/feeds\.dzone\.com/)) {
-            entryAction.addAction({
-                &#39;name&#39;:&#39;Click Through&#39;,
-                &#39;fn&#39;:function(entry) {
-                    chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;fetch_entry&amp;quot;, &amp;quot;url&amp;quot;:entry.url}, function(response) {
-                        var matched = /&amp;lt;div class=&amp;quot;ldTitle&amp;quot;&amp;gt;(.*?)&amp;lt;\/div&amp;gt;/.exec(response.data);
-                        var href = ($(matched[1]).attr(&amp;quot;href&amp;quot;));
-                        if (href !== null) {
-                            chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;open_tab&amp;quot;, &amp;quot;url&amp;quot;:href}, function(response) {
-                                // TODO: do something afterwards?
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here I built a little bit of abstraction around the raw entry action bar. It&amp;rsquo;s encapsulated in EntryAction class, which I&amp;rsquo;ll show in a moment. Basically, if the current displaying entry&amp;rsquo;s feed URL starts with feed.dzone.com, I&amp;rsquo;ll build the &amp;ldquo;click through&amp;rdquo; action, and set the click handler. It sends the feed URL to the background script. The background script will do the cross-site request to fetch the feed content and send it back. Then the content script will regex match the content to get the original story&amp;rsquo;s URL, and ask chrome to open the URL in a new tab.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s the code for &lt;code&gt;EntryAction&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    var EntryAction = function(element) {
-        this.element = element;
-        var entryElmt = this.element.parent(&amp;quot;.entry&amp;quot;);
-        var url = $(entryElmt).find(&amp;quot;.entry-title-link&amp;quot;).attr(&#39;href&#39;);
-        this.entry = {
-            &amp;quot;url&amp;quot; : url
-        };
-    };
-
-    EntryAction.prototype.addAction = function(action) {
-        var that = this;
-        var onclick = function(e) {
-            var actionFunc = action[&#39;fn&#39;];
-            actionFunc(that.entry);
-        }
-
-        this.element.append($(&amp;quot;&amp;lt;span&amp;gt;&amp;quot;)
-            .addClass(&amp;quot;link unselectable&amp;quot;)
-            .text(action[&#39;name&#39;])
-            .click(onclick));
-    };
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I won&amp;rsquo;t delve too much into this code. It makes assumptions about the structure of the DOM that Google Reader renders into. This does make the extension brittle but that&amp;rsquo;s the reality we have to deal with for client-side scripting. Luckily, Google Reader markup doesn&amp;rsquo;t change very often. For people new to object-oriented Javascript, this is one way to create a &amp;ldquo;class&amp;rdquo; (prototype) and put &amp;ldquo;instance&amp;rdquo; methods on a &amp;ldquo;class&amp;rdquo;.&lt;/p&gt;
-
-&lt;h3 id=&#34;background-html:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Background.html&lt;/h3&gt;
-
-&lt;p&gt;Unlike content scripts, which is injected and runs in the target page, the background page runs in its own process (the extension&amp;rsquo;s process) and keeps running while the extension is active. It&amp;rsquo;s comparable to the &amp;ldquo;server&amp;rdquo; side of the extension. For our extension&amp;rsquo;s purpose, we&amp;rsquo;re using the background script to make requests to 3rd party web sites (DZone).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;html&amp;gt;
-&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;lib/jquery-1.6.4.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;script&amp;gt;
-    (function($) {
-        chrome.extension.onRequest.addListener(
-            function(request, sender, sendResponse) {
-                if (request.type === &#39;fetch_entry&#39;) {
-                    $.get(request.url, function(data) {
-                        sendResponse({&amp;quot;data&amp;quot;:data});
-                    });
-                } else if (request.type === &#39;open_tab&#39;) {
-                    chrome.tabs.create({&#39;url&#39;:request.url});
-                    sendResponse({&amp;quot;status&amp;quot;:&amp;quot;ok&amp;quot;});
-                }
-            }
-        );
-    })(jQuery);
-&amp;lt;/script&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We register handlers for events that our &amp;ldquo;client&amp;rdquo; (the content script) is able to raise. Here we deal with 2 kinds of events: fetch_entry and open_tab.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Although Chrome 13 allows cross-site requests from content scripts, I&amp;rsquo;m actually quite fond of this pattern of delegating requests to the background page.&lt;/li&gt;
-&lt;li&gt;chrome.tabs isn&amp;rsquo;t accessible in the content script. That&amp;rsquo;s why open_tab is an event the client (the content script) can raise and delegate chrome specific API calls to the background script.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;after-thoughts:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;After Thoughts&lt;/h2&gt;
-
-&lt;p&gt;That&amp;rsquo;s it! That&amp;rsquo;s my first Chrome extension. It&amp;rsquo;s not earth shattering or anything but I learned quite a lot. I like Chrome extension development &amp;ndash; it&amp;rsquo;s straightforward and simple. The architecture is quite simple yet powerful. The code is on &lt;a href=&#34;https://github.com/kevinjqiu/greader&#34;&gt;Github&lt;/a&gt; and I plan to expand it to a framework for customizing Google Reader experience. Here are a few things we can do with the extension:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Link &amp;ldquo;Share&amp;rdquo; action to twitter/Google+&lt;/li&gt;
-&lt;li&gt;Click on &amp;ldquo;Like&amp;rdquo; action to automatically vote up on DZone (or any other news aggregator)&lt;/li&gt;
-&lt;li&gt;Share with comment on Google Reader puts the comment on the entry on DZone (or any other news aggregator)&lt;/li&gt;
-&lt;li&gt;endless opportunities&amp;hellip;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     

@@ -6,8 +6,170 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Sep 2015 22:16:36 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 28 Apr 2016 22:12:59 -0400</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Software Engineering Podcasts Review</title>
+      <link>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</link>
+      <pubDate>Thu, 28 Apr 2016 22:12:59 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</guid>
+      <description>
+
+&lt;p&gt;As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.&lt;/p&gt;
+
+&lt;h1 id=&#34;disclaimer:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Disclaimer&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;m not affiliated with any of the podcasts. Any comments I have on the podcasts are highly subjective. I&amp;rsquo;m mostly a backend web developer interested in devops, distributed systems and scalability, so I don&amp;rsquo;t subscribe to podcasts that are dedicated to iOS/Android development.&lt;/p&gt;
+
+&lt;h1 id=&#34;software-engineering-daily:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Software Engineering Daily&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/sed.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://softwareengineeringdaily.com/&#34;&gt;http://softwareengineeringdaily.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Frequency:&lt;/strong&gt; everyday&lt;/p&gt;
+
+&lt;p&gt;This has been a revelation for me since I discovered it at the end of last year (2015). It brings an episode of in-depth interview every day without fail, which speaks volume to the host &lt;a href=&#34;https://twitter.com/the_prion&#34;&gt;Jeff Meyerson&lt;/a&gt;&amp;rsquo;s passion for technology. The topics are wide-ranged, from distributed systems to operations (e.g., production monitoring) tobig data and everything in between. It&amp;rsquo;s very-well prepared and the guests are usually highly knowledgable of the subject.&lt;/p&gt;
+
+&lt;p&gt;I highly recommend this podcast.&lt;/p&gt;
+
+&lt;h1 id=&#34;software-engineering-radio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Software Engineering Radio&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/se-radio-logo.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://www.se-radio.net/&#34;&gt;http://www.se-radio.net/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; Semi-monthly&lt;/p&gt;
+
+&lt;p&gt;This is one of the first podcasts I subscribed to. It&amp;rsquo;s published by IEEE computer society so it has a high profile. Sometimes the show gets a little too academic that it disconnects with what programmers do on a day-to-day basis. Don&amp;rsquo;t get me wrong, this is an awesome show, and very insightful. However, depending on the topics or the guests, you may or may not get as much out of the show. That said, however, this is still a very solid show with interesting topics and in-depth discussions.&lt;/p&gt;
+
+&lt;h1 id=&#34;security-now:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Security Now&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/sn1400.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;https://twit.tv/shows/security-now&#34;&gt;https://twit.tv/shows/security-now&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; Weekly&lt;/p&gt;
+
+&lt;p&gt;Another long-time tech podcast and a prominent one from the popular twit.tv network. It&amp;rsquo;s going on for more than 10 years filling a unique niche. I learned a lot from Steve Gibson, the host. He has a knack of explaining security topics in plain words. His series on &lt;a href=&#34;https://twit.tv/shows/security-now/episodes/309&#34;&gt;How the Internet works&lt;/a&gt; is highly recommended. However, nowadays, the show tends to have trouble staying on topic, with so many non-security related chitchats. However, it&amp;rsquo;s still a good source to stay informed on security news.&lt;/p&gt;
+
+&lt;h1 id=&#34;coderradio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;CoderRadio&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/coderradio.jpeg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://www.jupiterbroadcasting.com/show/coderradio/&#34;&gt;http://www.jupiterbroadcasting.com/show/coderradio/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; Weekly&lt;/p&gt;
+
+&lt;p&gt;I started listening to Coder Radio after I discovered &lt;a href=&#34;http://www.jupiterbroadcasting.com/&#34;&gt;Jupiter Broadcasting&lt;/a&gt; by way of &lt;a href=&#34;http://www.jupiterbroadcasting.com/show/linuxactionshow/&#34;&gt;Linux Action Show&lt;/a&gt;. The host Michael Dominic is an independent developer, so he has some insight on how to run a consulting business and how to do contract negotiation. While I don&amp;rsquo;t fancy being a software contractor at this point of my career, I do appreciate the information. However, this show gets facetious, snarky and dismissive really quickly. I don&amp;rsquo;t mind that occasionally but sometimes I feel the host is over-doing it.&lt;/p&gt;
+
+&lt;p&gt;I do get some value out of the show but it&amp;rsquo;s not known for its depth.&lt;/p&gt;
+
+&lt;h1 id=&#34;turing-incomplete:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Turing-InComplete&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/turing.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://turing.cool/&#34;&gt;http://turing.cool/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; No fixed schedule&lt;/p&gt;
+
+&lt;p&gt;This is mostly a talk show among 4 software engineer friends. They have a good diversity: frontend/backend, devops, contractor and so on. They are all enthusiastic about software. The most I get out of the show is inspiration. They&amp;rsquo;re always experimenting with new technology: elixir, clojurescript, new hashicorp tools etc. Listening to their podcast makes me want to learn and be a better software engineer. In the first dozen of episodes, they have a single topic for each show such as TDD, code review, pair programming etc, but as time goes on, the show becomes a grabbag of everything and it gets chatty without a ton of substance. It&amp;rsquo;s a casual conversation among friends having fun, and I guess that could be viewed as a strength.&lt;/p&gt;
+
+&lt;h1 id=&#34;talk-python-to-me:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Talk Python to Me&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/talkpython.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;https://talkpython.fm/&#34;&gt;https://talkpython.fm/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; weekly&lt;/p&gt;
+
+&lt;p&gt;This is a Python-specific podcast hosted by Michael Kennedy. Being primarily a Python developer, I followed the podcast since its infancy. The show started off with a couple really strong interviews with interviewees like Mike Bayer, Kenneith Reitz, Armin Ronacher and David Beazley. The show has good depth, although sometimes it could be a bit stronger. There are gems like the one &lt;a href=&#34;https://talkpython.fm/episodes/show/22/cpython-internals-and-learning-python-with-pythontutor.com&#34;&gt;episode&lt;/a&gt; with Philip Guo which lead me to Philip&amp;rsquo;s excellent CPython internals video series. Overall, a really solid podcast.&lt;/p&gt;
+
+&lt;h1 id=&#34;podcast-init:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Podcast.__init__&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/podcast_init_logo.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://podcastinit.com/&#34;&gt;http://podcastinit.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; weekly&lt;/p&gt;
+
+&lt;p&gt;Another Python specific podcast started around the same time as Talk Python to Me. Another solid show and I do find it&amp;rsquo;s a little bit more in-depth than TalkPython but it might just be my impression.&lt;/p&gt;
+
+&lt;h1 id=&#34;scale-your-code:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Scale Your Code&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/scaleyourcode.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;https://scaleyourcode.com/&#34;&gt;https://scaleyourcode.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; semi-monthly&lt;/p&gt;
+
+&lt;p&gt;I learned about this podcast on an &lt;a href=&#34;http://softwareengineeringdaily.com/2016/04/27/scale-code-christophe-limpalair/&#34;&gt;episode&lt;/a&gt; of another podcast software engineering daily. The host Christophe Limpalair is a super energetic and passionate guy. It&amp;rsquo;s inspiring to hear his journey. I&amp;rsquo;ve only discovered it not too long ago, but the topics are very relevant to what I do and what I interest in. I can&amp;rsquo;t wait to dive into its archive of back episodes.&lt;/p&gt;
+
+&lt;h1 id=&#34;fullstack-radio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;FullStack Radio&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/fullstack.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://www.fullstackradio.com/&#34;&gt;http://www.fullstackradio.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; semi-monthly&lt;/p&gt;
+
+&lt;p&gt;Another podcast I discovered recently. I&amp;rsquo;ve only listened to one &lt;a href=&#34;http://www.fullstackradio.com/38&#34;&gt;episode&lt;/a&gt; so far but I&amp;rsquo;m very impressed by the depth of the show. It&amp;rsquo;s like listening to a technical discussion between two colleagues. The host is not simply an echoing chamber but he&amp;rsquo;s able to provide many counter points, such as discussion about trade-offs. Great stuff!&lt;/p&gt;
+
+&lt;p&gt;What are your favourite or most often listened to software podcasts?&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Use Python bytecode to solve puzzler</title>
@@ -1726,47 +1888,6 @@ def main():
 &lt;p&gt;Anyhow, give it a try and hope you like it.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/kevinjqiu/spectrum.vim&#34;&gt;https://github.com/kevinjqiu/spectrum.vim&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Scala Simple Build Tool -- Not so simple after all</title>
-      <link>http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</link>
-      <pubDate>Thu, 17 Mar 2011 20:04:00 +0000</pubDate>
-      
-      <guid>http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; I got sbt working by building directly from the master branch from their github repo. The current version is 0.7.5. The tagged 0.9.4 version is actually an older version. Anyway, tried it and kinda loved it.&lt;/p&gt;
-
-&lt;p&gt;This is just another late night rambling&amp;hellip;I was trying to get a proper scala build system setup. I was using Maven scala plugin for a while, but longing for something simpler and more scalanic (is there such a word?). I was pretty &lt;a href=&#34;2011/02/11/cake-the-yummy-clojure-build-system/&#34;&gt;happy&lt;/a&gt; with &lt;a href=&#34;https://github.com/ninjudd/cake&#34;&gt;Cake&lt;/a&gt;, the Clojure build system and expected SBT to allow me to break away from using Maven to build Scala projects&amp;hellip;boy, was I wrong&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;First off, when you google &amp;lsquo;simple build tool&amp;rsquo;, you get a link to the SBT &lt;a href=&#34;http://code.google.com/p/simple-build-tool/&#34;&gt;Google code home page&lt;/a&gt;. Well, nothing wrong there, except the &amp;ldquo;latest&amp;rdquo; version on Google code was 0.7.4 and it was half a year ago&amp;hellip;Maybe it&amp;rsquo;s not that outdated, so I downloaded it, followed &lt;a href=&#34;http://code.google.com/p/simple-build-tool/wiki/Setup&#34;&gt;this&lt;/a&gt; instruction and setup my &lt;code&gt;~/bin/sbt&lt;/code&gt; script. Running it, it asked me to setup projects, and it only supported up until Scala 2.7.7&amp;hellip;Hrm, 2.8 was out for a while now, so obviously, SBT 0.7.4 isn&amp;rsquo;t the latest. Reading their home page more carefully, they&amp;rsquo;re moving the repository to &lt;a href=&#34;https://github.com/harrah/xsbt&#34;&gt;Github&lt;/a&gt;. Awesome! I&amp;rsquo;d pick Github over Google Code any time too.&lt;/p&gt;
-
-&lt;p&gt;Heading over to their Github repo, and found the latest stable version is 0.9.2. Good! So it should support Scala 2.8 now! Downloaded the zip, unzipped it, and of course it wasn&amp;rsquo;t executable. You need to build it. There&amp;rsquo;s a README.md, so quickly I less&amp;rsquo;ed it. For step 1, it asked me to go to the setup wiki page on Google Code (!), which is the steps I did setting up 0.7.4&amp;hellip;I guess they&amp;rsquo;re using 0.7.4 as a bootstrapping build&amp;hellip;Anyways, I did that. Step 2 was to run &lt;code&gt;sbt update &amp;quot;project Launcher&amp;quot; proguard &amp;quot;project Simple Build Tool&amp;quot; &amp;quot;publish-local&amp;quot;&lt;/code&gt;. Of course it didn&amp;rsquo;t work. It&amp;rsquo;s complained 0.7.4 version of sbt-launch can&amp;rsquo;t download Scala 2.7.7 from any of the repository&amp;hellip;bummer! But hey, I can download Scala 2.7.7 lib from Maven! So I quickly updated pom.xml of one of my projects to use Scala 2.7.7 and did an upgrade. Now 2.7.7 is happily in my local Maven repo. Ran that command again, hooray! It started to build, and judging by the number of packages it&amp;rsquo;s building, &amp;ldquo;simple&amp;rdquo; isn&amp;rsquo;t the first adjective that comes into my mind. Anyway, it&amp;rsquo;s building at least, so even if it&amp;rsquo;s a little complicated, so be it&amp;hellip;Except&amp;hellip;of course it broke half way&amp;hellip; and why?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;[info]   Post-analysis: 107 classes.
-[info] == Precompiled 2.7.7 / compile ==
-[info]
-[info]    Precompiled 2.8.0 / compile ...
-[info]
-[info] == Precompiled 2.8.0 / compile ==
-[info]   Source analysis: 9 new/modified, 0 indirectly invalidated, 0 removed.
-[info] Compiling main sources...
-[warn] there were deprecation warnings; re-run with -deprecation for details
-[warn] one warning found
-[info] Compilation successful.
-[info]   Post-analysis: 108 classes.
-[info] == Precompiled 2.8.0 / compile ==
-java.lang.OutOfMemoryError: PermGen space
-        at java.lang.ClassLoader.defineClass1(Native Method)
-        at java.lang.ClassLoader.defineClassCond(ClassLoader.java:632)
-        at java.lang.ClassLoader.defineClass(ClassLoader.java:616)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You&amp;rsquo;ve gotta be kidding me! I set &lt;code&gt;-Xmx512M&lt;/code&gt; and it&amp;rsquo;s not enough? And why is it building every version of Scala &lt;strong&gt;from source&lt;/strong&gt;?? Is there something called a&amp;hellip;JAR?&lt;/p&gt;
-
-&lt;p&gt;Anyway, increased &lt;code&gt;-Xmx&lt;/code&gt; from 512 to 1024M, ran again, wait, and same thing happened again! Out of PermGen space&amp;hellip;urrgh&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;I decided to give up, at least for the day&amp;hellip; SBT is anything but simple, at least from my experience. I know it&amp;rsquo;s open source and people put efforts into it without compensation, so I shouldn&amp;rsquo;t be critical about it. I&amp;rsquo;ll give it a try again, and hopefully it&amp;rsquo;s worth the time investment.&lt;/p&gt;
 </description>
     </item>
     
