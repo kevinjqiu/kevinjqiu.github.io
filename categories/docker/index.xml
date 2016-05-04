@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/docker/</link>
+    <description>Recent content in Docker on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 May 2016 22:52:41 -0400</lastBuildDate>
+    <atom:link href="http://blog.idempotent.ca/categories/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Docker...root...root...Docker (a.k.a. the docker group is a backdoor)</title>
+      <link>http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</link>
+      <pubDate>Tue, 03 May 2016 22:52:41 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</guid>
+      <description>&lt;p&gt;While working with docker related stuff and when I use volume mount to a subdir of my home dir, I always come across the issue of the container littering folders with &lt;code&gt;root:root&lt;/code&gt; permission in my home folder and then I have to &lt;code&gt;sudo rm ...&lt;/code&gt; it, for example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d $(pwd)/data:/var/lib/mysql/data mysql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It always annoys me but today, it came to me like an epiphany that this is actually a pretty severe security vulnerability.&lt;/p&gt;
+
+&lt;p&gt;At &lt;code&gt;$DAYJOB&lt;/code&gt;, our build machines and staging hosts are all locked down, so we developers don&amp;rsquo;t have &lt;code&gt;sudo&lt;/code&gt; privilege to run anything &lt;strong&gt;except&lt;/strong&gt; &lt;code&gt;/usr/bin/docker&lt;/code&gt;, so it&amp;rsquo;s &lt;code&gt;/etc/sudoers&lt;/code&gt; file have something to the effect of:&lt;/p&gt;
+
+&lt;p&gt;%dev            ALL =(root) NOPASSWD: /usr/bin/docker&lt;/p&gt;
+
+&lt;p&gt;This is fine and dandy for other commands, but with &lt;code&gt;docker&lt;/code&gt;, when you run it with &lt;code&gt;sudo&lt;/code&gt;, you &lt;em&gt;are&lt;/em&gt; essentially &lt;code&gt;root&lt;/code&gt;, inside the container and outside. I thought: what if I create an image, and volume mount &lt;code&gt;/&lt;/code&gt; into the image? Wouldn&amp;rsquo;t that give me root privilege to everything?&lt;/p&gt;
+
+&lt;p&gt;A quick proof of concept proved my suspicion:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --rm -v /:/mnt alpine /bin/sh
+/ # chroot /mnt
+root@0a327dad801b:/# ls /
+bin   config   dev  home        initrd.img.old  lib64  logs        media  opt   root  sbin     srv  syslog-logs  usr  vmlinuz
+boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  run   selinux  sys  tmp          var  vmlinuz.old
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hey, I have a &lt;em&gt;root shell&lt;/em&gt; on the host machine where my user account has only limited permissions. Once I&amp;rsquo;m root, the possibility is endless: I can &lt;code&gt;cd&lt;/code&gt; into &lt;code&gt;/home/opsuser&lt;/code&gt;, and insert an ssh key I own to their &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; file and suddenly I can &lt;code&gt;ssh&lt;/code&gt; as that user without this docker backdoor. I can setup a MITMproxy and capture all traffic on the host. I can inspect the log files I&amp;rsquo;m not suppsed to see, etc etc etc. Of course I&amp;rsquo;m not going to do that, but just thinking of it gives me chills, and what if some rogue employee discovers this and either steals my account credentials or impersonates me?&lt;/p&gt;
+
+&lt;p&gt;Anyhow, I thought that was quite a revelation, and was about to email security@docker.com, until I searched online. Apparently, this is a &lt;a href=&#34;http://reventlov.com/advisories/using-the-docker-command-to-root-the-host&#34;&gt;known&lt;/a&gt; &lt;a href=&#34;https://fosterelli.co/privilege-escalation-via-docker.html&#34;&gt;security vulnerability&lt;/a&gt; that Docker does not consider as such. Once again, the Internet beat me to it :(&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
