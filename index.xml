@@ -6,8 +6,42 @@
     <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Apr 2016 22:12:59 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 03 May 2016 22:52:41 -0400</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Docker...root...root...Docker (a.k.a. the docker group is a backdoor)</title>
+      <link>http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</link>
+      <pubDate>Tue, 03 May 2016 22:52:41 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</guid>
+      <description>&lt;p&gt;While working with docker related stuff and when I use volume mount to a subdir of my home dir, I always come across the issue of the container littering folders with &lt;code&gt;root:root&lt;/code&gt; permission in my home folder and then I have to &lt;code&gt;sudo rm ...&lt;/code&gt; it, for example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d $(pwd)/data:/var/lib/mysql/data mysql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It always annoys me but today, it came to me like an epiphany that this is actually a pretty severe security vulnerability.&lt;/p&gt;
+
+&lt;p&gt;At &lt;code&gt;$DAYJOB&lt;/code&gt;, our build machines and staging hosts are all locked down, so we developers don&amp;rsquo;t have &lt;code&gt;sudo&lt;/code&gt; privilege to run anything &lt;strong&gt;except&lt;/strong&gt; &lt;code&gt;/usr/bin/docker&lt;/code&gt;, so it&amp;rsquo;s &lt;code&gt;/etc/sudoers&lt;/code&gt; file have something to the effect of:&lt;/p&gt;
+
+&lt;p&gt;%dev            ALL =(root) NOPASSWD: /usr/bin/docker&lt;/p&gt;
+
+&lt;p&gt;This is fine and dandy for other commands, but with &lt;code&gt;docker&lt;/code&gt;, when you run it with &lt;code&gt;sudo&lt;/code&gt;, you &lt;em&gt;are&lt;/em&gt; essentially &lt;code&gt;root&lt;/code&gt;, inside the container and outside. I thought: what if I create an image, and volume mount &lt;code&gt;/&lt;/code&gt; into the image? Wouldn&amp;rsquo;t that give me root privilege to everything?&lt;/p&gt;
+
+&lt;p&gt;A quick proof of concept proved my suspicion:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --rm -v /:/mnt alpine /bin/sh
+/ # chroot /mnt
+root@0a327dad801b:/# ls /
+bin   config   dev  home        initrd.img.old  lib64  logs        media  opt   root  sbin     srv  syslog-logs  usr  vmlinuz
+boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  run   selinux  sys  tmp          var  vmlinuz.old
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hey, I have a &lt;em&gt;root shell&lt;/em&gt; on the host machine where my user account has only limited permissions. Once I&amp;rsquo;m root, the possibility is endless: I can &lt;code&gt;cd&lt;/code&gt; into &lt;code&gt;/home/opsuser&lt;/code&gt;, and insert an ssh key I own to their &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; file and suddenly I can &lt;code&gt;ssh&lt;/code&gt; as that user without this docker backdoor. I can setup a MITMproxy and capture all traffic on the host. I can inspect the log files I&amp;rsquo;m not suppsed to see, etc etc etc. Of course I&amp;rsquo;m not going to do that, but just thinking of it gives me chills, and what if some rogue employee discovers this and either steals my account credentials or impersonates me?&lt;/p&gt;
+
+&lt;p&gt;Anyhow, I thought that was quite a revelation, and was about to email security@docker.com, until I searched online. Apparently, this is a &lt;a href=&#34;http://reventlov.com/advisories/using-the-docker-command-to-root-the-host&#34;&gt;known&lt;/a&gt; &lt;a href=&#34;https://fosterelli.co/privilege-escalation-via-docker.html&#34;&gt;security vulnerability&lt;/a&gt; that Docker does not consider as such. Once again, the Internet beat me to it :(&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Software Engineering Podcasts Review</title>
@@ -1894,167 +1928,6 @@ def main():
 &lt;p&gt;This is my first stab at websocket and the tornado web framework. I&amp;rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.&lt;/p&gt;
 
 &lt;p&gt;I think websocket is a very interesting technology. It opens a wide range of possibilities for more interactive and engaging web applications. Our web application is of traditional architecture: server renders most of the page, and every request involves page loads. Having a websocket may not be very beneficial as the application doesn&amp;rsquo;t have that much of user interaction. My hackoff is more of a proof of concept. However, if the application is a one-page web app (no full page reloads), the websocket model works very well.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Writing a Simple Clojure Library</title>
-      <link>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</link>
-      <pubDate>Sat, 03 Mar 2012 20:25:00 +0000</pubDate>
-      
-      <guid>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</guid>
-      <description>
-
-&lt;p&gt;I&amp;rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&amp;rsquo;t a deterrent for me at all, in fact, I&amp;rsquo;m quite fond of it and consider it very &lt;a href=&#34;http://en.wikipedia.org/wiki/Homoiconicity&#34;&gt;elegant&lt;/a&gt;. However, it does take some time to get used to. I don&amp;rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.&lt;/p&gt;
-
-&lt;h2 id=&#34;terminal-colours:917765c0791e064a1896921b9ddadd44&#34;&gt;Terminal colours&lt;/h2&gt;
-
-&lt;p&gt;Ever wonder how some console applications can output coloured text? Most terminals and terminal emulators (think iTerm or konsole) support colour through a system of &lt;a href=&#34;http://en.wikipedia.org/wiki/ANSI_escape_code&#34;&gt;escape sequences&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;An Escape Sequence starts with the ASCII code for the escape character (0x1b or 33). There a list of control characters you can specify after the escape character that controls the colour and style of the text after it. For example, sending &amp;ldquo;[31mfoo&amp;rdquo; to a terminal means &amp;ldquo;output red coloured text from now on&amp;rdquo;. Everything the terminal output will be coloured red, until the terminal reads another escape sequence, including &amp;ldquo;[ESC]0m&amp;rdquo;, which tells the terminal to reset the styles to the default.&lt;/p&gt;
-
-&lt;p&gt;So I had this idea to implement this in Clojure as a library so that console application authors can use it to output stylized text from their application using idiomatic Clojure, and here comes &lt;a href=&#34;https://github.com/kevinjqiu/lumiere&#34;&gt;Lumiere&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;implementing-it-in-clojure:917765c0791e064a1896921b9ddadd44&#34;&gt;Implementing it in Clojure&lt;/h2&gt;
-
-&lt;h3 id=&#34;design-the-interface:917765c0791e064a1896921b9ddadd44&#34;&gt;Design the interface&lt;/h3&gt;
-
-&lt;p&gt;What&amp;rsquo;s our end goal here? We would like to output colour sequence wrapped text with Clojure function calls such as&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(red &amp;quot;foo&amp;quot;) ; output foo in red colour
-(bg-green &amp;quot;bar&amp;quot;) ;&amp;quot;bar&amp;quot; with green background colour
-(bold (magenta &amp;quot;nyan cat&amp;quot;)) ; bold and magenta
-(-&amp;gt; &amp;quot;nyan cat&amp;quot; red bg-white bold) ; use Clojure&#39;s &amp;quot;thread macro&amp;quot; to combine these functions, resulting in red foreground, white background and bold &amp;quot;nyan cat&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toolchain:917765c0791e064a1896921b9ddadd44&#34;&gt;Toolchain&lt;/h3&gt;
-
-&lt;p&gt;I wrote a &lt;a href=&#34;http://blog.idempotent.ca/2011/02/11/cake-the-yummy-clojure-build-system/&#34;&gt;blog post&lt;/a&gt; a year ago about how I liked Cake the Clojure build system alternative to the defacto Leiningen. The recent news on this is that Cake and Leiningen are merging. This time, I decided to use Leiningen from the start. Even though Leiningen hasn&amp;rsquo;t ported some of the Cake goodies, but I&amp;rsquo;m hoping they will get ported soon.&lt;/p&gt;
-
-&lt;h3 id=&#34;first-working-version:917765c0791e064a1896921b9ddadd44&#34;&gt;First working version:&lt;/h3&gt;
-
-&lt;p&gt;With &lt;code&gt;lein new lumiere&lt;/code&gt;, Leiningen generates the default project layout. By default, Leiningen generates &lt;code&gt;src/lumiere/core.clj&lt;/code&gt; and &lt;code&gt;test/lumiere/core.clj&lt;/code&gt;. Because Lumiere is such a small script, we don&amp;rsquo;t need the &lt;code&gt;&#39;lumiere.core&lt;/code&gt; namespace, rather I&amp;rsquo;d like the functions to be in the &lt;code&gt;&#39;lumiere&lt;/code&gt; namespace. The easiest way is to delete &lt;code&gt;src/lumiere/&lt;/code&gt; folder and create &lt;code&gt;lumiere.clj&lt;/code&gt; under src. Same goes for the test file.&lt;/p&gt;
-
-&lt;p&gt;Following the spirit of TDD, off I went to write my first test:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(ns lumiere.test
-  (:use [lumiere])
-  (:use [clojure.test]))
-
-(deftest test-only-foreground
-  (is (= &amp;quot;&amp;amp;#092;&amp;amp;#048;33[30msome black text&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; (black &amp;quot;some black test&amp;quot;))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This tests that the correct sequences of characters are generated by the call to &lt;code&gt;(black &amp;quot;...&amp;quot;)&lt;/code&gt;. 33 is the ASCII code for .&lt;/p&gt;
-
-&lt;p&gt;To make this test pass, I added this in &lt;code&gt;src/lumiere.clj&lt;/code&gt;,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(ns lumiere)
-(defn black [text]
-  (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; 30 text)) ; 30 is the code for black foreground.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This passes the tests, but obviously there&amp;rsquo;s room for abstraction:
-* the red foreground code is 31, green 32, etc&amp;hellip;
-* the black background code is 40, red 41, green 42, etc&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;So here we go:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- colour ; defn- makes this function private to the current namespace.
-  ([code is-bg?] (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[%dm&amp;quot; (+ (if is-bg? 40 30) code)))
-  ([code] (colour code false)))
-
-(defn black [text] (colour 0))
-(defn red [text] (colour 1))
-(defn bg-black [text] (colour 0 true))
-(defn bg-red [text] (colour 1 true))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Clojure supports &amp;ldquo;default&amp;rdquo; arguments through method overloading. Here we adjust the offset based on whether or not that colour is a foreground or background.&lt;/p&gt;
-
-&lt;h3 id=&#34;second-take-use-macro-to-define-declaratively-create-colour-functions:917765c0791e064a1896921b9ddadd44&#34;&gt;Second take: use macro to define declaratively create colour functions&lt;/h3&gt;
-
-&lt;p&gt;One advantage of lispy syntax is the convergence of programming with meta-programming. If you read the core Clojure library code, you&amp;rsquo;ll find that Clojure defines a few special forms and most control structures are written in macros. In my case, however, I&amp;rsquo;m using macros to define colour/style functions in a declarative way. Some may argue it doesn&amp;rsquo;t justify using macro for this purpose, but I just want to practice writing macros, and it does make the public interface of the library a bit prettier.&lt;/p&gt;
-
-&lt;p&gt;First off, again, we need to define what the end result should look like. I would still like the functions to remain the same, e.g., red, bg-red, black, bg-black, etc. However, defining these functions takes a lot of boilerplate code. I&amp;rsquo;d like to simply call &lt;code&gt;(defcolour BLACK 0)&lt;/code&gt; or the like to generate the &lt;code&gt;black&lt;/code&gt; and &lt;code&gt;bg-black&lt;/code&gt; functions for me.&lt;/p&gt;
-
-&lt;p&gt;Disclaimer: I&amp;rsquo;m a novice macro writer. Advanced readers, please hold your nose and tell me what I did wrong or any improvements could be made :)&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(def RESET &amp;quot;&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot;)
-(defmacro defcolour [colour-func-name bg-colour-func-name colour-code]
-  `(do
-    (defn ~colour-func-name [text#]
-      (format &amp;quot;%s%s%s&amp;quot; (colour ~colour-code) text# RESET))
-    (defn ~bg-colour-func-name [text#]
-      (format &amp;quot;%s%s%s&amp;quot; (colour ~bg-colour-code true) text# RESET))))
-
-(defcolour black bg-black 0)
-(defcolour red bg-red 1)
-(defcolour green bg-green 2)
-; etc...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A few special reader macros you need to know about when writing a macro:
-* tick (`) indicates the following code should be quoted and treated as a template.
-* tilda (~) indicates that the symbol should not be quoted (unquote), and should be replaced with the value in the current context.
-* hash (#) indicates that the macro system should generate a unique name for this symbol so it doesn&amp;rsquo;t conflict. Otherwise, it will be expanded to its fully qualified name.&lt;/p&gt;
-
-&lt;p&gt;Run tests and because we didn&amp;rsquo;t change our public interface, everything all tests should still pass.&lt;/p&gt;
-
-&lt;h3 id=&#34;take-3-combining-styles:917765c0791e064a1896921b9ddadd44&#34;&gt;Take 3: combining styles&lt;/h3&gt;
-
-&lt;p&gt;Alright, now that we have a fully functional style system, we can cascade the styles, e.g., &lt;code&gt;(red (bg-green &amp;quot;foo&amp;quot;))&lt;/code&gt;. It work as expected when trying it in a REPL, but the character sequence it generates is &amp;ldquo;33[31m33[42mfoo33[0m33[0m&amp;rdquo; and surely it isn&amp;rsquo;t optimal. If we want to add styles such as bold, it&amp;rsquo;s going to get even worse.&lt;/p&gt;
-
-&lt;p&gt;So, we need some abstraction here. When you call &lt;code&gt;(red &amp;quot;some text&amp;quot;)&lt;/code&gt; it shouldn&amp;rsquo;t generate the character sequence right away. Instead, the caller should decide when the sequence should be generated. We need some data structure to represent a &amp;ldquo;luminated&amp;rdquo; text. In Clojure we can define a &amp;ldquo;record&amp;rdquo;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defrecord Lumiere [text opts])
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;opts&lt;/code&gt; is a map with keys &lt;code&gt;:fg&lt;/code&gt;, &lt;code&gt;:bg&lt;/code&gt;, &lt;code&gt;:styles&lt;/code&gt;. We also want to override the &lt;code&gt;toString()&lt;/code&gt; method so when the user calls &lt;code&gt;(str lumiered-text)&lt;/code&gt;, he will get the character sequence ready to be printed to the console. The downside of this is that we modified the interface, so we need to go back and change the tests so they call &lt;code&gt;(str (red &amp;quot;foo&amp;quot;))&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;  (is (= &amp;quot;&amp;amp;#092;&amp;amp;#048;33[30msome black text&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; (str (black &amp;quot;some black test&amp;quot;)))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To override &lt;code&gt;toString()&lt;/code&gt;, we need to extend our Lumiere type to conform to the &lt;code&gt;IObject&lt;/code&gt; protocol:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- ansi-escape-seq [&amp;amp; codes]
-  (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[%sm&amp;quot; (join &amp;quot;;&amp;quot; (filter #(not= % nil) codes))))
-
-(defrecord Lumiere [text fg bg styles]
-  Object
-  (toString [this]
-    (let [prefix (ansi-escape-seq (:fg this) (:bg this) (:styles this))]
-      (format &amp;quot;%s%s%s&amp;quot; prefix (:text this) RESET))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Next we need to let the colour/style functions return Lumiere object, rather than plain character sequence. There are two situations we need to adapt:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;When we first start decorating a text, text input is going to be a plain string. In this case, we need to create a Lumiere object with the text and options.&lt;/li&gt;
-&lt;li&gt;When the return of a colour/style function is chained into another colour/style function, we need to modify the options of the Lumiere object.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- adapt-lum [text option value]
-  (let [local-option-map (merge {:fg nil :bg nil :styles nil} {option value})]
-    (cond
-      (instance? String text) (Lumiere. text (:fg local-option-map) (:bg local-option-map) (:styles local-option-map))
-      (instance? Lumiere text) (assoc text option value)
-      :else (throw (java.lang.IllegalArgumentException.)))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and we need to modify the macros so &lt;code&gt;adapt-lum&lt;/code&gt; helper is used:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defmacro defcolour [colour-func-name bg-colour-func-name ^Integer colour-code]
-  `(do
-     (defn ~colour-func-name [text#]
-       (adapt-lum text# :fg ~colour-name))
-     (defn ~bg-colour-func-name [text#]
-       (adapt-lum text# :bg ~bg-colour-name))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;publish-to-clojar-org:917765c0791e064a1896921b9ddadd44&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
-
-&lt;p&gt;Now that the library is in a relatively stable state. I&amp;rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do &lt;code&gt;lein pom &amp;amp;&amp;amp; lein deploy&lt;/code&gt;, voilà!&lt;/p&gt;
 </description>
     </item>
     
