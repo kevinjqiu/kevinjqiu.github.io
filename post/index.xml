@@ -51,6 +51,8 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
       <guid>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</guid>
       <description>
 
+&lt;p&gt;UPDATE: I&amp;rsquo;ve got a lot of great comments here and on &lt;a href=&#34;https://redd.it/4hycnz&#34;&gt;reddit&lt;/a&gt;. Thanks everyone for the suggestions.&lt;/p&gt;
+
 &lt;p&gt;As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.&lt;/p&gt;
 
 &lt;h1 id=&#34;disclaimer:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Disclaimer&lt;/h1&gt;
@@ -91,6 +93,22 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 &lt;strong&gt;Frequency:&lt;/strong&gt; Semi-monthly&lt;/p&gt;
 
 &lt;p&gt;This is one of the first podcasts I subscribed to. It&amp;rsquo;s published by IEEE computer society so it has a high profile. Sometimes the show gets a little too academic that it disconnects with what programmers do on a day-to-day basis. Don&amp;rsquo;t get me wrong, this is an awesome show, and very insightful. However, depending on the topics or the guests, you may or may not get as much out of the show. That said, however, this is still a very solid show with interesting topics and in-depth discussions.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-changelog:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;The Changelog&lt;/h1&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/the-changelog.svg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;https://changelog.com/&#34;&gt;https://changelog.com/&lt;/a&gt;
+&lt;strong&gt;Frequency:&lt;/strong&gt; weekly-ish&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve been following thechangelog show from its infancy. The show was on hiatus for a while but since they&amp;rsquo;re are back a few years ago, they&amp;rsquo;ve been in full gear, putting together tons of excellent interviews. Its primary focus is on open source projects and have put lots of interesting projects on my tech radar, including Golang and Docker. The depth of the show has been improving as well, and show is not just &amp;ldquo;hey there&amp;rsquo;s this project you probably haven&amp;rsquo;t heard about but you should&amp;rdquo;. The hosts are able to ask some insightful questions and the guests are usually able to provide detailed answers. I also like the show for the fact that you can open suggestions via &lt;a href=&#34;https://github.com/thechangelog/ping&#34;&gt;github issue link&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h1 id=&#34;security-now:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Security Now&lt;/h1&gt;
 
