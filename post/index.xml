@@ -21,8 +21,9 @@
 
 &lt;p&gt;This post is a summary of my journey learning Ruby as a seasoned Python developer, and my thoughts comparing these two popular languages.&lt;/p&gt;
 
-&lt;p&gt;Disclaimer: I&amp;rsquo;m by no means a Ruby expert. My understand of Ruby so far has been quite superficial.
-Disclaimer: Most of the points here are my notes while going through the excellent &lt;a href=&#34;http://rubykoans.com/&#34;&gt;Ruby Koan&lt;/a&gt; exercises. A big shout out to them!&lt;/p&gt;
+&lt;p&gt;Disclaimer:
+* I&amp;rsquo;m by no means a Ruby expert. My understand of Ruby so far has been quite superficial.
+* Most of the points here are my notes while going through the excellent &lt;a href=&#34;http://rubykoans.com/&#34;&gt;Ruby Koan&lt;/a&gt; exercises. A big shout out to them!&lt;/p&gt;
 
 &lt;h1 id=&#34;arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Arrays&lt;/h1&gt;
 
