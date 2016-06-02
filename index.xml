@@ -6,8 +6,602 @@
     <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 03 May 2016 22:52:41 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 31 May 2016 23:04:13 -0400</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ruby for Pythonistas</title>
+      <link>http://blog.idempotent.ca/2016/05/31/ruby-for-pythonistas/</link>
+      <pubDate>Tue, 31 May 2016 23:04:13 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/05/31/ruby-for-pythonistas/</guid>
+      <description>
+
+&lt;p&gt;It&amp;rsquo;s been 11 years since I first encountered Python, and it&amp;rsquo;s been my favourite programming language ever since. However, I&amp;rsquo;ve always been curious about the Ruby language. On the surface, they have a lot in common: both dynamic, object-oriented, interpreted, vm-based, and optimize for developer happiness rather than machine speed. However, they have quite different data models, syntax and community culture.&lt;/p&gt;
+
+&lt;p&gt;This post is a summary of my journey learning Ruby as a seasoned Python developer, and my thoughts comparing these two popular languages.&lt;/p&gt;
+
+&lt;p&gt;Disclaimer: I&amp;rsquo;m by no means a Ruby expert. My understand of Ruby so far has been quite superficial.
+Disclaimer: Most of the points here are my notes while going through the excellent &lt;a href=&#34;http://rubykoans.com/&#34;&gt;Ruby Koan&lt;/a&gt; exercises. A big shout out to them!&lt;/p&gt;
+
+&lt;h1 id=&#34;arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Arrays&lt;/h1&gt;
+
+&lt;p&gt;In my opinion, Ruby arrays are a lot richer than Python lists.&lt;/p&gt;
+
+&lt;h2 id=&#34;concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Concatenation&lt;/h2&gt;
+
+&lt;p&gt;Use the &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt; operator on arrays:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;a &amp;lt;&amp;lt; 3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;in Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;a.append(3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;access:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Access&lt;/h2&gt;
+
+&lt;p&gt;To access an array, you can use the array index just like it is in almost every other language. However, Ruby&amp;rsquo;s &lt;code&gt;Array&lt;/code&gt; class also implements convenient methods to access the first and last element of the array:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):004:0&amp;gt; a = [1, 2, :three]
+=&amp;gt; [1, 2, :three]
+irb(main):005:0&amp;gt; a[0]
+=&amp;gt; 1
+irb(main):006:0&amp;gt; a[-1]
+=&amp;gt; :three
+irb(main):007:0&amp;gt; a.last
+=&amp;gt; :three
+irb(main):008:0&amp;gt; a.first
+=&amp;gt; 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Slices and Ranges&lt;/h2&gt;
+
+&lt;p&gt;Both Python and Ruby support slicing although the syntax are slightly different:&lt;/p&gt;
+
+&lt;p&gt;Ruby: &lt;code&gt;arr[a, b]&lt;/code&gt;, where &lt;code&gt;a&lt;/code&gt; is the starting index and &lt;code&gt;b&lt;/code&gt; is the size of the slice.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):012:0&amp;gt; a=[:one, :two, :three]
+=&amp;gt; [:one, :two, :three]
+irb(main):013:0&amp;gt; a[0,1]
+=&amp;gt; [:one]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python: &lt;code&gt;arr[a:b]&lt;/code&gt;, where &lt;code&gt;a&lt;/code&gt; is the starting index and &lt;code&gt;b&lt;/code&gt; is the ending index (exclusive)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; a=[1,2,3]
+&amp;gt;&amp;gt;&amp;gt; a[0:1]
+[1]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python has &lt;code&gt;range&lt;/code&gt; and &lt;code&gt;xrange&lt;/code&gt; builtin functions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; list(range(10))
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby also has range, but it provides language construct for &lt;code&gt;Range&lt;/code&gt; objects:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):010:0&amp;gt; (1..5).to_a
+=&amp;gt; [1, 2, 3, 4, 5]
+
+irb(main):011:0&amp;gt; (1...5).to_a
+=&amp;gt; [1, 2, 3, 4]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It&amp;rsquo;s worth noting that double dot (&lt;code&gt;..&lt;/code&gt;) creates an inclusive interval whereas triple dot (&lt;code&gt;...&lt;/code&gt;) creates an exclusive interval. This threw me off at first, since somehow my brain associate &lt;code&gt;...&lt;/code&gt; with inclusive and &lt;code&gt;..&lt;/code&gt; being exclusive.&lt;/p&gt;
+
+&lt;p&gt;In Ruby, you can also pass a range object to an array, and that behaves more or less the same way as Python&amp;rsquo;s slicing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):019:0&amp;gt; a[1...3]
+=&amp;gt; [:two, :three]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python&amp;rsquo;s slicing is also pretty flexible. Python&amp;rsquo;s special method &lt;code&gt;__getitem__&lt;/code&gt; is able to take a range object (or any object for that matter) and override the behaviour of &lt;code&gt;[]&lt;/code&gt; operator.&lt;/p&gt;
+
+&lt;h2 id=&#34;unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Unpacking&lt;/h2&gt;
+
+&lt;p&gt;One of the nice features of Python is list/tuple unpacking, e.g.,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; a=[&#39;one&#39;, &#39;two&#39;]
+&amp;gt;&amp;gt;&amp;gt; one, two = a
+&amp;gt;&amp;gt;&amp;gt; one
+&#39;one&#39;
+&amp;gt;&amp;gt;&amp;gt; two
+&#39;two&#39;
+&amp;gt;&amp;gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;IMO, Ruby does it better.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):020:0&amp;gt; a=[:one, :two]
+=&amp;gt; [:one, :two]
+irb(main):021:0&amp;gt; one, two = a
+=&amp;gt; [:one, :two]
+irb(main):022:0&amp;gt; one
+=&amp;gt; :one
+irb(main):023:0&amp;gt; two
+=&amp;gt; :two
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Left side doesn&amp;rsquo;t have to match the right side cardinally:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):024:0&amp;gt; one, two = [1, 2, 3, 4, 5]
+=&amp;gt; [1, 2, 3, 4, 5]
+irb(main):025:0&amp;gt; one
+=&amp;gt; 1
+irb(main):026:0&amp;gt; two
+=&amp;gt; 2
+
+irb(main):027:0&amp;gt; one, two = [1]
+=&amp;gt; [1]
+irb(main):029:0&amp;gt; one
+=&amp;gt; 1
+irb(main):030:0&amp;gt; two
+=&amp;gt; nil
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Python, that&amp;rsquo;s a &lt;code&gt;ValueError&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; one, two = [1,2,3,4,5]
+Traceback (most recent call last):
+  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;
+  ValueError: too many values to unpack (expected 2)
+
+&amp;gt;&amp;gt;&amp;gt; one, two = [1]
+Traceback (most recent call last):
+  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;
+  ValueError: not enough values to unpack (expected 2, got 1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby also supports &amp;ldquo;wildcard&amp;rdquo; match which in Python-land is only available after Python 3.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):031:0&amp;gt; first, *rest = [1,2,3,4,5]
+=&amp;gt; [1, 2, 3, 4, 5]
+irb(main):032:0&amp;gt; first
+=&amp;gt; 1
+irb(main):033:0&amp;gt; rest
+=&amp;gt; [2, 3, 4, 5]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Both Languages support inline swapping:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):034:0&amp;gt; a, b = [1, 3]
+=&amp;gt; [1, 3]
+irb(main):035:0&amp;gt; a, b = b, a
+=&amp;gt; [3, 1]
+irb(main):036:0&amp;gt; a
+=&amp;gt; 3
+irb(main):037:0&amp;gt; b
+=&amp;gt; 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Hashes&lt;/h1&gt;
+
+&lt;p&gt;Ruby hashes are equivalent of Python dictionaries. They can be constructed and accessed using similar syntax.&lt;/p&gt;
+
+&lt;h2 id=&#34;no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;No &lt;code&gt;KeyError&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;In Python, when accessing a key that doesn&amp;rsquo;t exist in the dictionary, you get a &lt;code&gt;KeyError&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; x={&#39;a&#39;: 1}
+&amp;gt;&amp;gt;&amp;gt; x[&#39;b&#39;]
+Traceback (most recent call last):
+  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;
+  KeyError: &#39;b&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Ruby, you simply get &lt;code&gt;nil&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):038:0&amp;gt; a={:a =&amp;gt; 1, :b =&amp;gt; 2}
+=&amp;gt; {:a=&amp;gt;1, :b=&amp;gt;2}
+irb(main):039:0&amp;gt; a[:c]
+=&amp;gt; nil
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, doing a &lt;code&gt;fetch&lt;/code&gt; will result in &lt;code&gt;KeyError&lt;/code&gt; if it doesn&amp;rsquo;t exist:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):040:0&amp;gt; a.fetch(:c)
+KeyError: key not found: :c
+    from (irb):40:in `fetch&#39;
+    from (irb):40
+    from /usr/bin/irb:11:in `&amp;lt;main&amp;gt;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Default value&lt;/h2&gt;
+
+&lt;p&gt;In Ruby, default value functionality is built-in with &lt;code&gt;Hash&lt;/code&gt; class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):041:0&amp;gt; x=Hash.new([])
+=&amp;gt; {}
+irb(main):042:0&amp;gt; x[:one]
+=&amp;gt; []
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Python, we use &lt;code&gt;collections.defaultdict&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; import collections
+&amp;gt;&amp;gt;&amp;gt; x=collections.defaultdict(list)
+&amp;gt;&amp;gt;&amp;gt; x[&amp;quot;one&amp;quot;]
+[]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python&amp;rsquo;s &lt;code&gt;defaultdict&lt;/code&gt; is more flexible, allowing the default value be obtained via a callable. Maybe there&amp;rsquo;s a way to achieve the same thing with Ruby but I haven&amp;rsquo;t found it.&lt;/p&gt;
+
+&lt;p&gt;Gotcha: The default value in Ruby&amp;rsquo;s &lt;code&gt;Hash&lt;/code&gt; though is shared among all instances:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):043:0&amp;gt; x=Hash.new([])
+=&amp;gt; {}
+irb(main):044:0&amp;gt; x[:one] &amp;lt;&amp;lt; &amp;quot;1&amp;quot;
+=&amp;gt; [&amp;quot;1&amp;quot;]
+irb(main):045:0&amp;gt; x[:two] &amp;lt;&amp;lt; &amp;quot;2&amp;quot;
+=&amp;gt; [&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;]
+irb(main):046:0&amp;gt; x[:two]
+=&amp;gt; [&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This could lead to subtle bugs if not careful.&lt;/p&gt;
+
+&lt;p&gt;A safer approach is to use block initialization:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):047:0&amp;gt; x=Hash.new { |hash, key| hash[key] = [] }
+=&amp;gt; {}
+irb(main):048:0&amp;gt; x[:one] &amp;lt;&amp;lt; 1
+=&amp;gt; [1]
+irb(main):049:0&amp;gt; x[:two] &amp;lt;&amp;lt; 2
+=&amp;gt; [2]
+irb(main):050:0&amp;gt; x[:two]
+=&amp;gt; [2]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://rubylearning.com/satishtalim/ruby_blocks.html&#34;&gt;Block&lt;/a&gt; is one of my favourite Ruby language features.&lt;/p&gt;
+
+&lt;h1 id=&#34;strings:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Strings&lt;/h1&gt;
+
+&lt;p&gt;Strings are similar in both languages, except Ruby strings are mutable, while Pythons&amp;rsquo; are immutable. Ruby also has more ways to escape quotes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):051:0&amp;gt; %(I can use &#39; and &amp;quot; here no problem)
+=&amp;gt; &amp;quot;I can use &#39; and \&amp;quot; here no problem&amp;quot;
+
+irb(main):052:0&amp;gt; %!and here &#39;&amp;quot;!
+=&amp;gt; &amp;quot;and here &#39;\&amp;quot;&amp;quot;
+
+irb(main):053:0&amp;gt; %{or here &#39;&amp;quot;}
+=&amp;gt; &amp;quot;or here &#39;\&amp;quot;&amp;quot;
+
+irb(main):054:0&amp;gt; %{multi
+irb(main):055:0&amp;quot; line
+irb(main):056:0&amp;quot; strings%}
+=&amp;gt; &amp;quot;multi\nline\nstrings%&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use regex as string index to extract the matched substring:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):065:0&amp;gt; &amp;quot;j&#39;ai 34 ans&amp;quot;[/\d+/]
+=&amp;gt; &amp;quot;34&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Symbols&lt;/h1&gt;
+
+&lt;p&gt;Symbols are a unique in Ruby that&amp;rsquo;s not present in Python (although I wish). It has permeated into the design of other modern languages, like Clojure and Elixir. You can think of symbols as a way to do free-form enums, a way to name something, as oppose to just some free form texts.&lt;/p&gt;
+
+&lt;p&gt;You can get all symbols in the current scope:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):060:0&amp;gt; Symbol.all_symbols
+[... long list of global symbols ...]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use symbols to refer to functions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):062:0&amp;gt; &#39;&#39;.respond_to? :to_i
+=&amp;gt; true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can dynamically create a symbol from strings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):063:0&amp;gt; &#39;abc&#39;.to_sym
+=&amp;gt; :abc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;methods:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Methods&lt;/h1&gt;
+
+&lt;h2 id=&#34;default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Default values&lt;/h2&gt;
+
+&lt;p&gt;Same as Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(a, b=&#39;default&#39;) 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Variadic arguments&lt;/h2&gt;
+
+&lt;p&gt;Same as Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(a, *c)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Inside the method, &lt;code&gt;c&lt;/code&gt; is available as an &lt;code&gt;Array&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Invocation and Return&lt;/h2&gt;
+
+&lt;p&gt;Ruby method invocation does not require parentheses, unless it&amp;rsquo;s it results in ambiguity. e.g., you can omit parens in:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(arg)
+  ...
+end
+
+foo :bar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;but you have to use parens to disambiguate in situations like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(arg)
+end
+
+def bar(arg)
+end
+
+bar(foo arg)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Python, parens are mandatory.&lt;/p&gt;
+
+&lt;p&gt;In Ruby, almost everything is an expression. In the case of a method definition, the last expression becomes the return value of the method. Some people call it implicit returns, and people have mixed feelings about it. Personally I like the everything-is-an-expression model and using the last expression as the return value feels natural. In Python, you have to use &lt;code&gt;return&lt;/code&gt;, otherwise, it implicitly returns &lt;code&gt;None&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Keyword arguments&lt;/h2&gt;
+
+&lt;p&gt;Ruby 1.x doesn&amp;rsquo;t have keyword arguments as a language feature. This is a little disappointing. However, it&amp;rsquo;s idiomatic in Ruby to have a method accept a hash, and use symbols to simulate keyword arguments:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):068:0&amp;gt; def foo(args)
+irb(main):069:1&amp;gt;   puts args
+irb(main):070:1&amp;gt; end
+=&amp;gt; :foo
+irb(main):071:0&amp;gt; foo(a: 5, b: 6)
+{:a=&amp;gt;5, :b=&amp;gt;6}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since you can omit &lt;code&gt;{}&lt;/code&gt; in Hash construction, this code is almost like Python&amp;rsquo;s keyword arguments. However, you have to do argument validation yourself.&lt;/p&gt;
+
+&lt;p&gt;In Ruby 2.x, this pattern has been elevated as a language feature, so now Ruby has proper keyword argument support. However, I have not seen an equivalent of Python&amp;rsquo;s &lt;a href=&#34;https://www.python.org/dev/peps/pep-3102/&#34;&gt;keyword-only argument&lt;/a&gt; feature.&lt;/p&gt;
+
+&lt;h1 id=&#34;constants:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Constants&lt;/h1&gt;
+
+&lt;p&gt;Ruby symbols start with capital letters are &amp;ldquo;constants&amp;rdquo;, so classes are also &amp;ldquo;constants&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):074:0&amp;gt; class foo
+irb(main):075:1&amp;gt; end
+SyntaxError: (irb):74: class/module name must be CONSTANT
+        from /usr/bin/irb:11:in `&amp;lt;main&amp;gt;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby constants are more enforced than their counterpart in Python. (well, technically, Python doesn&amp;rsquo;t have constants, only by convention, all cap symbols are considered constants.)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):076:0&amp;gt; A=1
+=&amp;gt; 1
+irb(main):077:0&amp;gt; A=2
+(irb):77: warning: already initialized constant A
+(irb):76: warning: previous definition of A was here
+=&amp;gt; 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Truthiness&lt;/h1&gt;
+
+&lt;p&gt;Truthiness in Ruby is a lot different from Python. Python has the concept of &amp;ldquo;falsy&amp;rdquo;, in which &lt;code&gt;0&lt;/code&gt;, &lt;code&gt;[]&lt;/code&gt;, &lt;code&gt;{}&lt;/code&gt;, &lt;code&gt;&#39;&#39;&lt;/code&gt; are all evaluated to &lt;code&gt;False&lt;/code&gt;. In Ruby, however, only &lt;code&gt;false&lt;/code&gt; is false, and everything else is treated as &lt;code&gt;true&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def is_true?(value)
+  if value
+    :true
+  else
+    :false
+  end
+end
+
+irb(main):098:0&amp;gt; is_true? 0
+=&amp;gt; :true
+irb(main):099:0&amp;gt; is_true? &#39;0&#39;
+=&amp;gt; :true
+irb(main):100:0&amp;gt; is_true? &#39;&#39;
+=&amp;gt; :true
+irb(main):101:0&amp;gt; is_true? []
+=&amp;gt; :true
+irb(main):103:0&amp;gt; is_true?({})
+=&amp;gt; :true
+irb(main):104:0&amp;gt; is_true?(false)
+=&amp;gt; :false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Exceptions&lt;/h1&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s exception hierarchy is a lot like Python&amp;rsquo;s, at least in name:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RuntimeError &amp;lt; StandardError &amp;lt; Exception
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To handle exceptions, you use &lt;code&gt;begin...rescue...ensure&lt;/code&gt; rather than &lt;code&gt;try...except...finally&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Map/Reduce/Filter&lt;/h1&gt;
+
+&lt;p&gt;Ruby the language itself is not a functional language, although it provides machinery for you to program in a functional way, such as using high-order functions.&lt;/p&gt;
+
+&lt;p&gt;When first learning Ruby, I was looking for my familiar friends &lt;code&gt;map&lt;/code&gt;/&lt;code&gt;reduce&lt;/code&gt;/&lt;code&gt;filter&lt;/code&gt; but couldn&amp;rsquo;t find any. Then I realized they&amp;rsquo;re called something completely different:&lt;/p&gt;
+
+&lt;p&gt;In Ruby, &lt;code&gt;filter&lt;/code&gt; is achieved using &lt;code&gt;select&lt;/code&gt;/&lt;code&gt;find_all&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):105:0&amp;gt; [1,2,3,4,5].select { |x| x % 2 == 0 }
+=&amp;gt; [2, 4]
+irb(main):106:0&amp;gt; [1,2,3,4,5].find_all { |x| x % 2 == 0 }
+=&amp;gt; [2, 4]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;map&lt;/code&gt; is equivalent to &lt;code&gt;collect&lt;/code&gt;/&lt;code&gt;map&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):107:0&amp;gt; [1,2,3,4,5].collect { |x| x * 2 }
+=&amp;gt; [2, 4, 6, 8, 10]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;reduce&lt;/code&gt; is not &lt;code&gt;reduce&lt;/code&gt;, nor is it called &lt;code&gt;fold&lt;/code&gt;, but is weirdly named &lt;code&gt;inject&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):108:0&amp;gt; [1,2,3,4,5].inject(0) { |x, y| x + y }
+=&amp;gt; 15
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Blocks&lt;/h1&gt;
+
+&lt;p&gt;As I eluded to before, blocks are one of my favourite Ruby language features. It&amp;rsquo;s comparable to Python&amp;rsquo;s &lt;a href=&#34;https://docs.python.org/2/reference/compound_stmts.html#with&#34;&gt;context managers&lt;/a&gt;, but it can be invoked without using a keyword and can be added to any method calls. It feels more natural.&lt;/p&gt;
+
+&lt;p&gt;Similar to Python (using &lt;code&gt;contextlib.contextmanager&lt;/code&gt;), you can invoke a block by &lt;code&gt;yield&lt;/code&gt; to the caller:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def do_with_logging
+    log &amp;quot;start&amp;quot;
+    yield
+    log &amp;quot;end&amp;quot;
+end
+
+do_with_logging {
+    # serious business
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A Ruby method is also able to determine if it&amp;rsquo;s called with a block being passed by using &lt;code&gt;block_given?&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def do_it
+    if block_given?
+        yield
+    else
+        put &amp;quot;no block&amp;quot;
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;classes:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Classes&lt;/h1&gt;
+
+&lt;p&gt;Ruby classes are defined in a similar way as Python.&lt;/p&gt;
+
+&lt;h2 id=&#34;self:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;self&lt;/h2&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s &lt;code&gt;self&lt;/code&gt; can reference different things in different scopes. For example, inside a class definition, &lt;code&gt;self&lt;/code&gt; refers to the class object (kind of like when you define a &lt;code&gt;classmethod&lt;/code&gt; in Python), but inside an instance method, &lt;code&gt;self&lt;/code&gt; refers to the instance of the class.&lt;/p&gt;
+
+&lt;h2 id=&#34;private:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;private&lt;/h2&gt;
+
+&lt;p&gt;Python doesn&amp;rsquo;t have &lt;code&gt;private&lt;/code&gt; members or methods. With Ruby however, you &lt;em&gt;can&lt;/em&gt; define &amp;ldquo;private&amp;rdquo; methods if you put &lt;code&gt;private&lt;/code&gt; in front of your method definition.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    private def foo
+        puts &amp;quot;private&amp;quot;
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Outside callers can&amp;rsquo;t call &lt;code&gt;foo&lt;/code&gt;. Members of the same class can call &lt;code&gt;foo&lt;/code&gt; if only it is called with &lt;code&gt;self&lt;/code&gt; being the implicit receiver:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    private ...
+
+    def use_foo
+        foo  # this is fine
+        self.foo  # Not allowed
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s instance variables are private with &lt;code&gt;@&lt;/code&gt; prefix:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    def initialize(name)
+        @name = name
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To access &lt;code&gt;@name&lt;/code&gt; you can define getters and/or settings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    attr_accessor :name
+    # or attr_reader :name to make it readonly
+    ...
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Although the &lt;code&gt;private&lt;/code&gt; restriction can be circumvented by metaprogramming:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;foo = Foo.new
+foo.instance_variable_get(&amp;quot;@name&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Overall, I think Ruby encourages more encapsulation and better design.&lt;/p&gt;
+
+&lt;h2 id=&#34;define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Define class methods&lt;/h2&gt;
+
+&lt;p&gt;You can refer to the class by name when defining methods to make class methods:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    def Foo.bar
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, remember we said before that &lt;code&gt;self&lt;/code&gt; inside a class definition refers to the class itself? So this works too:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    def self.bar
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another way to write class method uses an inner class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    class &amp;lt;&amp;lt; self
+        def bar
+        end
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is good if you want to group class methods together.&lt;/p&gt;
+
+&lt;h2 id=&#34;open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Open class&lt;/h2&gt;
+
+&lt;p&gt;A powerful (yet controversial) feature of Ruby is that you can &amp;ldquo;amend&amp;rdquo; any Ruby classes (even the builtin ones) during runtime. It&amp;rsquo;s like monkey-patching on steroids.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class ::Integer
+    def even?
+        self % 2 == 0
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now suddenly &lt;code&gt;2.even?&lt;/code&gt; is a thing. It certainly makes writing your own DSL a lot easier, but it may lead to magical code that&amp;rsquo;s hard to track down.&lt;/p&gt;
+
+&lt;h2 id=&#34;inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Inheritance&lt;/h2&gt;
+
+&lt;p&gt;Ruby uses &lt;code&gt;A &amp;lt; B&lt;/code&gt; to mean class &lt;code&gt;A&lt;/code&gt; inherits from class &lt;code&gt;B&lt;/code&gt;. &lt;code&gt;super&lt;/code&gt; is available to refer to the same-named methods in the super class. Because Ruby is single inheritance, there&amp;rsquo;s no ambiguity of &lt;code&gt;super&lt;/code&gt; here.&lt;/p&gt;
+
+&lt;h2 id=&#34;mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Mixin&lt;/h2&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s class can only have a single parent, but you can &amp;ldquo;mixin&amp;rdquo; behaviour into your class by &lt;code&gt;include&lt;/code&gt; other modules. Compared to Python, which does support multiple inheritance, and extra attention has to be paid to avoid diamond inheritance problem.&lt;/p&gt;
+
+&lt;p&gt;I feel the Ruby design is more thought-out. As oppose to give more ropes to developers to hang themselves, it makes the use case of multiple inheritance more clear (only for mixins).&lt;/p&gt;
+
+&lt;h1 id=&#34;message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Message Passing&lt;/h1&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s object-oriented model is based on the idea of message passing. As opposed to invoking using &lt;code&gt;obj.method&lt;/code&gt;, you can pass a message &lt;code&gt;method&lt;/code&gt; to object &lt;code&gt;obj&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;obj.send :method
+
+obj.__send__ :method
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use &lt;code&gt;respond_to?&lt;/code&gt; to test if a receiver can handle such message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if obj.respond_to? :method
+    ...
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;obj&lt;/code&gt; can implement &lt;code&gt;method_mssing?&lt;/code&gt; method to implement generic method dispatcher. With Python, you can achieve the same thing with &lt;code&gt;__getattribute__&lt;/code&gt; magic method.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Docker...root...root...Docker (a.k.a. the docker group is a backdoor)</title>
@@ -1774,178 +2368,6 @@ class Nostrils(Plugin):
 &lt;h2 id=&#34;collaborators-welcome:c0963e613fb36e35763da3ad0b838456&#34;&gt;Collaborators welcome!&lt;/h2&gt;
 
 &lt;p&gt;I have since refactored the code, revised the data structure and published it on &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;github&lt;/a&gt;. Please provide me with feedbacks and suggestions.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Realtime notification delivery using rabbitmq</title>
-      <link>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
-      <pubDate>Sat, 07 Apr 2012 16:50:00 +0000</pubDate>
-      
-      <guid>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
-      <description>
-
-&lt;p&gt;Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this &lt;a href=&#34;http://en.wikipedia.org/wiki/WebSocket&#34;&gt;websocket&lt;/a&gt; buzz for a while now and would like to build something interesting with it.&lt;/p&gt;
-
-&lt;h2 id=&#34;websocket:3652469de01842bf96882033c0b91b72&#34;&gt;WebSocket&lt;/h2&gt;
-
-&lt;p&gt;Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&amp;rsquo;s still the same model: the client asks the server whether there&amp;rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.freshbooks.com/&#34;&gt;Our company&lt;/a&gt; provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &amp;ldquo;events&amp;rdquo; which gets sent to &lt;a href=&#34;http://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.&lt;/p&gt;
-
-&lt;h2 id=&#34;proof-of-concept:3652469de01842bf96882033c0b91b72&#34;&gt;Proof of concept&lt;/h2&gt;
-
-&lt;p&gt;For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2012/04/websocket-1.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2012/04/websocket-1.png?w=300&#34; alt=&#34;&#34; title=&#34;architecture&#34; width=&#34;300&#34; height=&#34;181&#34; class=&#34;aligncenter size-medium wp-image-292&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ve heard good things about &lt;a href=&#34;http://www.tornadoweb.org&#34;&gt;Tornado&lt;/a&gt;. Having read their docs on &lt;a href=&#34;http://www.tornadoweb.org/documentation/websocket.html&#34;&gt;websocket request handler&lt;/a&gt;, I felt it&amp;rsquo;s straightforward enough for me, so I chose Tornado as my backend.&lt;/p&gt;
-
-&lt;h2 id=&#34;pika:3652469de01842bf96882033c0b91b72&#34;&gt;Pika&lt;/h2&gt;
-
-&lt;p&gt;One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as &lt;a href=&#34;http://pypi.python.org/pypi/sparkplug/&#34;&gt;sparkplug&lt;/a&gt; and &lt;a href=&#34;http://pypi.python.org/pypi/stormed-amqp/0.1&#34;&gt;stormed-amqp&lt;/a&gt;, neither seem to be a good hit here. Finally, I stumbled on &lt;a href=&#34;https://github.com/pika/pika&#34;&gt;Pika&lt;/a&gt;. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.&lt;/p&gt;
-
-&lt;p&gt;The entry point looks like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;application = tornado.web.Application([
-    (r&#39;/ws&#39;, handlers.MyWebSocketHandler),
-])
-
-def main():
-    pika.log.setup(color=True)
-
-    io_loop = tornado.ioloop.IOLoop.instance()
-
-    # PikaClient is our rabbitmq consumer
-    pc = client.PikaClient(io_loop)
-    application.pc = pc
-    application.pc.connect()
-
-    application.listen(8888)
-    io_loop.start()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
-
-    def open(self, *args, **kwargs):
-        pika.log.info(&amp;quot;WebSocket opened&amp;quot;)
-
-    def on_close(self):
-        pika.log.info(&amp;quot;WebSocket closed&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That was straightforward. However, I&amp;rsquo;m faced with the problem of how to make the amqp consumer notify websocket handlers when we receive a message from the message queue. We cannot get the handler instances from the tornado application object. Note, each websocket connection has a corresponding &lt;code&gt;MyWebSocketHandler&lt;/code&gt; instance. The instances are not available from the application object. Maybe there&amp;rsquo;s a way to get them by other means, but I&amp;rsquo;m not familiar with the tornado API enough to know that.&lt;/p&gt;
-
-&lt;p&gt;However, from the handler, we do get the &lt;code&gt;application&lt;/code&gt; object, and because we attached pika_client (our amqp consumer) to the application, we have access to it inside our socket handler. Hey, how about registering the handler with the client when the websocket is connected, and let the client &amp;ldquo;notify&amp;rdquo; the handler when events are received? Hey, isn&amp;rsquo;t that the &lt;a href=&#34;http://en.wikipedia.org/wiki/Observer_pattern&#34;&gt;observer pattern&lt;/a&gt;?&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s the code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyWebSocketHandler(websocket.WebSocketHandler):
-
-    def open(self, *args, **kwargs):
-        self.application.pc.add_event_listener(self)
-        pika.log.info(&amp;quot;WebSocket opened&amp;quot;)
-
-    def on_close(self):
-        pika.log.info(&amp;quot;WebSocket closed&amp;quot;)
-        self.application.pc.remove_event_listener(self)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, our &lt;code&gt;PikaClient&lt;/code&gt; object need to support &lt;code&gt;add_event_listener()&lt;/code&gt; and &lt;code&gt;remove_event_listener()&lt;/code&gt; methods.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class PikaClient(object):
-
-    def __init__(self, io_loop):
-        pika.log.info(&#39;PikaClient: __init__&#39;)
-        self.io_loop = io_loop
-
-        self.connected = False
-        self.connecting = False
-        self.connection = None
-        self.channel = None
-
-        self.event_listeners = set([])
-
-    def connect(self):
-        if self.connecting:
-            pika.log.info(&#39;PikaClient: Already connecting to RabbitMQ&#39;)
-            return
-
-        pika.log.info(&#39;PikaClient: Connecting to RabbitMQ&#39;)
-        self.connecting = True
-
-        cred = pika.PlainCredentials(&#39;guest&#39;, &#39;guest&#39;)
-        param = pika.ConnectionParameters(
-            host=&#39;localhost&#39;,
-            port=5672,
-            virtual_host=&#39;/&#39;,
-            credentials=cred
-        )
-
-        self.connection = TornadoConnection(param,
-            on_open_callback=self.on_connected)
-        self.connection.add_on_close_callback(self.on_closed)
-
-    def on_connected(self, connection):
-        pika.log.info(&#39;PikaClient: connected to RabbitMQ&#39;)
-        self.connected = True
-        self.connection = connection
-        self.connection.channel(self.on_channel_open)
-
-    def on_channel_open(self, channel):
-        pika.log.info(&#39;PikaClient: Channel open, Declaring exchange&#39;)
-        self.channel = channel
-        # declare exchanges, which in turn, declare
-        # queues, and bind exchange to queues
-
-    def on_closed(self, connection):
-        pika.log.info(&#39;PikaClient: rabbit connection closed&#39;)
-        self.io_loop.stop()
-
-    def on_message(self, channel, method, header, body):
-        pika.log.info(&#39;PikaClient: message received: %s&#39; % body)
-        self.notify_listeners(event_factory(body))
-
-    def notify_listeners(self, event_obj):
-        # here we assume the message the sourcing app
-        # post to the message queue is in JSON format
-        event_json = json.dumps(event_ostener in self.event_listeners:
-            listener.write_message(event_json)
-            pika.log.info(&#39;PikaClient: notified %s&#39; % repr(listener))
-
-    def add_event_listener(self, listener):
-        self.event_listeners.add(listener)
-        pika.log.info(&#39;PikaClient: listener %s added&#39; % repr(listener))
-
-    def remove_event_listener(self, listener):
-        try:
-            self.event_listeners.remove(listener)
-            pika.log.info(&#39;PikaClient: listener %s removed&#39; % repr(listener))
-        except KeyError:
-            pass
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I left out the queue setup code here for brevity. &lt;code&gt;on_message&lt;/code&gt; callback is called when the consumer gets a message from the queue. The client, in turn, notifies all registered websocket handlers. Obviously, in real applications, you may want to do some kind of credentials and filtering, so the right message get to the right receiver. Then we simply call &lt;code&gt;handler.write_message()&lt;/code&gt;, so the message gets relayed to the front-end&amp;rsquo;s websocket.onmessage callback.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s some front-end code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($){
-    $(document).ready(function() {
-        var ws = new WebSocket(&#39;ws://localhost:8888/ws&#39;);
-        ws.onmessage = function(evt){
-            alert(evt.data);
-        }
-    });
-})(jQuery);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.&lt;/p&gt;
-
-&lt;h2 id=&#34;conclusion:3652469de01842bf96882033c0b91b72&#34;&gt;Conclusion&lt;/h2&gt;
-
-&lt;p&gt;This is my first stab at websocket and the tornado web framework. I&amp;rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.&lt;/p&gt;
-
-&lt;p&gt;I think websocket is a very interesting technology. It opens a wide range of possibilities for more interactive and engaging web applications. Our web application is of traditional architecture: server renders most of the page, and every request involves page loads. Having a websocket may not be very beneficial as the application doesn&amp;rsquo;t have that much of user interaction. My hackoff is more of a proof of concept. However, if the application is a one-page web app (no full page reloads), the websocket model works very well.&lt;/p&gt;
 </description>
     </item>
     

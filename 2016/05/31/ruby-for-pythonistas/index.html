@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Ruby for Pythonistas // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.15" />
+
+  <meta property="og:title" content="Ruby for Pythonistas" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2016/05/31/ruby-for-pythonistas/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2">Arrays</a>
+<ul>
+<li><a href="#concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2">Concatenation</a></li>
+<li><a href="#access:d5bc6a4bd55e5a8752ca6c90bf0813d2">Access</a></li>
+<li><a href="#slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2">Slices and Ranges</a></li>
+<li><a href="#unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2">Unpacking</a></li>
+</ul></li>
+<li><a href="#hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Hashes</a>
+<ul>
+<li><a href="#no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2">No <code>KeyError</code></a></li>
+<li><a href="#default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default value</a></li>
+</ul></li>
+<li><a href="#strings:d5bc6a4bd55e5a8752ca6c90bf0813d2">Strings</a></li>
+<li><a href="#symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2">Symbols</a></li>
+<li><a href="#methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Methods</a>
+<ul>
+<li><a href="#default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default values</a></li>
+<li><a href="#variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Variadic arguments</a></li>
+<li><a href="#invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2">Invocation and Return</a></li>
+<li><a href="#keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Keyword arguments</a></li>
+</ul></li>
+<li><a href="#constants:d5bc6a4bd55e5a8752ca6c90bf0813d2">Constants</a></li>
+<li><a href="#truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2">Truthiness</a></li>
+<li><a href="#exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2">Exceptions</a></li>
+<li><a href="#map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2">Map/Reduce/Filter</a></li>
+<li><a href="#blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2">Blocks</a></li>
+<li><a href="#classes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Classes</a>
+<ul>
+<li><a href="#self:d5bc6a4bd55e5a8752ca6c90bf0813d2">self</a></li>
+<li><a href="#private:d5bc6a4bd55e5a8752ca6c90bf0813d2">private</a></li>
+<li><a href="#define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Define class methods</a></li>
+<li><a href="#open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2">Open class</a></li>
+<li><a href="#inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2">Inheritance</a></li>
+<li><a href="#mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2">Mixin</a></li>
+</ul></li>
+<li><a href="#message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2">Message Passing</a></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2016/05/31/ruby-for-pythonistas/">Ruby for Pythonistas</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2016</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+
+			
+
+			
+
+            
+
+<p>It&rsquo;s been 11 years since I first encountered Python, and it&rsquo;s been my favourite programming language ever since. However, I&rsquo;ve always been curious about the Ruby language. On the surface, they have a lot in common: both dynamic, object-oriented, interpreted, vm-based, and optimize for developer happiness rather than machine speed. However, they have quite different data models, syntax and community culture.</p>
+
+<p>This post is a summary of my journey learning Ruby as a seasoned Python developer, and my thoughts comparing these two popular languages.</p>
+
+<p>Disclaimer: I&rsquo;m by no means a Ruby expert. My understand of Ruby so far has been quite superficial.
+Disclaimer: Most of the points here are my notes while going through the excellent <a href="http://rubykoans.com/">Ruby Koan</a> exercises. A big shout out to them!</p>
+
+<h1 id="arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2">Arrays</h1>
+
+<p>In my opinion, Ruby arrays are a lot richer than Python lists.</p>
+
+<h2 id="concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2">Concatenation</h2>
+
+<p>Use the <code>&lt;&lt;</code> operator on arrays:</p>
+
+<pre><code class="language-ruby">a &lt;&lt; 3
+</code></pre>
+
+<p>in Python:</p>
+
+<pre><code class="language-python">a.append(3)
+</code></pre>
+
+<h2 id="access:d5bc6a4bd55e5a8752ca6c90bf0813d2">Access</h2>
+
+<p>To access an array, you can use the array index just like it is in almost every other language. However, Ruby&rsquo;s <code>Array</code> class also implements convenient methods to access the first and last element of the array:</p>
+
+<pre><code>irb(main):004:0&gt; a = [1, 2, :three]
+=&gt; [1, 2, :three]
+irb(main):005:0&gt; a[0]
+=&gt; 1
+irb(main):006:0&gt; a[-1]
+=&gt; :three
+irb(main):007:0&gt; a.last
+=&gt; :three
+irb(main):008:0&gt; a.first
+=&gt; 1
+</code></pre>
+
+<h2 id="slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2">Slices and Ranges</h2>
+
+<p>Both Python and Ruby support slicing although the syntax are slightly different:</p>
+
+<p>Ruby: <code>arr[a, b]</code>, where <code>a</code> is the starting index and <code>b</code> is the size of the slice.</p>
+
+<pre><code>irb(main):012:0&gt; a=[:one, :two, :three]
+=&gt; [:one, :two, :three]
+irb(main):013:0&gt; a[0,1]
+=&gt; [:one]
+</code></pre>
+
+<p>Python: <code>arr[a:b]</code>, where <code>a</code> is the starting index and <code>b</code> is the ending index (exclusive)</p>
+
+<pre><code>&gt;&gt;&gt; a=[1,2,3]
+&gt;&gt;&gt; a[0:1]
+[1]
+</code></pre>
+
+<p>Python has <code>range</code> and <code>xrange</code> builtin functions.</p>
+
+<pre><code>&gt;&gt;&gt; list(range(10))
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+</code></pre>
+
+<p>Ruby also has range, but it provides language construct for <code>Range</code> objects:</p>
+
+<pre><code>irb(main):010:0&gt; (1..5).to_a
+=&gt; [1, 2, 3, 4, 5]
+
+irb(main):011:0&gt; (1...5).to_a
+=&gt; [1, 2, 3, 4]
+</code></pre>
+
+<p>It&rsquo;s worth noting that double dot (<code>..</code>) creates an inclusive interval whereas triple dot (<code>...</code>) creates an exclusive interval. This threw me off at first, since somehow my brain associate <code>...</code> with inclusive and <code>..</code> being exclusive.</p>
+
+<p>In Ruby, you can also pass a range object to an array, and that behaves more or less the same way as Python&rsquo;s slicing:</p>
+
+<pre><code>irb(main):019:0&gt; a[1...3]
+=&gt; [:two, :three]
+</code></pre>
+
+<p>Python&rsquo;s slicing is also pretty flexible. Python&rsquo;s special method <code>__getitem__</code> is able to take a range object (or any object for that matter) and override the behaviour of <code>[]</code> operator.</p>
+
+<h2 id="unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2">Unpacking</h2>
+
+<p>One of the nice features of Python is list/tuple unpacking, e.g.,</p>
+
+<pre><code>&gt;&gt;&gt; a=['one', 'two']
+&gt;&gt;&gt; one, two = a
+&gt;&gt;&gt; one
+'one'
+&gt;&gt;&gt; two
+'two'
+&gt;&gt;&gt;
+</code></pre>
+
+<p>IMO, Ruby does it better.</p>
+
+<pre><code>irb(main):020:0&gt; a=[:one, :two]
+=&gt; [:one, :two]
+irb(main):021:0&gt; one, two = a
+=&gt; [:one, :two]
+irb(main):022:0&gt; one
+=&gt; :one
+irb(main):023:0&gt; two
+=&gt; :two
+</code></pre>
+
+<p>Left side doesn&rsquo;t have to match the right side cardinally:</p>
+
+<pre><code>irb(main):024:0&gt; one, two = [1, 2, 3, 4, 5]
+=&gt; [1, 2, 3, 4, 5]
+irb(main):025:0&gt; one
+=&gt; 1
+irb(main):026:0&gt; two
+=&gt; 2
+
+irb(main):027:0&gt; one, two = [1]
+=&gt; [1]
+irb(main):029:0&gt; one
+=&gt; 1
+irb(main):030:0&gt; two
+=&gt; nil
+</code></pre>
+
+<p>In Python, that&rsquo;s a <code>ValueError</code>:</p>
+
+<pre><code>&gt;&gt;&gt; one, two = [1,2,3,4,5]
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  ValueError: too many values to unpack (expected 2)
+
+&gt;&gt;&gt; one, two = [1]
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  ValueError: not enough values to unpack (expected 2, got 1)
+</code></pre>
+
+<p>Ruby also supports &ldquo;wildcard&rdquo; match which in Python-land is only available after Python 3.</p>
+
+<pre><code>irb(main):031:0&gt; first, *rest = [1,2,3,4,5]
+=&gt; [1, 2, 3, 4, 5]
+irb(main):032:0&gt; first
+=&gt; 1
+irb(main):033:0&gt; rest
+=&gt; [2, 3, 4, 5]
+</code></pre>
+
+<p>Both Languages support inline swapping:</p>
+
+<pre><code>irb(main):034:0&gt; a, b = [1, 3]
+=&gt; [1, 3]
+irb(main):035:0&gt; a, b = b, a
+=&gt; [3, 1]
+irb(main):036:0&gt; a
+=&gt; 3
+irb(main):037:0&gt; b
+=&gt; 1
+</code></pre>
+
+<h1 id="hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Hashes</h1>
+
+<p>Ruby hashes are equivalent of Python dictionaries. They can be constructed and accessed using similar syntax.</p>
+
+<h2 id="no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2">No <code>KeyError</code></h2>
+
+<p>In Python, when accessing a key that doesn&rsquo;t exist in the dictionary, you get a <code>KeyError</code>:</p>
+
+<pre><code>&gt;&gt;&gt; x={'a': 1}
+&gt;&gt;&gt; x['b']
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  KeyError: 'b'
+</code></pre>
+
+<p>In Ruby, you simply get <code>nil</code>:</p>
+
+<pre><code>irb(main):038:0&gt; a={:a =&gt; 1, :b =&gt; 2}
+=&gt; {:a=&gt;1, :b=&gt;2}
+irb(main):039:0&gt; a[:c]
+=&gt; nil
+</code></pre>
+
+<p>However, doing a <code>fetch</code> will result in <code>KeyError</code> if it doesn&rsquo;t exist:</p>
+
+<pre><code>irb(main):040:0&gt; a.fetch(:c)
+KeyError: key not found: :c
+    from (irb):40:in `fetch'
+    from (irb):40
+    from /usr/bin/irb:11:in `&lt;main&gt;'
+</code></pre>
+
+<h2 id="default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default value</h2>
+
+<p>In Ruby, default value functionality is built-in with <code>Hash</code> class:</p>
+
+<pre><code>irb(main):041:0&gt; x=Hash.new([])
+=&gt; {}
+irb(main):042:0&gt; x[:one]
+=&gt; []
+</code></pre>
+
+<p>In Python, we use <code>collections.defaultdict</code>:</p>
+
+<pre><code>&gt;&gt;&gt; import collections
+&gt;&gt;&gt; x=collections.defaultdict(list)
+&gt;&gt;&gt; x[&quot;one&quot;]
+[]
+</code></pre>
+
+<p>Python&rsquo;s <code>defaultdict</code> is more flexible, allowing the default value be obtained via a callable. Maybe there&rsquo;s a way to achieve the same thing with Ruby but I haven&rsquo;t found it.</p>
+
+<p>Gotcha: The default value in Ruby&rsquo;s <code>Hash</code> though is shared among all instances:</p>
+
+<pre><code>irb(main):043:0&gt; x=Hash.new([])
+=&gt; {}
+irb(main):044:0&gt; x[:one] &lt;&lt; &quot;1&quot;
+=&gt; [&quot;1&quot;]
+irb(main):045:0&gt; x[:two] &lt;&lt; &quot;2&quot;
+=&gt; [&quot;1&quot;, &quot;2&quot;]
+irb(main):046:0&gt; x[:two]
+=&gt; [&quot;1&quot;, &quot;2&quot;]
+</code></pre>
+
+<p>This could lead to subtle bugs if not careful.</p>
+
+<p>A safer approach is to use block initialization:</p>
+
+<pre><code>irb(main):047:0&gt; x=Hash.new { |hash, key| hash[key] = [] }
+=&gt; {}
+irb(main):048:0&gt; x[:one] &lt;&lt; 1
+=&gt; [1]
+irb(main):049:0&gt; x[:two] &lt;&lt; 2
+=&gt; [2]
+irb(main):050:0&gt; x[:two]
+=&gt; [2]
+</code></pre>
+
+<p><a href="http://rubylearning.com/satishtalim/ruby_blocks.html">Block</a> is one of my favourite Ruby language features.</p>
+
+<h1 id="strings:d5bc6a4bd55e5a8752ca6c90bf0813d2">Strings</h1>
+
+<p>Strings are similar in both languages, except Ruby strings are mutable, while Pythons&rsquo; are immutable. Ruby also has more ways to escape quotes:</p>
+
+<pre><code>irb(main):051:0&gt; %(I can use ' and &quot; here no problem)
+=&gt; &quot;I can use ' and \&quot; here no problem&quot;
+
+irb(main):052:0&gt; %!and here '&quot;!
+=&gt; &quot;and here '\&quot;&quot;
+
+irb(main):053:0&gt; %{or here '&quot;}
+=&gt; &quot;or here '\&quot;&quot;
+
+irb(main):054:0&gt; %{multi
+irb(main):055:0&quot; line
+irb(main):056:0&quot; strings%}
+=&gt; &quot;multi\nline\nstrings%&quot;
+</code></pre>
+
+<p>You can use regex as string index to extract the matched substring:</p>
+
+<pre><code>irb(main):065:0&gt; &quot;j'ai 34 ans&quot;[/\d+/]
+=&gt; &quot;34&quot;
+</code></pre>
+
+<h1 id="symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2">Symbols</h1>
+
+<p>Symbols are a unique in Ruby that&rsquo;s not present in Python (although I wish). It has permeated into the design of other modern languages, like Clojure and Elixir. You can think of symbols as a way to do free-form enums, a way to name something, as oppose to just some free form texts.</p>
+
+<p>You can get all symbols in the current scope:</p>
+
+<pre><code>irb(main):060:0&gt; Symbol.all_symbols
+[... long list of global symbols ...]
+</code></pre>
+
+<p>You can use symbols to refer to functions:</p>
+
+<pre><code>irb(main):062:0&gt; ''.respond_to? :to_i
+=&gt; true
+</code></pre>
+
+<p>You can dynamically create a symbol from strings:</p>
+
+<pre><code>irb(main):063:0&gt; 'abc'.to_sym
+=&gt; :abc
+</code></pre>
+
+<h1 id="methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Methods</h1>
+
+<h2 id="default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default values</h2>
+
+<p>Same as Python:</p>
+
+<pre><code>def foo(a, b='default') 
+</code></pre>
+
+<h2 id="variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Variadic arguments</h2>
+
+<p>Same as Python:</p>
+
+<pre><code>def foo(a, *c)
+</code></pre>
+
+<p>Inside the method, <code>c</code> is available as an <code>Array</code>.</p>
+
+<h2 id="invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2">Invocation and Return</h2>
+
+<p>Ruby method invocation does not require parentheses, unless it&rsquo;s it results in ambiguity. e.g., you can omit parens in:</p>
+
+<pre><code>def foo(arg)
+  ...
+end
+
+foo :bar
+</code></pre>
+
+<p>but you have to use parens to disambiguate in situations like:</p>
+
+<pre><code>def foo(arg)
+end
+
+def bar(arg)
+end
+
+bar(foo arg)
+</code></pre>
+
+<p>In Python, parens are mandatory.</p>
+
+<p>In Ruby, almost everything is an expression. In the case of a method definition, the last expression becomes the return value of the method. Some people call it implicit returns, and people have mixed feelings about it. Personally I like the everything-is-an-expression model and using the last expression as the return value feels natural. In Python, you have to use <code>return</code>, otherwise, it implicitly returns <code>None</code>.</p>
+
+<h2 id="keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Keyword arguments</h2>
+
+<p>Ruby 1.x doesn&rsquo;t have keyword arguments as a language feature. This is a little disappointing. However, it&rsquo;s idiomatic in Ruby to have a method accept a hash, and use symbols to simulate keyword arguments:</p>
+
+<pre><code>irb(main):068:0&gt; def foo(args)
+irb(main):069:1&gt;   puts args
+irb(main):070:1&gt; end
+=&gt; :foo
+irb(main):071:0&gt; foo(a: 5, b: 6)
+{:a=&gt;5, :b=&gt;6}
+</code></pre>
+
+<p>Since you can omit <code>{}</code> in Hash construction, this code is almost like Python&rsquo;s keyword arguments. However, you have to do argument validation yourself.</p>
+
+<p>In Ruby 2.x, this pattern has been elevated as a language feature, so now Ruby has proper keyword argument support. However, I have not seen an equivalent of Python&rsquo;s <a href="https://www.python.org/dev/peps/pep-3102/">keyword-only argument</a> feature.</p>
+
+<h1 id="constants:d5bc6a4bd55e5a8752ca6c90bf0813d2">Constants</h1>
+
+<p>Ruby symbols start with capital letters are &ldquo;constants&rdquo;, so classes are also &ldquo;constants&rdquo;:</p>
+
+<pre><code>irb(main):074:0&gt; class foo
+irb(main):075:1&gt; end
+SyntaxError: (irb):74: class/module name must be CONSTANT
+        from /usr/bin/irb:11:in `&lt;main&gt;'
+</code></pre>
+
+<p>Ruby constants are more enforced than their counterpart in Python. (well, technically, Python doesn&rsquo;t have constants, only by convention, all cap symbols are considered constants.)</p>
+
+<pre><code>irb(main):076:0&gt; A=1
+=&gt; 1
+irb(main):077:0&gt; A=2
+(irb):77: warning: already initialized constant A
+(irb):76: warning: previous definition of A was here
+=&gt; 2
+</code></pre>
+
+<h1 id="truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2">Truthiness</h1>
+
+<p>Truthiness in Ruby is a lot different from Python. Python has the concept of &ldquo;falsy&rdquo;, in which <code>0</code>, <code>[]</code>, <code>{}</code>, <code>''</code> are all evaluated to <code>False</code>. In Ruby, however, only <code>false</code> is false, and everything else is treated as <code>true</code>:</p>
+
+<pre><code>def is_true?(value)
+  if value
+    :true
+  else
+    :false
+  end
+end
+
+irb(main):098:0&gt; is_true? 0
+=&gt; :true
+irb(main):099:0&gt; is_true? '0'
+=&gt; :true
+irb(main):100:0&gt; is_true? ''
+=&gt; :true
+irb(main):101:0&gt; is_true? []
+=&gt; :true
+irb(main):103:0&gt; is_true?({})
+=&gt; :true
+irb(main):104:0&gt; is_true?(false)
+=&gt; :false
+</code></pre>
+
+<h1 id="exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2">Exceptions</h1>
+
+<p>Ruby&rsquo;s exception hierarchy is a lot like Python&rsquo;s, at least in name:</p>
+
+<pre><code>RuntimeError &lt; StandardError &lt; Exception
+</code></pre>
+
+<p>To handle exceptions, you use <code>begin...rescue...ensure</code> rather than <code>try...except...finally</code>.</p>
+
+<h1 id="map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2">Map/Reduce/Filter</h1>
+
+<p>Ruby the language itself is not a functional language, although it provides machinery for you to program in a functional way, such as using high-order functions.</p>
+
+<p>When first learning Ruby, I was looking for my familiar friends <code>map</code>/<code>reduce</code>/<code>filter</code> but couldn&rsquo;t find any. Then I realized they&rsquo;re called something completely different:</p>
+
+<p>In Ruby, <code>filter</code> is achieved using <code>select</code>/<code>find_all</code>:</p>
+
+<pre><code>irb(main):105:0&gt; [1,2,3,4,5].select { |x| x % 2 == 0 }
+=&gt; [2, 4]
+irb(main):106:0&gt; [1,2,3,4,5].find_all { |x| x % 2 == 0 }
+=&gt; [2, 4]
+</code></pre>
+
+<p><code>map</code> is equivalent to <code>collect</code>/<code>map</code>:</p>
+
+<pre><code>irb(main):107:0&gt; [1,2,3,4,5].collect { |x| x * 2 }
+=&gt; [2, 4, 6, 8, 10]
+</code></pre>
+
+<p><code>reduce</code> is not <code>reduce</code>, nor is it called <code>fold</code>, but is weirdly named <code>inject</code>:</p>
+
+<pre><code>irb(main):108:0&gt; [1,2,3,4,5].inject(0) { |x, y| x + y }
+=&gt; 15
+</code></pre>
+
+<h1 id="blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2">Blocks</h1>
+
+<p>As I eluded to before, blocks are one of my favourite Ruby language features. It&rsquo;s comparable to Python&rsquo;s <a href="https://docs.python.org/2/reference/compound_stmts.html#with">context managers</a>, but it can be invoked without using a keyword and can be added to any method calls. It feels more natural.</p>
+
+<p>Similar to Python (using <code>contextlib.contextmanager</code>), you can invoke a block by <code>yield</code> to the caller:</p>
+
+<pre><code>def do_with_logging
+    log &quot;start&quot;
+    yield
+    log &quot;end&quot;
+end
+
+do_with_logging {
+    # serious business
+}
+</code></pre>
+
+<p>A Ruby method is also able to determine if it&rsquo;s called with a block being passed by using <code>block_given?</code> method.</p>
+
+<pre><code>def do_it
+    if block_given?
+        yield
+    else
+        put &quot;no block&quot;
+    end
+end
+</code></pre>
+
+<h1 id="classes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Classes</h1>
+
+<p>Ruby classes are defined in a similar way as Python.</p>
+
+<h2 id="self:d5bc6a4bd55e5a8752ca6c90bf0813d2">self</h2>
+
+<p>Ruby&rsquo;s <code>self</code> can reference different things in different scopes. For example, inside a class definition, <code>self</code> refers to the class object (kind of like when you define a <code>classmethod</code> in Python), but inside an instance method, <code>self</code> refers to the instance of the class.</p>
+
+<h2 id="private:d5bc6a4bd55e5a8752ca6c90bf0813d2">private</h2>
+
+<p>Python doesn&rsquo;t have <code>private</code> members or methods. With Ruby however, you <em>can</em> define &ldquo;private&rdquo; methods if you put <code>private</code> in front of your method definition.</p>
+
+<pre><code>class Foo
+    private def foo
+        puts &quot;private&quot;
+    end
+end
+</code></pre>
+
+<p>Outside callers can&rsquo;t call <code>foo</code>. Members of the same class can call <code>foo</code> if only it is called with <code>self</code> being the implicit receiver:</p>
+
+<pre><code>class Foo
+    private ...
+
+    def use_foo
+        foo  # this is fine
+        self.foo  # Not allowed
+    end
+end
+</code></pre>
+
+<p>Ruby&rsquo;s instance variables are private with <code>@</code> prefix:</p>
+
+<pre><code>class Foo
+    def initialize(name)
+        @name = name
+    end
+end
+</code></pre>
+
+<p>To access <code>@name</code> you can define getters and/or settings:</p>
+
+<pre><code>class Foo
+    attr_accessor :name
+    # or attr_reader :name to make it readonly
+    ...
+end
+</code></pre>
+
+<p>Although the <code>private</code> restriction can be circumvented by metaprogramming:</p>
+
+<pre><code>foo = Foo.new
+foo.instance_variable_get(&quot;@name&quot;)
+</code></pre>
+
+<p>Overall, I think Ruby encourages more encapsulation and better design.</p>
+
+<h2 id="define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Define class methods</h2>
+
+<p>You can refer to the class by name when defining methods to make class methods:</p>
+
+<pre><code>class Foo
+    def Foo.bar
+    end
+end
+</code></pre>
+
+<p>Alternatively, remember we said before that <code>self</code> inside a class definition refers to the class itself? So this works too:</p>
+
+<pre><code>class Foo
+    def self.bar
+    end
+end
+</code></pre>
+
+<p>Another way to write class method uses an inner class:</p>
+
+<pre><code>class Foo
+    class &lt;&lt; self
+        def bar
+        end
+    end
+end
+</code></pre>
+
+<p>This is good if you want to group class methods together.</p>
+
+<h2 id="open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2">Open class</h2>
+
+<p>A powerful (yet controversial) feature of Ruby is that you can &ldquo;amend&rdquo; any Ruby classes (even the builtin ones) during runtime. It&rsquo;s like monkey-patching on steroids.</p>
+
+<pre><code>class ::Integer
+    def even?
+        self % 2 == 0
+    end
+end
+</code></pre>
+
+<p>Now suddenly <code>2.even?</code> is a thing. It certainly makes writing your own DSL a lot easier, but it may lead to magical code that&rsquo;s hard to track down.</p>
+
+<h2 id="inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2">Inheritance</h2>
+
+<p>Ruby uses <code>A &lt; B</code> to mean class <code>A</code> inherits from class <code>B</code>. <code>super</code> is available to refer to the same-named methods in the super class. Because Ruby is single inheritance, there&rsquo;s no ambiguity of <code>super</code> here.</p>
+
+<h2 id="mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2">Mixin</h2>
+
+<p>Ruby&rsquo;s class can only have a single parent, but you can &ldquo;mixin&rdquo; behaviour into your class by <code>include</code> other modules. Compared to Python, which does support multiple inheritance, and extra attention has to be paid to avoid diamond inheritance problem.</p>
+
+<p>I feel the Ruby design is more thought-out. As oppose to give more ropes to developers to hang themselves, it makes the use case of multiple inheritance more clear (only for mixins).</p>
+
+<h1 id="message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2">Message Passing</h1>
+
+<p>Ruby&rsquo;s object-oriented model is based on the idea of message passing. As opposed to invoking using <code>obj.method</code>, you can pass a message <code>method</code> to object <code>obj</code>:</p>
+
+<pre><code>obj.send :method
+
+obj.__send__ :method
+</code></pre>
+
+<p>Use <code>respond_to?</code> to test if a receiver can handle such message:</p>
+
+<pre><code>if obj.respond_to? :method
+    ...
+end
+</code></pre>
+
+<p><code>obj</code> can implement <code>method_mssing?</code> method to implement generic method dispatcher. With Python, you can achieve the same thing with <code>__getattribute__</code> magic method.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/">Docker...root...root...Docker (a.k.a. the docker group is a backdoor)</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'idempotentca';
+    var disqus_identifier = 'http:\/\/blog.idempotent.ca\/2016\/05\/31\/ruby-for-pythonistas\/';
+    var disqus_title = 'Ruby for Pythonistas';
+    var disqus_url = 'http:\/\/blog.idempotent.ca\/2016\/05\/31\/ruby-for-pythonistas\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

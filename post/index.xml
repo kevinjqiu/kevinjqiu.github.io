@@ -6,8 +6,602 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 03 May 2016 22:52:41 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 31 May 2016 23:04:13 -0400</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ruby for Pythonistas</title>
+      <link>http://blog.idempotent.ca/2016/05/31/ruby-for-pythonistas/</link>
+      <pubDate>Tue, 31 May 2016 23:04:13 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/05/31/ruby-for-pythonistas/</guid>
+      <description>
+
+&lt;p&gt;It&amp;rsquo;s been 11 years since I first encountered Python, and it&amp;rsquo;s been my favourite programming language ever since. However, I&amp;rsquo;ve always been curious about the Ruby language. On the surface, they have a lot in common: both dynamic, object-oriented, interpreted, vm-based, and optimize for developer happiness rather than machine speed. However, they have quite different data models, syntax and community culture.&lt;/p&gt;
+
+&lt;p&gt;This post is a summary of my journey learning Ruby as a seasoned Python developer, and my thoughts comparing these two popular languages.&lt;/p&gt;
+
+&lt;p&gt;Disclaimer: I&amp;rsquo;m by no means a Ruby expert. My understand of Ruby so far has been quite superficial.
+Disclaimer: Most of the points here are my notes while going through the excellent &lt;a href=&#34;http://rubykoans.com/&#34;&gt;Ruby Koan&lt;/a&gt; exercises. A big shout out to them!&lt;/p&gt;
+
+&lt;h1 id=&#34;arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Arrays&lt;/h1&gt;
+
+&lt;p&gt;In my opinion, Ruby arrays are a lot richer than Python lists.&lt;/p&gt;
+
+&lt;h2 id=&#34;concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Concatenation&lt;/h2&gt;
+
+&lt;p&gt;Use the &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt; operator on arrays:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;a &amp;lt;&amp;lt; 3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;in Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;a.append(3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;access:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Access&lt;/h2&gt;
+
+&lt;p&gt;To access an array, you can use the array index just like it is in almost every other language. However, Ruby&amp;rsquo;s &lt;code&gt;Array&lt;/code&gt; class also implements convenient methods to access the first and last element of the array:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):004:0&amp;gt; a = [1, 2, :three]
+=&amp;gt; [1, 2, :three]
+irb(main):005:0&amp;gt; a[0]
+=&amp;gt; 1
+irb(main):006:0&amp;gt; a[-1]
+=&amp;gt; :three
+irb(main):007:0&amp;gt; a.last
+=&amp;gt; :three
+irb(main):008:0&amp;gt; a.first
+=&amp;gt; 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Slices and Ranges&lt;/h2&gt;
+
+&lt;p&gt;Both Python and Ruby support slicing although the syntax are slightly different:&lt;/p&gt;
+
+&lt;p&gt;Ruby: &lt;code&gt;arr[a, b]&lt;/code&gt;, where &lt;code&gt;a&lt;/code&gt; is the starting index and &lt;code&gt;b&lt;/code&gt; is the size of the slice.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):012:0&amp;gt; a=[:one, :two, :three]
+=&amp;gt; [:one, :two, :three]
+irb(main):013:0&amp;gt; a[0,1]
+=&amp;gt; [:one]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python: &lt;code&gt;arr[a:b]&lt;/code&gt;, where &lt;code&gt;a&lt;/code&gt; is the starting index and &lt;code&gt;b&lt;/code&gt; is the ending index (exclusive)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; a=[1,2,3]
+&amp;gt;&amp;gt;&amp;gt; a[0:1]
+[1]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python has &lt;code&gt;range&lt;/code&gt; and &lt;code&gt;xrange&lt;/code&gt; builtin functions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; list(range(10))
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby also has range, but it provides language construct for &lt;code&gt;Range&lt;/code&gt; objects:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):010:0&amp;gt; (1..5).to_a
+=&amp;gt; [1, 2, 3, 4, 5]
+
+irb(main):011:0&amp;gt; (1...5).to_a
+=&amp;gt; [1, 2, 3, 4]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It&amp;rsquo;s worth noting that double dot (&lt;code&gt;..&lt;/code&gt;) creates an inclusive interval whereas triple dot (&lt;code&gt;...&lt;/code&gt;) creates an exclusive interval. This threw me off at first, since somehow my brain associate &lt;code&gt;...&lt;/code&gt; with inclusive and &lt;code&gt;..&lt;/code&gt; being exclusive.&lt;/p&gt;
+
+&lt;p&gt;In Ruby, you can also pass a range object to an array, and that behaves more or less the same way as Python&amp;rsquo;s slicing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):019:0&amp;gt; a[1...3]
+=&amp;gt; [:two, :three]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python&amp;rsquo;s slicing is also pretty flexible. Python&amp;rsquo;s special method &lt;code&gt;__getitem__&lt;/code&gt; is able to take a range object (or any object for that matter) and override the behaviour of &lt;code&gt;[]&lt;/code&gt; operator.&lt;/p&gt;
+
+&lt;h2 id=&#34;unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Unpacking&lt;/h2&gt;
+
+&lt;p&gt;One of the nice features of Python is list/tuple unpacking, e.g.,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; a=[&#39;one&#39;, &#39;two&#39;]
+&amp;gt;&amp;gt;&amp;gt; one, two = a
+&amp;gt;&amp;gt;&amp;gt; one
+&#39;one&#39;
+&amp;gt;&amp;gt;&amp;gt; two
+&#39;two&#39;
+&amp;gt;&amp;gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;IMO, Ruby does it better.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):020:0&amp;gt; a=[:one, :two]
+=&amp;gt; [:one, :two]
+irb(main):021:0&amp;gt; one, two = a
+=&amp;gt; [:one, :two]
+irb(main):022:0&amp;gt; one
+=&amp;gt; :one
+irb(main):023:0&amp;gt; two
+=&amp;gt; :two
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Left side doesn&amp;rsquo;t have to match the right side cardinally:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):024:0&amp;gt; one, two = [1, 2, 3, 4, 5]
+=&amp;gt; [1, 2, 3, 4, 5]
+irb(main):025:0&amp;gt; one
+=&amp;gt; 1
+irb(main):026:0&amp;gt; two
+=&amp;gt; 2
+
+irb(main):027:0&amp;gt; one, two = [1]
+=&amp;gt; [1]
+irb(main):029:0&amp;gt; one
+=&amp;gt; 1
+irb(main):030:0&amp;gt; two
+=&amp;gt; nil
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Python, that&amp;rsquo;s a &lt;code&gt;ValueError&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; one, two = [1,2,3,4,5]
+Traceback (most recent call last):
+  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;
+  ValueError: too many values to unpack (expected 2)
+
+&amp;gt;&amp;gt;&amp;gt; one, two = [1]
+Traceback (most recent call last):
+  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;
+  ValueError: not enough values to unpack (expected 2, got 1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby also supports &amp;ldquo;wildcard&amp;rdquo; match which in Python-land is only available after Python 3.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):031:0&amp;gt; first, *rest = [1,2,3,4,5]
+=&amp;gt; [1, 2, 3, 4, 5]
+irb(main):032:0&amp;gt; first
+=&amp;gt; 1
+irb(main):033:0&amp;gt; rest
+=&amp;gt; [2, 3, 4, 5]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Both Languages support inline swapping:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):034:0&amp;gt; a, b = [1, 3]
+=&amp;gt; [1, 3]
+irb(main):035:0&amp;gt; a, b = b, a
+=&amp;gt; [3, 1]
+irb(main):036:0&amp;gt; a
+=&amp;gt; 3
+irb(main):037:0&amp;gt; b
+=&amp;gt; 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Hashes&lt;/h1&gt;
+
+&lt;p&gt;Ruby hashes are equivalent of Python dictionaries. They can be constructed and accessed using similar syntax.&lt;/p&gt;
+
+&lt;h2 id=&#34;no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;No &lt;code&gt;KeyError&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;In Python, when accessing a key that doesn&amp;rsquo;t exist in the dictionary, you get a &lt;code&gt;KeyError&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; x={&#39;a&#39;: 1}
+&amp;gt;&amp;gt;&amp;gt; x[&#39;b&#39;]
+Traceback (most recent call last):
+  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;
+  KeyError: &#39;b&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Ruby, you simply get &lt;code&gt;nil&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):038:0&amp;gt; a={:a =&amp;gt; 1, :b =&amp;gt; 2}
+=&amp;gt; {:a=&amp;gt;1, :b=&amp;gt;2}
+irb(main):039:0&amp;gt; a[:c]
+=&amp;gt; nil
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, doing a &lt;code&gt;fetch&lt;/code&gt; will result in &lt;code&gt;KeyError&lt;/code&gt; if it doesn&amp;rsquo;t exist:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):040:0&amp;gt; a.fetch(:c)
+KeyError: key not found: :c
+    from (irb):40:in `fetch&#39;
+    from (irb):40
+    from /usr/bin/irb:11:in `&amp;lt;main&amp;gt;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Default value&lt;/h2&gt;
+
+&lt;p&gt;In Ruby, default value functionality is built-in with &lt;code&gt;Hash&lt;/code&gt; class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):041:0&amp;gt; x=Hash.new([])
+=&amp;gt; {}
+irb(main):042:0&amp;gt; x[:one]
+=&amp;gt; []
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Python, we use &lt;code&gt;collections.defaultdict&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; import collections
+&amp;gt;&amp;gt;&amp;gt; x=collections.defaultdict(list)
+&amp;gt;&amp;gt;&amp;gt; x[&amp;quot;one&amp;quot;]
+[]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Python&amp;rsquo;s &lt;code&gt;defaultdict&lt;/code&gt; is more flexible, allowing the default value be obtained via a callable. Maybe there&amp;rsquo;s a way to achieve the same thing with Ruby but I haven&amp;rsquo;t found it.&lt;/p&gt;
+
+&lt;p&gt;Gotcha: The default value in Ruby&amp;rsquo;s &lt;code&gt;Hash&lt;/code&gt; though is shared among all instances:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):043:0&amp;gt; x=Hash.new([])
+=&amp;gt; {}
+irb(main):044:0&amp;gt; x[:one] &amp;lt;&amp;lt; &amp;quot;1&amp;quot;
+=&amp;gt; [&amp;quot;1&amp;quot;]
+irb(main):045:0&amp;gt; x[:two] &amp;lt;&amp;lt; &amp;quot;2&amp;quot;
+=&amp;gt; [&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;]
+irb(main):046:0&amp;gt; x[:two]
+=&amp;gt; [&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This could lead to subtle bugs if not careful.&lt;/p&gt;
+
+&lt;p&gt;A safer approach is to use block initialization:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):047:0&amp;gt; x=Hash.new { |hash, key| hash[key] = [] }
+=&amp;gt; {}
+irb(main):048:0&amp;gt; x[:one] &amp;lt;&amp;lt; 1
+=&amp;gt; [1]
+irb(main):049:0&amp;gt; x[:two] &amp;lt;&amp;lt; 2
+=&amp;gt; [2]
+irb(main):050:0&amp;gt; x[:two]
+=&amp;gt; [2]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://rubylearning.com/satishtalim/ruby_blocks.html&#34;&gt;Block&lt;/a&gt; is one of my favourite Ruby language features.&lt;/p&gt;
+
+&lt;h1 id=&#34;strings:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Strings&lt;/h1&gt;
+
+&lt;p&gt;Strings are similar in both languages, except Ruby strings are mutable, while Pythons&amp;rsquo; are immutable. Ruby also has more ways to escape quotes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):051:0&amp;gt; %(I can use &#39; and &amp;quot; here no problem)
+=&amp;gt; &amp;quot;I can use &#39; and \&amp;quot; here no problem&amp;quot;
+
+irb(main):052:0&amp;gt; %!and here &#39;&amp;quot;!
+=&amp;gt; &amp;quot;and here &#39;\&amp;quot;&amp;quot;
+
+irb(main):053:0&amp;gt; %{or here &#39;&amp;quot;}
+=&amp;gt; &amp;quot;or here &#39;\&amp;quot;&amp;quot;
+
+irb(main):054:0&amp;gt; %{multi
+irb(main):055:0&amp;quot; line
+irb(main):056:0&amp;quot; strings%}
+=&amp;gt; &amp;quot;multi\nline\nstrings%&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use regex as string index to extract the matched substring:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):065:0&amp;gt; &amp;quot;j&#39;ai 34 ans&amp;quot;[/\d+/]
+=&amp;gt; &amp;quot;34&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Symbols&lt;/h1&gt;
+
+&lt;p&gt;Symbols are a unique in Ruby that&amp;rsquo;s not present in Python (although I wish). It has permeated into the design of other modern languages, like Clojure and Elixir. You can think of symbols as a way to do free-form enums, a way to name something, as oppose to just some free form texts.&lt;/p&gt;
+
+&lt;p&gt;You can get all symbols in the current scope:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):060:0&amp;gt; Symbol.all_symbols
+[... long list of global symbols ...]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use symbols to refer to functions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):062:0&amp;gt; &#39;&#39;.respond_to? :to_i
+=&amp;gt; true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can dynamically create a symbol from strings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):063:0&amp;gt; &#39;abc&#39;.to_sym
+=&amp;gt; :abc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;methods:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Methods&lt;/h1&gt;
+
+&lt;h2 id=&#34;default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Default values&lt;/h2&gt;
+
+&lt;p&gt;Same as Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(a, b=&#39;default&#39;) 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Variadic arguments&lt;/h2&gt;
+
+&lt;p&gt;Same as Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(a, *c)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Inside the method, &lt;code&gt;c&lt;/code&gt; is available as an &lt;code&gt;Array&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Invocation and Return&lt;/h2&gt;
+
+&lt;p&gt;Ruby method invocation does not require parentheses, unless it&amp;rsquo;s it results in ambiguity. e.g., you can omit parens in:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(arg)
+  ...
+end
+
+foo :bar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;but you have to use parens to disambiguate in situations like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def foo(arg)
+end
+
+def bar(arg)
+end
+
+bar(foo arg)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Python, parens are mandatory.&lt;/p&gt;
+
+&lt;p&gt;In Ruby, almost everything is an expression. In the case of a method definition, the last expression becomes the return value of the method. Some people call it implicit returns, and people have mixed feelings about it. Personally I like the everything-is-an-expression model and using the last expression as the return value feels natural. In Python, you have to use &lt;code&gt;return&lt;/code&gt;, otherwise, it implicitly returns &lt;code&gt;None&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Keyword arguments&lt;/h2&gt;
+
+&lt;p&gt;Ruby 1.x doesn&amp;rsquo;t have keyword arguments as a language feature. This is a little disappointing. However, it&amp;rsquo;s idiomatic in Ruby to have a method accept a hash, and use symbols to simulate keyword arguments:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):068:0&amp;gt; def foo(args)
+irb(main):069:1&amp;gt;   puts args
+irb(main):070:1&amp;gt; end
+=&amp;gt; :foo
+irb(main):071:0&amp;gt; foo(a: 5, b: 6)
+{:a=&amp;gt;5, :b=&amp;gt;6}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since you can omit &lt;code&gt;{}&lt;/code&gt; in Hash construction, this code is almost like Python&amp;rsquo;s keyword arguments. However, you have to do argument validation yourself.&lt;/p&gt;
+
+&lt;p&gt;In Ruby 2.x, this pattern has been elevated as a language feature, so now Ruby has proper keyword argument support. However, I have not seen an equivalent of Python&amp;rsquo;s &lt;a href=&#34;https://www.python.org/dev/peps/pep-3102/&#34;&gt;keyword-only argument&lt;/a&gt; feature.&lt;/p&gt;
+
+&lt;h1 id=&#34;constants:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Constants&lt;/h1&gt;
+
+&lt;p&gt;Ruby symbols start with capital letters are &amp;ldquo;constants&amp;rdquo;, so classes are also &amp;ldquo;constants&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):074:0&amp;gt; class foo
+irb(main):075:1&amp;gt; end
+SyntaxError: (irb):74: class/module name must be CONSTANT
+        from /usr/bin/irb:11:in `&amp;lt;main&amp;gt;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby constants are more enforced than their counterpart in Python. (well, technically, Python doesn&amp;rsquo;t have constants, only by convention, all cap symbols are considered constants.)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):076:0&amp;gt; A=1
+=&amp;gt; 1
+irb(main):077:0&amp;gt; A=2
+(irb):77: warning: already initialized constant A
+(irb):76: warning: previous definition of A was here
+=&amp;gt; 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Truthiness&lt;/h1&gt;
+
+&lt;p&gt;Truthiness in Ruby is a lot different from Python. Python has the concept of &amp;ldquo;falsy&amp;rdquo;, in which &lt;code&gt;0&lt;/code&gt;, &lt;code&gt;[]&lt;/code&gt;, &lt;code&gt;{}&lt;/code&gt;, &lt;code&gt;&#39;&#39;&lt;/code&gt; are all evaluated to &lt;code&gt;False&lt;/code&gt;. In Ruby, however, only &lt;code&gt;false&lt;/code&gt; is false, and everything else is treated as &lt;code&gt;true&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def is_true?(value)
+  if value
+    :true
+  else
+    :false
+  end
+end
+
+irb(main):098:0&amp;gt; is_true? 0
+=&amp;gt; :true
+irb(main):099:0&amp;gt; is_true? &#39;0&#39;
+=&amp;gt; :true
+irb(main):100:0&amp;gt; is_true? &#39;&#39;
+=&amp;gt; :true
+irb(main):101:0&amp;gt; is_true? []
+=&amp;gt; :true
+irb(main):103:0&amp;gt; is_true?({})
+=&amp;gt; :true
+irb(main):104:0&amp;gt; is_true?(false)
+=&amp;gt; :false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Exceptions&lt;/h1&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s exception hierarchy is a lot like Python&amp;rsquo;s, at least in name:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RuntimeError &amp;lt; StandardError &amp;lt; Exception
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To handle exceptions, you use &lt;code&gt;begin...rescue...ensure&lt;/code&gt; rather than &lt;code&gt;try...except...finally&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Map/Reduce/Filter&lt;/h1&gt;
+
+&lt;p&gt;Ruby the language itself is not a functional language, although it provides machinery for you to program in a functional way, such as using high-order functions.&lt;/p&gt;
+
+&lt;p&gt;When first learning Ruby, I was looking for my familiar friends &lt;code&gt;map&lt;/code&gt;/&lt;code&gt;reduce&lt;/code&gt;/&lt;code&gt;filter&lt;/code&gt; but couldn&amp;rsquo;t find any. Then I realized they&amp;rsquo;re called something completely different:&lt;/p&gt;
+
+&lt;p&gt;In Ruby, &lt;code&gt;filter&lt;/code&gt; is achieved using &lt;code&gt;select&lt;/code&gt;/&lt;code&gt;find_all&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):105:0&amp;gt; [1,2,3,4,5].select { |x| x % 2 == 0 }
+=&amp;gt; [2, 4]
+irb(main):106:0&amp;gt; [1,2,3,4,5].find_all { |x| x % 2 == 0 }
+=&amp;gt; [2, 4]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;map&lt;/code&gt; is equivalent to &lt;code&gt;collect&lt;/code&gt;/&lt;code&gt;map&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):107:0&amp;gt; [1,2,3,4,5].collect { |x| x * 2 }
+=&amp;gt; [2, 4, 6, 8, 10]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;reduce&lt;/code&gt; is not &lt;code&gt;reduce&lt;/code&gt;, nor is it called &lt;code&gt;fold&lt;/code&gt;, but is weirdly named &lt;code&gt;inject&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;irb(main):108:0&amp;gt; [1,2,3,4,5].inject(0) { |x, y| x + y }
+=&amp;gt; 15
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Blocks&lt;/h1&gt;
+
+&lt;p&gt;As I eluded to before, blocks are one of my favourite Ruby language features. It&amp;rsquo;s comparable to Python&amp;rsquo;s &lt;a href=&#34;https://docs.python.org/2/reference/compound_stmts.html#with&#34;&gt;context managers&lt;/a&gt;, but it can be invoked without using a keyword and can be added to any method calls. It feels more natural.&lt;/p&gt;
+
+&lt;p&gt;Similar to Python (using &lt;code&gt;contextlib.contextmanager&lt;/code&gt;), you can invoke a block by &lt;code&gt;yield&lt;/code&gt; to the caller:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def do_with_logging
+    log &amp;quot;start&amp;quot;
+    yield
+    log &amp;quot;end&amp;quot;
+end
+
+do_with_logging {
+    # serious business
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A Ruby method is also able to determine if it&amp;rsquo;s called with a block being passed by using &lt;code&gt;block_given?&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def do_it
+    if block_given?
+        yield
+    else
+        put &amp;quot;no block&amp;quot;
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;classes:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Classes&lt;/h1&gt;
+
+&lt;p&gt;Ruby classes are defined in a similar way as Python.&lt;/p&gt;
+
+&lt;h2 id=&#34;self:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;self&lt;/h2&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s &lt;code&gt;self&lt;/code&gt; can reference different things in different scopes. For example, inside a class definition, &lt;code&gt;self&lt;/code&gt; refers to the class object (kind of like when you define a &lt;code&gt;classmethod&lt;/code&gt; in Python), but inside an instance method, &lt;code&gt;self&lt;/code&gt; refers to the instance of the class.&lt;/p&gt;
+
+&lt;h2 id=&#34;private:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;private&lt;/h2&gt;
+
+&lt;p&gt;Python doesn&amp;rsquo;t have &lt;code&gt;private&lt;/code&gt; members or methods. With Ruby however, you &lt;em&gt;can&lt;/em&gt; define &amp;ldquo;private&amp;rdquo; methods if you put &lt;code&gt;private&lt;/code&gt; in front of your method definition.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    private def foo
+        puts &amp;quot;private&amp;quot;
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Outside callers can&amp;rsquo;t call &lt;code&gt;foo&lt;/code&gt;. Members of the same class can call &lt;code&gt;foo&lt;/code&gt; if only it is called with &lt;code&gt;self&lt;/code&gt; being the implicit receiver:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    private ...
+
+    def use_foo
+        foo  # this is fine
+        self.foo  # Not allowed
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s instance variables are private with &lt;code&gt;@&lt;/code&gt; prefix:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    def initialize(name)
+        @name = name
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To access &lt;code&gt;@name&lt;/code&gt; you can define getters and/or settings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    attr_accessor :name
+    # or attr_reader :name to make it readonly
+    ...
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Although the &lt;code&gt;private&lt;/code&gt; restriction can be circumvented by metaprogramming:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;foo = Foo.new
+foo.instance_variable_get(&amp;quot;@name&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Overall, I think Ruby encourages more encapsulation and better design.&lt;/p&gt;
+
+&lt;h2 id=&#34;define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Define class methods&lt;/h2&gt;
+
+&lt;p&gt;You can refer to the class by name when defining methods to make class methods:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    def Foo.bar
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, remember we said before that &lt;code&gt;self&lt;/code&gt; inside a class definition refers to the class itself? So this works too:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    def self.bar
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another way to write class method uses an inner class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Foo
+    class &amp;lt;&amp;lt; self
+        def bar
+        end
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is good if you want to group class methods together.&lt;/p&gt;
+
+&lt;h2 id=&#34;open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Open class&lt;/h2&gt;
+
+&lt;p&gt;A powerful (yet controversial) feature of Ruby is that you can &amp;ldquo;amend&amp;rdquo; any Ruby classes (even the builtin ones) during runtime. It&amp;rsquo;s like monkey-patching on steroids.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class ::Integer
+    def even?
+        self % 2 == 0
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now suddenly &lt;code&gt;2.even?&lt;/code&gt; is a thing. It certainly makes writing your own DSL a lot easier, but it may lead to magical code that&amp;rsquo;s hard to track down.&lt;/p&gt;
+
+&lt;h2 id=&#34;inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Inheritance&lt;/h2&gt;
+
+&lt;p&gt;Ruby uses &lt;code&gt;A &amp;lt; B&lt;/code&gt; to mean class &lt;code&gt;A&lt;/code&gt; inherits from class &lt;code&gt;B&lt;/code&gt;. &lt;code&gt;super&lt;/code&gt; is available to refer to the same-named methods in the super class. Because Ruby is single inheritance, there&amp;rsquo;s no ambiguity of &lt;code&gt;super&lt;/code&gt; here.&lt;/p&gt;
+
+&lt;h2 id=&#34;mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Mixin&lt;/h2&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s class can only have a single parent, but you can &amp;ldquo;mixin&amp;rdquo; behaviour into your class by &lt;code&gt;include&lt;/code&gt; other modules. Compared to Python, which does support multiple inheritance, and extra attention has to be paid to avoid diamond inheritance problem.&lt;/p&gt;
+
+&lt;p&gt;I feel the Ruby design is more thought-out. As oppose to give more ropes to developers to hang themselves, it makes the use case of multiple inheritance more clear (only for mixins).&lt;/p&gt;
+
+&lt;h1 id=&#34;message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Message Passing&lt;/h1&gt;
+
+&lt;p&gt;Ruby&amp;rsquo;s object-oriented model is based on the idea of message passing. As opposed to invoking using &lt;code&gt;obj.method&lt;/code&gt;, you can pass a message &lt;code&gt;method&lt;/code&gt; to object &lt;code&gt;obj&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;obj.send :method
+
+obj.__send__ :method
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use &lt;code&gt;respond_to?&lt;/code&gt; to test if a receiver can handle such message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if obj.respond_to? :method
+    ...
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;obj&lt;/code&gt; can implement &lt;code&gt;method_mssing?&lt;/code&gt; method to implement generic method dispatcher. With Python, you can achieve the same thing with &lt;code&gt;__getattribute__&lt;/code&gt; magic method.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Docker...root...root...Docker (a.k.a. the docker group is a backdoor)</title>
@@ -1744,176 +2338,6 @@ def main():
 &lt;h2 id=&#34;publish-to-clojar-org:917765c0791e064a1896921b9ddadd44&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
 
 &lt;p&gt;Now that the library is in a relatively stable state. I&amp;rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do &lt;code&gt;lein pom &amp;amp;&amp;amp; lein deploy&lt;/code&gt;, voilà!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Building a Google Reader plugin using Chrome extension</title>
-      <link>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</link>
-      <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
-      
-      <guid>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</guid>
-      <description>
-
-&lt;p&gt;OK, ok, I understand. The title is a bit misleading. &lt;a href=&#34;http://reader.google.com&#34;&gt;Google Reader&lt;/a&gt; isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-we-going-to-achieve:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;What are we going to achieve?&lt;/h2&gt;
-
-&lt;p&gt;Anyone uses Google Reader to read &lt;a href=&#34;http://www.dzone.com&#34;&gt;DZone&lt;/a&gt; feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following. I don&amp;rsquo;t know about you but for me, sometimes I just want to read the original story without going to the DZone page. It&amp;rsquo;d be nice if they have a &amp;ldquo;click through&amp;rdquo; action (like the following) on the action bar that brings you to the original story.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png?w=300&#34; alt=&#34;End goal&#34; title=&#34;Screenshot-Google Reader (539) - Chromium&#34; width=&#34;300&#34; height=&#34;100&#34; class=&#34;aligncenter size-medium wp-image-262&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;basic-strategy:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Basic strategy&lt;/h2&gt;
-
-&lt;p&gt;So, how are we going to implement this feature? Chrome Extension code can be injected into the running page, and have full access to its DOM. Therefore, we can write code such that if the currently opened entry is a DZone entry, we insert &amp;lsquo;Click Through&amp;rsquo; action into the entry action bar (action bar is the bar underneath the main entry, where &amp;lsquo;Add Star&amp;rsquo;, &amp;lsquo;Like&amp;rsquo;, &amp;lsquo;Share&amp;rsquo; actions are). The &amp;lsquo;Click Through&amp;rsquo; action, when clicked, will read the feed URL, fetch it in the background, parse it and get the URL of the original story, and open the original URL in a separate tab.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-261&#34; title=&#34;strategy&#34; src=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png?w=300&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;231&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;create-a-manifest:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Create a manifest&lt;/h3&gt;
-
-&lt;p&gt;A Chrome extension must have a manifest.json file containing the metadata of the extension.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{
-    &amp;quot;name&amp;quot;:&amp;quot;GReader&amp;quot;,
-    &amp;quot;version&amp;quot;:&amp;quot;1.0&amp;quot;,
-    &amp;quot;description&amp;quot;:&amp;quot;Enhanced Google Reader experience&amp;quot;,
-    &amp;quot;permissions&amp;quot;: [
-        &amp;quot;http://*.dzone.com/&amp;quot;
-    ],
-    &amp;quot;background_page&amp;quot;:&amp;quot;background.html&amp;quot;,
-    &amp;quot;content_scripts&amp;quot;:[{
-        &amp;quot;matches&amp;quot;:[
-            &amp;quot;*://www.google.com/reader/view/*&amp;quot;
-        ],
-        &amp;quot;js&amp;quot;:[
-            &amp;quot;lib/jquery-1.6.4.min.js&amp;quot;,
-            &amp;quot;src/greader.js&amp;quot;
-        ],
-        &amp;quot;run_at&amp;quot;:&amp;quot;document_idle&amp;quot;
-    }]
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here we&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;specify that the extension needs to access any URL on dzone.com including its subdomains.&lt;/li&gt;
-&lt;li&gt;specify the background page&lt;/li&gt;
-&lt;li&gt;specify the content script&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &amp;ldquo;run_at&amp;rdquo; property will dictate when the content script is going to be run. Because Google Reader is a full AJAX application, we want our script to be run when the document is fully rendered.&lt;/p&gt;
-
-&lt;p&gt;We also specify the &amp;ldquo;matches&amp;rdquo; property, so our content script is only activated when the URL matches.&lt;/p&gt;
-
-&lt;h3 id=&#34;the-content-script:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;The content script&lt;/h3&gt;
-
-&lt;p&gt;We start with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($) {
-
-})(jQuery);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This creates a function scope, which separates our &lt;code&gt;$&lt;/code&gt; variable apart from the current page&amp;rsquo;s &lt;code&gt;$&lt;/code&gt; variable. Google Reader (I assume, is using Google&amp;rsquo;s own closure library), already defines $ and it&amp;rsquo;s not the jQuery object. This idiom gives &lt;code&gt;$&lt;/code&gt; as jQuery.&lt;/p&gt;
-
-&lt;p&gt;We want to insert the &amp;ldquo;Click through&amp;rdquo; action in the entry action bar. To achieve this, we will need to listen on &lt;code&gt;DOMNodeInserted&lt;/code&gt; event, and when such event happens and the node inserted is of the right CSS class name (&amp;ldquo;entry-action&amp;rdquo; here), we proceed to manipulate the DOM to add our customized actions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    $(&amp;quot;#entries&amp;quot;).live(&#39;DOMNodeInserted&#39;, function(e) {
-        if (!e.target.className.match(/entry\-actions/))
-            return;
-
-        var entryAction = new EntryAction($(e.target));
-        if (entryAction.entry.url.match(/^http\:\/\/feeds\.dzone\.com/)) {
-            entryAction.addAction({
-                &#39;name&#39;:&#39;Click Through&#39;,
-                &#39;fn&#39;:function(entry) {
-                    chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;fetch_entry&amp;quot;, &amp;quot;url&amp;quot;:entry.url}, function(response) {
-                        var matched = /&amp;lt;div class=&amp;quot;ldTitle&amp;quot;&amp;gt;(.*?)&amp;lt;\/div&amp;gt;/.exec(response.data);
-                        var href = ($(matched[1]).attr(&amp;quot;href&amp;quot;));
-                        if (href !== null) {
-                            chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;open_tab&amp;quot;, &amp;quot;url&amp;quot;:href}, function(response) {
-                                // TODO: do something afterwards?
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here I built a little bit of abstraction around the raw entry action bar. It&amp;rsquo;s encapsulated in EntryAction class, which I&amp;rsquo;ll show in a moment. Basically, if the current displaying entry&amp;rsquo;s feed URL starts with feed.dzone.com, I&amp;rsquo;ll build the &amp;ldquo;click through&amp;rdquo; action, and set the click handler. It sends the feed URL to the background script. The background script will do the cross-site request to fetch the feed content and send it back. Then the content script will regex match the content to get the original story&amp;rsquo;s URL, and ask chrome to open the URL in a new tab.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s the code for &lt;code&gt;EntryAction&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    var EntryAction = function(element) {
-        this.element = element;
-        var entryElmt = this.element.parent(&amp;quot;.entry&amp;quot;);
-        var url = $(entryElmt).find(&amp;quot;.entry-title-link&amp;quot;).attr(&#39;href&#39;);
-        this.entry = {
-            &amp;quot;url&amp;quot; : url
-        };
-    };
-
-    EntryAction.prototype.addAction = function(action) {
-        var that = this;
-        var onclick = function(e) {
-            var actionFunc = action[&#39;fn&#39;];
-            actionFunc(that.entry);
-        }
-
-        this.element.append($(&amp;quot;&amp;lt;span&amp;gt;&amp;quot;)
-            .addClass(&amp;quot;link unselectable&amp;quot;)
-            .text(action[&#39;name&#39;])
-            .click(onclick));
-    };
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I won&amp;rsquo;t delve too much into this code. It makes assumptions about the structure of the DOM that Google Reader renders into. This does make the extension brittle but that&amp;rsquo;s the reality we have to deal with for client-side scripting. Luckily, Google Reader markup doesn&amp;rsquo;t change very often. For people new to object-oriented Javascript, this is one way to create a &amp;ldquo;class&amp;rdquo; (prototype) and put &amp;ldquo;instance&amp;rdquo; methods on a &amp;ldquo;class&amp;rdquo;.&lt;/p&gt;
-
-&lt;h3 id=&#34;background-html:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Background.html&lt;/h3&gt;
-
-&lt;p&gt;Unlike content scripts, which is injected and runs in the target page, the background page runs in its own process (the extension&amp;rsquo;s process) and keeps running while the extension is active. It&amp;rsquo;s comparable to the &amp;ldquo;server&amp;rdquo; side of the extension. For our extension&amp;rsquo;s purpose, we&amp;rsquo;re using the background script to make requests to 3rd party web sites (DZone).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;html&amp;gt;
-&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;lib/jquery-1.6.4.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;script&amp;gt;
-    (function($) {
-        chrome.extension.onRequest.addListener(
-            function(request, sender, sendResponse) {
-                if (request.type === &#39;fetch_entry&#39;) {
-                    $.get(request.url, function(data) {
-                        sendResponse({&amp;quot;data&amp;quot;:data});
-                    });
-                } else if (request.type === &#39;open_tab&#39;) {
-                    chrome.tabs.create({&#39;url&#39;:request.url});
-                    sendResponse({&amp;quot;status&amp;quot;:&amp;quot;ok&amp;quot;});
-                }
-            }
-        );
-    })(jQuery);
-&amp;lt;/script&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We register handlers for events that our &amp;ldquo;client&amp;rdquo; (the content script) is able to raise. Here we deal with 2 kinds of events: fetch_entry and open_tab.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Although Chrome 13 allows cross-site requests from content scripts, I&amp;rsquo;m actually quite fond of this pattern of delegating requests to the background page.&lt;/li&gt;
-&lt;li&gt;chrome.tabs isn&amp;rsquo;t accessible in the content script. That&amp;rsquo;s why open_tab is an event the client (the content script) can raise and delegate chrome specific API calls to the background script.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;after-thoughts:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;After Thoughts&lt;/h2&gt;
-
-&lt;p&gt;That&amp;rsquo;s it! That&amp;rsquo;s my first Chrome extension. It&amp;rsquo;s not earth shattering or anything but I learned quite a lot. I like Chrome extension development &amp;ndash; it&amp;rsquo;s straightforward and simple. The architecture is quite simple yet powerful. The code is on &lt;a href=&#34;https://github.com/kevinjqiu/greader&#34;&gt;Github&lt;/a&gt; and I plan to expand it to a framework for customizing Google Reader experience. Here are a few things we can do with the extension:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Link &amp;ldquo;Share&amp;rdquo; action to twitter/Google+&lt;/li&gt;
-&lt;li&gt;Click on &amp;ldquo;Like&amp;rdquo; action to automatically vote up on DZone (or any other news aggregator)&lt;/li&gt;
-&lt;li&gt;Share with comment on Google Reader puts the comment on the entry on DZone (or any other news aggregator)&lt;/li&gt;
-&lt;li&gt;endless opportunities&amp;hellip;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
