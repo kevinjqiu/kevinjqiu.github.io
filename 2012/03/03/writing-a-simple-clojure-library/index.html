@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Writing a Simple Clojure Library" />
 <meta property="og:description" content="" />
@@ -130,16 +130,16 @@
 <ul>
 <li>
 <ul>
-<li><a href="#terminal-colours:917765c0791e064a1896921b9ddadd44">Terminal colours</a></li>
-<li><a href="#implementing-it-in-clojure:917765c0791e064a1896921b9ddadd44">Implementing it in Clojure</a>
+<li><a href="#terminal-colours">Terminal colours</a></li>
+<li><a href="#implementing-it-in-clojure">Implementing it in Clojure</a>
 <ul>
-<li><a href="#design-the-interface:917765c0791e064a1896921b9ddadd44">Design the interface</a></li>
-<li><a href="#toolchain:917765c0791e064a1896921b9ddadd44">Toolchain</a></li>
-<li><a href="#first-working-version:917765c0791e064a1896921b9ddadd44">First working version:</a></li>
-<li><a href="#second-take-use-macro-to-define-declaratively-create-colour-functions:917765c0791e064a1896921b9ddadd44">Second take: use macro to define declaratively create colour functions</a></li>
-<li><a href="#take-3-combining-styles:917765c0791e064a1896921b9ddadd44">Take 3: combining styles</a></li>
+<li><a href="#design-the-interface">Design the interface</a></li>
+<li><a href="#toolchain">Toolchain</a></li>
+<li><a href="#first-working-version">First working version:</a></li>
+<li><a href="#second-take-use-macro-to-define-declaratively-create-colour-functions">Second take: use macro to define declaratively create colour functions</a></li>
+<li><a href="#take-3-combining-styles">Take 3: combining styles</a></li>
 </ul></li>
-<li><a href="#publish-to-clojar-org:917765c0791e064a1896921b9ddadd44">Publish to Clojar.org</a></li>
+<li><a href="#publish-to-clojar-org">Publish to Clojar.org</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -179,7 +179,7 @@
 
 <p>I&rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&rsquo;t a deterrent for me at all, in fact, I&rsquo;m quite fond of it and consider it very <a href="http://en.wikipedia.org/wiki/Homoiconicity">elegant</a>. However, it does take some time to get used to. I don&rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.</p>
 
-<h2 id="terminal-colours:917765c0791e064a1896921b9ddadd44">Terminal colours</h2>
+<h2 id="terminal-colours">Terminal colours</h2>
 
 <p>Ever wonder how some console applications can output coloured text? Most terminals and terminal emulators (think iTerm or konsole) support colour through a system of <a href="http://en.wikipedia.org/wiki/ANSI_escape_code">escape sequences</a>.</p>
 
@@ -187,9 +187,9 @@
 
 <p>So I had this idea to implement this in Clojure as a library so that console application authors can use it to output stylized text from their application using idiomatic Clojure, and here comes <a href="https://github.com/kevinjqiu/lumiere">Lumiere</a>.</p>
 
-<h2 id="implementing-it-in-clojure:917765c0791e064a1896921b9ddadd44">Implementing it in Clojure</h2>
+<h2 id="implementing-it-in-clojure">Implementing it in Clojure</h2>
 
-<h3 id="design-the-interface:917765c0791e064a1896921b9ddadd44">Design the interface</h3>
+<h3 id="design-the-interface">Design the interface</h3>
 
 <p>What&rsquo;s our end goal here? We would like to output colour sequence wrapped text with Clojure function calls such as</p>
 
@@ -199,11 +199,11 @@
 (-&gt; &quot;nyan cat&quot; red bg-white bold) ; use Clojure's &quot;thread macro&quot; to combine these functions, resulting in red foreground, white background and bold &quot;nyan cat&quot;
 </code></pre>
 
-<h3 id="toolchain:917765c0791e064a1896921b9ddadd44">Toolchain</h3>
+<h3 id="toolchain">Toolchain</h3>
 
 <p>I wrote a <a href="/2011/02/11/cake-the-yummy-clojure-build-system/">blog post</a> a year ago about how I liked Cake the Clojure build system alternative to the defacto Leiningen. The recent news on this is that Cake and Leiningen are merging. This time, I decided to use Leiningen from the start. Even though Leiningen hasn&rsquo;t ported some of the Cake goodies, but I&rsquo;m hoping they will get ported soon.</p>
 
-<h3 id="first-working-version:917765c0791e064a1896921b9ddadd44">First working version:</h3>
+<h3 id="first-working-version">First working version:</h3>
 
 <p>With <code>lein new lumiere</code>, Leiningen generates the default project layout. By default, Leiningen generates <code>src/lumiere/core.clj</code> and <code>test/lumiere/core.clj</code>. Because Lumiere is such a small script, we don&rsquo;t need the <code>'lumiere.core</code> namespace, rather I&rsquo;d like the functions to be in the <code>'lumiere</code> namespace. The easiest way is to delete <code>src/lumiere/</code> folder and create <code>lumiere.clj</code> under src. Same goes for the test file.</p>
 
@@ -244,7 +244,7 @@
 
 <p>Clojure supports &ldquo;default&rdquo; arguments through method overloading. Here we adjust the offset based on whether or not that colour is a foreground or background.</p>
 
-<h3 id="second-take-use-macro-to-define-declaratively-create-colour-functions:917765c0791e064a1896921b9ddadd44">Second take: use macro to define declaratively create colour functions</h3>
+<h3 id="second-take-use-macro-to-define-declaratively-create-colour-functions">Second take: use macro to define declaratively create colour functions</h3>
 
 <p>One advantage of lispy syntax is the convergence of programming with meta-programming. If you read the core Clojure library code, you&rsquo;ll find that Clojure defines a few special forms and most control structures are written in macros. In my case, however, I&rsquo;m using macros to define colour/style functions in a declarative way. Some may argue it doesn&rsquo;t justify using macro for this purpose, but I just want to practice writing macros, and it does make the public interface of the library a bit prettier.</p>
 
@@ -273,7 +273,7 @@
 
 <p>Run tests and because we didn&rsquo;t change our public interface, everything all tests should still pass.</p>
 
-<h3 id="take-3-combining-styles:917765c0791e064a1896921b9ddadd44">Take 3: combining styles</h3>
+<h3 id="take-3-combining-styles">Take 3: combining styles</h3>
 
 <p>Alright, now that we have a fully functional style system, we can cascade the styles, e.g., <code>(red (bg-green &quot;foo&quot;))</code>. It work as expected when trying it in a REPL, but the character sequence it generates is &ldquo;33[31m33[42mfoo33[0m33[0m&rdquo; and surely it isn&rsquo;t optimal. If we want to add styles such as bold, it&rsquo;s going to get even worse.</p>
 
@@ -324,7 +324,7 @@
        (adapt-lum text# :bg ~bg-colour-name))))
 </code></pre>
 
-<h2 id="publish-to-clojar-org:917765c0791e064a1896921b9ddadd44">Publish to Clojar.org</h2>
+<h2 id="publish-to-clojar-org">Publish to Clojar.org</h2>
 
 <p>Now that the library is in a relatively stable state. I&rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do <code>lein pom &amp;&amp; lein deploy</code>, voilà!</p>
 

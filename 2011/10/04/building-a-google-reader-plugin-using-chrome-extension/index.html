@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Building a Google Reader plugin using Chrome extension" />
 <meta property="og:description" content="" />
@@ -130,14 +130,14 @@
 <ul>
 <li>
 <ul>
-<li><a href="#what-are-we-going-to-achieve:91a7f408cafa0bd117d7b35559a353f7">What are we going to achieve?</a></li>
-<li><a href="#basic-strategy:91a7f408cafa0bd117d7b35559a353f7">Basic strategy</a>
+<li><a href="#what-are-we-going-to-achieve">What are we going to achieve?</a></li>
+<li><a href="#basic-strategy">Basic strategy</a>
 <ul>
-<li><a href="#create-a-manifest:91a7f408cafa0bd117d7b35559a353f7">Create a manifest</a></li>
-<li><a href="#the-content-script:91a7f408cafa0bd117d7b35559a353f7">The content script</a></li>
-<li><a href="#background-html:91a7f408cafa0bd117d7b35559a353f7">Background.html</a></li>
+<li><a href="#create-a-manifest">Create a manifest</a></li>
+<li><a href="#the-content-script">The content script</a></li>
+<li><a href="#background-html">Background.html</a></li>
 </ul></li>
-<li><a href="#after-thoughts:91a7f408cafa0bd117d7b35559a353f7">After Thoughts</a></li>
+<li><a href="#after-thoughts">After Thoughts</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -181,19 +181,19 @@
 
 <p>OK, ok, I understand. The title is a bit misleading. <a href="http://reader.google.com">Google Reader</a> isn&rsquo;t open for 3rd party plugins, and there&rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &ldquo;plugins&rdquo;.</p>
 
-<h2 id="what-are-we-going-to-achieve:91a7f408cafa0bd117d7b35559a353f7">What are we going to achieve?</h2>
+<h2 id="what-are-we-going-to-achieve">What are we going to achieve?</h2>
 
 <p>Anyone uses Google Reader to read <a href="http://www.dzone.com">DZone</a> feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following. I don&rsquo;t know about you but for me, sometimes I just want to read the original story without going to the DZone page. It&rsquo;d be nice if they have a &ldquo;click through&rdquo; action (like the following) on the action bar that brings you to the original story.</p>
 
 <p><a href="http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png"><img src="http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png?w=300" alt="End goal" title="Screenshot-Google Reader (539) - Chromium" width="300" height="100" class="aligncenter size-medium wp-image-262" /></a></p>
 
-<h2 id="basic-strategy:91a7f408cafa0bd117d7b35559a353f7">Basic strategy</h2>
+<h2 id="basic-strategy">Basic strategy</h2>
 
 <p>So, how are we going to implement this feature? Chrome Extension code can be injected into the running page, and have full access to its DOM. Therefore, we can write code such that if the currently opened entry is a DZone entry, we insert &lsquo;Click Through&rsquo; action into the entry action bar (action bar is the bar underneath the main entry, where &lsquo;Add Star&rsquo;, &lsquo;Like&rsquo;, &lsquo;Share&rsquo; actions are). The &lsquo;Click Through&rsquo; action, when clicked, will read the feed URL, fetch it in the background, parse it and get the URL of the original story, and open the original URL in a separate tab.</p>
 
 <p><a href="http://reminiscential.files.wordpress.com/2011/10/untitled-1.png"><img class="aligncenter size-medium wp-image-261" title="strategy" src="http://reminiscential.files.wordpress.com/2011/10/untitled-1.png?w=300" alt="" width="300" height="231" /></a></p>
 
-<h3 id="create-a-manifest:91a7f408cafa0bd117d7b35559a353f7">Create a manifest</h3>
+<h3 id="create-a-manifest">Create a manifest</h3>
 
 <p>A Chrome extension must have a manifest.json file containing the metadata of the extension.</p>
 
@@ -230,7 +230,7 @@
 
 <p>We also specify the &ldquo;matches&rdquo; property, so our content script is only activated when the URL matches.</p>
 
-<h3 id="the-content-script:91a7f408cafa0bd117d7b35559a353f7">The content script</h3>
+<h3 id="the-content-script">The content script</h3>
 
 <p>We start with:</p>
 
@@ -296,7 +296,7 @@
 
 <p>I won&rsquo;t delve too much into this code. It makes assumptions about the structure of the DOM that Google Reader renders into. This does make the extension brittle but that&rsquo;s the reality we have to deal with for client-side scripting. Luckily, Google Reader markup doesn&rsquo;t change very often. For people new to object-oriented Javascript, this is one way to create a &ldquo;class&rdquo; (prototype) and put &ldquo;instance&rdquo; methods on a &ldquo;class&rdquo;.</p>
 
-<h3 id="background-html:91a7f408cafa0bd117d7b35559a353f7">Background.html</h3>
+<h3 id="background-html">Background.html</h3>
 
 <p>Unlike content scripts, which is injected and runs in the target page, the background page runs in its own process (the extension&rsquo;s process) and keeps running while the extension is active. It&rsquo;s comparable to the &ldquo;server&rdquo; side of the extension. For our extension&rsquo;s purpose, we&rsquo;re using the background script to make requests to 3rd party web sites (DZone).</p>
 
@@ -328,7 +328,7 @@
 <li>chrome.tabs isn&rsquo;t accessible in the content script. That&rsquo;s why open_tab is an event the client (the content script) can raise and delegate chrome specific API calls to the background script.</li>
 </ul>
 
-<h2 id="after-thoughts:91a7f408cafa0bd117d7b35559a353f7">After Thoughts</h2>
+<h2 id="after-thoughts">After Thoughts</h2>
 
 <p>That&rsquo;s it! That&rsquo;s my first Chrome extension. It&rsquo;s not earth shattering or anything but I learned quite a lot. I like Chrome extension development &ndash; it&rsquo;s straightforward and simple. The architecture is quite simple yet powerful. The code is on <a href="https://github.com/kevinjqiu/greader">Github</a> and I plan to expand it to a framework for customizing Google Reader experience. Here are a few things we can do with the extension:</p>
 

@@ -3,8 +3,12 @@
   
   <url>
     <loc>http://blog.idempotent.ca/</loc>
-    <lastmod>2016-05-31T23:04:13-04:00</lastmod>
-    <priority>0</priority>
+    <lastmod>2016-06-19T21:49:51-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/2016/06/19/docker-security/</loc>
+    <lastmod>2016-06-19T21:49:51-07:00</lastmod>
   </url>
   
   <url>
@@ -158,17 +162,17 @@
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/09/building-a-gaegwt-application-using-the-best-practices-part-5/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/09/building-a-gae&#43;gwt-application-using-the-best-practices-part-5/</loc>
     <lastmod>2010-03-09T13:24:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-4/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-4/</loc>
     <lastmod>2010-03-03T13:15:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-3/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-3/</loc>
     <lastmod>2010-03-03T01:02:00+00:00</lastmod>
   </url>
   
@@ -178,12 +182,12 @@
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/01/building-a-gaegwt-application-using-the-best-practices-part-2/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/</loc>
     <lastmod>2010-03-01T00:44:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/02/26/building-a-gaegwt-application-using-the-best-practices-part-1/</loc>
+    <loc>http://blog.idempotent.ca/2010/02/26/building-a-gae&#43;gwt-application-using-the-best-practices-part-1/</loc>
     <lastmod>2010-02-26T00:39:00+00:00</lastmod>
   </url>
   

@@ -32,7 +32,7 @@
 
 &lt;p&gt;I wrote an Erlang version of this problem &lt;a href=&#34;http://blog.idempotent.ca/blog/2009/06/01/fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/&#34;&gt;before&lt;/a&gt;, but since then, Erlang kind of fell off my radar.  However, the problem and the concurrent solution is still relevant.&lt;/p&gt;
 
-&lt;h1 id=&#34;test-if-a-number-is-prime:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Test if a number is prime&lt;/h1&gt;
+&lt;h1 id=&#34;test-if-a-number-is-prime&#34;&gt;Test if a number is prime&lt;/h1&gt;
 
 &lt;p&gt;I&amp;rsquo;ll briefly go over primality test function, since it&amp;rsquo;s not the focus of this blog post:&lt;/p&gt;
 
@@ -57,7 +57,7 @@
 
 &lt;p&gt;I understand there are other faster primality tests but I opted for this basic algorithm for simplicity.&lt;/p&gt;
 
-&lt;h1 id=&#34;non-concurrent-version:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Non-concurrent version&lt;/h1&gt;
+&lt;h1 id=&#34;non-concurrent-version&#34;&gt;Non-concurrent version&lt;/h1&gt;
 
 &lt;p&gt;A naive way to solve this problem is to call &lt;code&gt;isPrime&lt;/code&gt; on every number below 2 million, if it&amp;rsquo;s a prime, add it to the tally.&lt;/p&gt;
 
@@ -99,7 +99,7 @@ sys     0m0.029s
 
 &lt;p&gt;Not too bad.  I remember when I ran this algorithm 4 years ago on my previous laptop (Core-2 Duo) I wasn&amp;rsquo;t able to produce any result in a tolerable timeframe.  My current machine is a 3-year old Quad Core i7.&lt;/p&gt;
 
-&lt;h1 id=&#34;concurrent-version:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Concurrent version&lt;/h1&gt;
+&lt;h1 id=&#34;concurrent-version&#34;&gt;Concurrent version&lt;/h1&gt;
 
 &lt;p&gt;If you are on Linux and you open system monitor while the previous program was running, you can see that only one CPU was saturated and constantly running at near 100%, but all other cores are nearly idle.  Of course this is a huge waste of our computing resource.  &lt;code&gt;isPrime&lt;/code&gt; function is what takes up the CPU load, and because we&amp;rsquo;re running testing the primality of all 2 million numbers inside a single thread, all of them have to be tested one after the other.  This is not great.  Instead, because we have more than one CPU core, we can give the other cores chances to do some of the work for us.&lt;/p&gt;
 
@@ -109,18 +109,18 @@ sys     0m0.029s
 - spawn a new thread to do the primality test
 - inside the thread, if the primality test succeeds, lock the access to the &lt;code&gt;sum&lt;/code&gt; variable, update &lt;code&gt;sum&lt;/code&gt;, unlock&lt;/p&gt;
 
-&lt;p&gt;Programs like this have a higher complexity than it should.  It may not look like it&amp;rsquo;s too complicated for this case, but synchronization using &lt;a href=&#34;http://en.wikipedia.org/wiki/Lock_(computer_science&#34;&gt;locks&lt;/a&gt;#Disadvantages) has inherent problems and is usually a source of bugs and defects.  Also, spawning as many threads as you can normally won&amp;rsquo;t give you more throughput.  On the contrary, if you hand the OS more threads at once than the number of physical cores, context switching will happen and it will decrease your performance.&lt;/p&gt;
+&lt;p&gt;Programs like this have a higher complexity than it should.  It may not look like it&amp;rsquo;s too complicated for this case, but synchronization using &lt;a href=&#34;http://en.wikipedia.org/wiki/Lock_(computer_science)#Disadvantages&#34;&gt;locks&lt;/a&gt; has inherent problems and is usually a source of bugs and defects.  Also, spawning as many threads as you can normally won&amp;rsquo;t give you more throughput.  On the contrary, if you hand the OS more threads at once than the number of physical cores, context switching will happen and it will decrease your performance.&lt;/p&gt;
 
 &lt;p&gt;Go&amp;rsquo;s approach is very similar to Erlang&amp;rsquo;s in concept.  In Erlang, the actor processes can&amp;rsquo;t share variables, but instead, they can send data to the other processes.  In Go, goroutines normally don&amp;rsquo;t share variables, but they communicate via the use of channels.&lt;/p&gt;
 
-&lt;h2 id=&#34;channels:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Channels&lt;/h2&gt;
+&lt;h2 id=&#34;channels&#34;&gt;Channels&lt;/h2&gt;
 
 &lt;p&gt;For this problem, we need to have the following channels:
 - jobs: the outstanding jobs need to be performed.  Each job is a number whose primality needs to be tested.  It&amp;rsquo;s a buffered channel whose size is the number of physical cores.
 - results: the prime numbers that are already tested.  Buffered channel.  Can be as big as reasonable.
 - done: whether all workers have finished their job. Also a buffered channel whose size is the number of physical cores.&lt;/p&gt;
 
-&lt;h2 id=&#34;goroutines:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Goroutines&lt;/h2&gt;
+&lt;h2 id=&#34;goroutines&#34;&gt;Goroutines&lt;/h2&gt;
 
 &lt;p&gt;We need the following goroutines to:
 - take the next number and put it in the &lt;code&gt;jobs&lt;/code&gt; channel
@@ -129,7 +129,7 @@ sys     0m0.029s
 
 &lt;p&gt;Finally, we need to have a function to sum up all results.&lt;/p&gt;
 
-&lt;h2 id=&#34;data-structures:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Data structures&lt;/h2&gt;
+&lt;h2 id=&#34;data-structures&#34;&gt;Data structures&lt;/h2&gt;
 
 &lt;p&gt;We want an abstraction of a &lt;code&gt;Job&lt;/code&gt;.  In Go, that&amp;rsquo;s a struct:&lt;/p&gt;
 
@@ -152,7 +152,7 @@ sys     0m0.029s
 
 &lt;p&gt;In Go, a function with a receiver is practically a method on a struct and is able to be called with &lt;code&gt;receiver.method&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;rewrite-sumprimesupto:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Rewrite sumPrimesUpto&lt;/h2&gt;
+&lt;h2 id=&#34;rewrite-sumprimesupto&#34;&gt;Rewrite sumPrimesUpto&lt;/h2&gt;
 
 &lt;p&gt;Now, rewrite the &lt;code&gt;sumPrimesUpto&lt;/code&gt; function:&lt;/p&gt;
 
@@ -229,7 +229,7 @@ func sumPrimesUpto(n int) int {
 
 &lt;p&gt;The full gist can be found &lt;a href=&#34;https://gist.github.com/kevinjqiu/7568264#file-sumprimes-go&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;performance:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Performance&lt;/h2&gt;
+&lt;h2 id=&#34;performance&#34;&gt;Performance&lt;/h2&gt;
 
 &lt;p&gt;So how does this concurrent version faire?&lt;/p&gt;
 
@@ -244,7 +244,7 @@ func sumPrimesUpto(n int) int {
 
 &lt;p&gt;On my Quad Core i7, it takes 12 seconds, almost twice as fast as the non-concurrent version!  And if you open System Monitor, you can see all 4 cores are running near 100%.&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;So there&amp;rsquo;s my first dip into Go&amp;rsquo;s concurrency with an old problem. I like the concurrency primitives Go provides, even though it takes some getting used to.  Conceptually, goroutines are very similar to Erlang&amp;rsquo;s actors.  Go has the advantage of a C-ish syntax that doesn&amp;rsquo;t look like Prolog and it doesn&amp;rsquo;t require a separate runtime as Erlang does.&lt;/p&gt;
 </description>

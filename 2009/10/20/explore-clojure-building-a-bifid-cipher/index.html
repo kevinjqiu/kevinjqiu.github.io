@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Explore Clojure: Building a Bifid cipher" />
 <meta property="og:description" content="" />
@@ -130,10 +130,10 @@
 <ul>
 <li>
 <ul>
-<li><a href="#polybius-square:a073ba723e7125cda2ae0c275308be1f">Polybius Square</a></li>
-<li><a href="#the-codec-maps:a073ba723e7125cda2ae0c275308be1f">The codec maps</a></li>
-<li><a href="#encode:a073ba723e7125cda2ae0c275308be1f">Encode</a></li>
-<li><a href="#putting-it-together:a073ba723e7125cda2ae0c275308be1f">Putting it together</a></li>
+<li><a href="#polybius-square">Polybius Square</a></li>
+<li><a href="#the-codec-maps">The codec maps</a></li>
+<li><a href="#encode">Encode</a></li>
+<li><a href="#putting-it-together">Putting it together</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -175,7 +175,7 @@
 
 <p>The best way to learn a language is to use it to solve some non-trivial practical problems. I stumbled <a href="http://programmingpraxis.com/2009/10/13/bifid-cipher/">this</a> problem on <a href="http://programmingpraxis.com/">Programming Praxis</a>. It’s about building a <a href="http://en.wikipedia.org/wiki/Bifid_cipher">Bifid</a> cipher, which I thought could be a good practical problem for me to solve in Clojure.</p>
 
-<h2 id="polybius-square:a073ba723e7125cda2ae0c275308be1f">Polybius Square</h2>
+<h2 id="polybius-square">Polybius Square</h2>
 
 <p>Bifid cipher is based on <a href="http://en.wikipedia.org/wiki/Polybius_square">Polybius Square</a>, which looks like this:</p>
 
@@ -219,7 +219,7 @@
 
 <p>When you see the square as a flat list, it’s clear that the cycle should stop when it reaches <code>square-size^2</code>, hence <code>(take (\* square-size square-size) (cycle (range 1 (+ 1 square-size))))</code>.</p>
 
-<h2 id="the-codec-maps:a073ba723e7125cda2ae0c275308be1f">The codec maps</h2>
+<h2 id="the-codec-maps">The codec maps</h2>
 
 <p>After the Polybius square is built, we have the bases for our encryption. However, it’s not user-friendly: it’s a flat list of tuples. We want two maps for fast searching from letters to their encoding forms <code>(letter-2-code)</code> and from transposed vectors to the letters <code>(transposed-2-letter)</code>.</p>
 
@@ -253,7 +253,7 @@
     (helper square (empty hash-map))))
 </code></pre>
 
-<h2 id="encode:a073ba723e7125cda2ae0c275308be1f">Encode</h2>
+<h2 id="encode">Encode</h2>
 
 <p>Now comes the <code>encode</code> function. It’s important to note that the encoding will be different if a different polybius square is provided. Therefore, both <code>encode</code> and <code>decode</code> functions take the Polybius square as parameter.</p>
 
@@ -309,7 +309,7 @@ gives:
     (apply str (map #(get c2l %1 %1) (map #(vector %1 %2) (first parts) (second parts))))))
 </code></pre>
 
-<h2 id="putting-it-together:a073ba723e7125cda2ae0c275308be1f">Putting it together</h2>
+<h2 id="putting-it-together">Putting it together</h2>
 
 <p>Now with all the pieces are in place, we can put it together by writing a simple test:</p>
 

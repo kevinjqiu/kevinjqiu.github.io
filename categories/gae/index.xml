@@ -11,13 +11,13 @@
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 5)</title>
-      <link>http://blog.idempotent.ca/2010/03/09/building-a-gaegwt-application-using-the-best-practices-part-5/</link>
+      <link>http://blog.idempotent.ca/2010/03/09/building-a-gae&#43;gwt-application-using-the-best-practices-part-5/</link>
       <pubDate>Tue, 09 Mar 2010 13:24:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/09/building-a-gaegwt-application-using-the-best-practices-part-5/</guid>
+      <guid>http://blog.idempotent.ca/2010/03/09/building-a-gae&#43;gwt-application-using-the-best-practices-part-5/</guid>
       <description>
 
-&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series:269117b6f43b7f5906d6e2f84997c97d&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
+&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.idempotent.ca/2010/02/26/building-a-gae-plus-gwt-application-using-the-best-practices-part-1/&#34;&gt;Part 1&lt;/a&gt;&lt;/li&gt;
@@ -29,7 +29,7 @@
 
 &lt;p&gt;In the last post of the series, I&amp;rsquo;ve shown how to setup a client side GIN+MVP project. This post will discuss the actual building of the UI and GWT-RPC web service calls using GWT-Dispatch on the client side.&lt;/p&gt;
 
-&lt;h2 id=&#34;use-cases:269117b6f43b7f5906d6e2f84997c97d&#34;&gt;Use cases&lt;/h2&gt;
+&lt;h2 id=&#34;use-cases&#34;&gt;Use cases&lt;/h2&gt;
 
 &lt;p&gt;Before we dive into the code, let&amp;rsquo;s go over again the use cases our little app has.
 &lt;a href=&#34;http://reminiscential.files.wordpress.com/2010/02/screenshot2.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2010/02/screenshot2.png&#34; alt=&#34;&#34; title=&#34;RateChecker&#34; width=&#34;259&#34; height=&#34;216&#34; class=&#34;aligncenter size-full wp-image-145&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
@@ -41,13 +41,13 @@
 &lt;li&gt;The &amp;ldquo;Fetch latest&amp;rdquo; button fetches the rate from the bank website, store it in the data store, and insert the latest rate in the recent rate table&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;mvp-pattern:269117b6f43b7f5906d6e2f84997c97d&#34;&gt;MVP pattern&lt;/h2&gt;
+&lt;h2 id=&#34;mvp-pattern&#34;&gt;MVP pattern&lt;/h2&gt;
 
 &lt;p&gt;For traditional desktop application, there&amp;rsquo;s the MVC (Model-View-Control) pattern that&amp;rsquo;s been in existence for over 20 years, since the Smalltalk days. However, the responsibility separation between the view and controller hasn&amp;rsquo;t been well defined and over the years, people have been arguing about what whether the business logic should be entirely in controller.&lt;/p&gt;
 
 &lt;p&gt;With the MVP (Model-View-Presenter) pattern, the view itself doesn&amp;rsquo;t contain any logic. The presenter manipulates the view according to business logic. Therefore, the pattern is also called &amp;ldquo;supervising controller&amp;rdquo; or &amp;ldquo;passive view&amp;rdquo;. This brings a huge benefit because now unit tests only have to deal with presenters, and mock out the view through the display interface. With this setup, the presenter unit tests can be run entirely in JVM. Otherwise, the tests need to involve GWT widgets, which can only be tested with GWTTestCase, which takes a lot longer to run.&lt;/p&gt;
 
-&lt;h2 id=&#34;mainview:269117b6f43b7f5906d6e2f84997c97d&#34;&gt;MainView&lt;/h2&gt;
+&lt;h2 id=&#34;mainview&#34;&gt;MainView&lt;/h2&gt;
 
 &lt;p&gt;Here I&amp;rsquo;m using the new GWT2 UiBinder feature. UiBinder makes developing UI less boring.&lt;/p&gt;
 
@@ -121,7 +121,7 @@ The display interface can be standalone, but I find it&#39;s much more convenien
 
 &lt;p&gt;Here we use the &amp;ldquo;characteristic interface&amp;rdquo; of the UI elements as return type as they can be mocked. For things that cannot be returned as characteristic interfaces (like FlexTable), we provide methods for the presenter to manipulate the state of the UI objects (such as clearRecentRates()).&lt;/p&gt;
 
-&lt;h3 id=&#34;mainview-java:269117b6f43b7f5906d6e2f84997c97d&#34;&gt;MainView.java&lt;/h3&gt;
+&lt;h3 id=&#34;mainview-java&#34;&gt;MainView.java&lt;/h3&gt;
 
 &lt;p&gt;Now we have the display interface, we can map these interface methods onto our UI.
 ```java MainView.java
@@ -374,13 +374,13 @@ public class MainPresenter extends WidgetPresenter&amp;lt;MainPresenter.Display&
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 4)</title>
-      <link>http://blog.idempotent.ca/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-4/</link>
+      <link>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-4/</link>
       <pubDate>Wed, 03 Mar 2010 13:15:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-4/</guid>
+      <guid>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-4/</guid>
       <description>
 
-&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series:100ce34f4a70748da3e786c5a099750f&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
+&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.idempotent.ca/2010/02/26/building-a-gae-plus-gwt-application-using-the-best-practices-part-1/&#34;&gt;Part 1&lt;/a&gt;&lt;/li&gt;
@@ -392,7 +392,7 @@ public class MainPresenter extends WidgetPresenter&amp;lt;MainPresenter.Display&
 
 &lt;p&gt;In the last blog post, we went over how to write GWT-RPC handlers using GWT-dispatch and dependency injection (Guice). This section, we&amp;rsquo;re going to see how the client side is set up.&lt;/p&gt;
 
-&lt;h2 id=&#34;dependencies:100ce34f4a70748da3e786c5a099750f&#34;&gt;Dependencies&lt;/h2&gt;
+&lt;h2 id=&#34;dependencies&#34;&gt;Dependencies&lt;/h2&gt;
 
 &lt;p&gt;We need the following dependencies
 * &lt;a href=&#34;http://code.google.com/p/google-gin/&#34;&gt;Gin&lt;/a&gt;
@@ -402,7 +402,7 @@ public class MainPresenter extends WidgetPresenter&amp;lt;MainPresenter.Display&
 
 &lt;p&gt;They need to be on the classpath when you compile your GWT code, but not under the war directory like the server dependencies need to be.&lt;/p&gt;
 
-&lt;h2 id=&#34;module-definition:100ce34f4a70748da3e786c5a099750f&#34;&gt;Module definition&lt;/h2&gt;
+&lt;h2 id=&#34;module-definition&#34;&gt;Module definition&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2010/03/screenshot1.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2010/03/screenshot1.png?w=200&#34; alt=&#34;&#34; title=&#34;Screenshot&#34; width=&#34;200&#34; height=&#34;300&#34; class=&#34;aligncenter size-medium wp-image-172&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
@@ -428,7 +428,7 @@ RateChecker.gwt.xml&lt;/p&gt;
 
 &lt;p&gt;Here we specify the explicitly the packages need to be included for compiling - &amp;ldquo;client&amp;rdquo; and &amp;ldquo;shared&amp;rdquo;. If not specified, GWT will by default compile every source file under the client package.&lt;/p&gt;
 
-&lt;h2 id=&#34;create-a-gin-module:100ce34f4a70748da3e786c5a099750f&#34;&gt;Create a Gin Module&lt;/h2&gt;
+&lt;h2 id=&#34;create-a-gin-module&#34;&gt;Create a Gin Module&lt;/h2&gt;
 
 &lt;p&gt;Gin and Guice implements the same API (or rather, Gin has the same interface as Guice), but Gin uses GWT deferred binding &amp;ldquo;magic&amp;rdquo;. Similar to what we have on the server side, on the client side, we start by defining our module:
 RateCheckerClientModule:&lt;/p&gt;
@@ -498,7 +498,7 @@ public class AppPresenter {
 
 &lt;p&gt;Here we specify the explicitly the packages need to be included for compiling - &amp;ldquo;client&amp;rdquo; and &amp;ldquo;shared&amp;rdquo;. If not specified, GWT will by default compile every source file under the client package.&lt;/p&gt;
 
-&lt;h2 id=&#34;ginjector:100ce34f4a70748da3e786c5a099750f&#34;&gt;Ginjector&lt;/h2&gt;
+&lt;h2 id=&#34;ginjector&#34;&gt;Ginjector&lt;/h2&gt;
 
 &lt;p&gt;Similar to &amp;ldquo;Injector&amp;rdquo; interface on the server side, the client side needs to define a Ginjector that act as a gateway for Gin managed object instances.&lt;/p&gt;
 
@@ -545,13 +545,13 @@ public class RateChecker implements EntryPoint {
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 3)</title>
-      <link>http://blog.idempotent.ca/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-3/</link>
+      <link>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-3/</link>
       <pubDate>Wed, 03 Mar 2010 01:02:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-3/</guid>
+      <guid>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-3/</guid>
       <description>
 
-&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
+&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.idempotent.ca/2010/02/26/building-a-gae-plus-gwt-application-using-the-best-practices-part-1/&#34;&gt;Part 1&lt;/a&gt;&lt;/li&gt;
@@ -563,29 +563,29 @@ public class RateChecker implements EntryPoint {
 
 &lt;p&gt;In this part of the series, we&amp;rsquo;re going to explore the designing of the web services for RateChecker and coding them using the command pattern from &lt;a href=&#34;http://code.google.com/p/gwt-dispatch/&#34;&gt;GWT-dispatch&lt;/a&gt; based on Ray Ryan&amp;rsquo;s &lt;a href=&#34;http://www.youtube.com/watch?v=PDuhR18-EdM&#34;&gt;presentation&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-big-picture:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;The big picture&lt;/h2&gt;
+&lt;h2 id=&#34;the-big-picture&#34;&gt;The big picture&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2010/03/classdiagram.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-166&#34; title=&#34;ClassDiagram&#34; src=&#34;http://reminiscential.files.wordpress.com/2010/03/classdiagram.png?w=300&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;272&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;To correctly implement web services using the command pattern, we first have to get the big picture. There are three &amp;ldquo;actors&amp;rdquo; involved in this: an action, a result and a handler.&lt;/p&gt;
 
-&lt;h3 id=&#34;action:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Action&lt;/h3&gt;
+&lt;h3 id=&#34;action&#34;&gt;Action&lt;/h3&gt;
 
 &lt;p&gt;An action is used to store the parameters of the web service call (if any). For instance, a CheckRate action needs to know what type of rate the user is checking: buying rate? selling rate? currency?&lt;/p&gt;
 
-&lt;h3 id=&#34;result:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Result&lt;/h3&gt;
+&lt;h3 id=&#34;result&#34;&gt;Result&lt;/h3&gt;
 
 &lt;p&gt;A result object stores the result (duh&amp;hellip;) of the web service call. In the case of CheckRate method, the result is the rate object containing the details of the rate.&lt;/p&gt;
 
-&lt;h3 id=&#34;handler:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Handler&lt;/h3&gt;
+&lt;h3 id=&#34;handler&#34;&gt;Handler&lt;/h3&gt;
 
 &lt;p&gt;A handler is the actual &amp;ldquo;worker&amp;rdquo; that actually does the work of checking the rate. In this case, the check rate method fetches the posted rate page , parses the text (if needed) to get the rate information.&lt;/p&gt;
 
-&lt;h3 id=&#34;dispatch-and-dispatchasync:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Dispatch and DispatchAsync&lt;/h3&gt;
+&lt;h3 id=&#34;dispatch-and-dispatchasync&#34;&gt;Dispatch and DispatchAsync&lt;/h3&gt;
 
 &lt;p&gt;A Handler is executed on the server side (by the DispatchServlet we saw in the last post). On the client side, there&amp;rsquo;s a counterpart &amp;ldquo;DispatchAsync&amp;rdquo;, which is the asynchronous interface that the client code calls.&lt;/p&gt;
 
-&lt;h2 id=&#34;implementing-web-service-methods:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Implementing web service methods&lt;/h2&gt;
+&lt;h2 id=&#34;implementing-web-service-methods&#34;&gt;Implementing web service methods&lt;/h2&gt;
 
 &lt;p&gt;Now that we have the big picture in place, we&amp;rsquo;re going to look into how to actually implement them.
 The first step is to define a domain model. In this case, it&amp;rsquo;s our Rate class:&lt;/p&gt;
@@ -628,7 +628,7 @@ public class Rate implements Serializable {
 &lt;li&gt;Get rate: get the rates from the data store.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;check-rate:a9b7cd24cb55e7fc3628cb7a4a587a25&#34;&gt;Check rate&lt;/h3&gt;
+&lt;h3 id=&#34;check-rate&#34;&gt;Check rate&lt;/h3&gt;
 
 &lt;p&gt;As we have shown in the big picture, every action needs three pieces: action, result (both in shared package, as they will be used by both the client and the server) and the handler (lives in the server package).&lt;/p&gt;
 
@@ -755,13 +755,13 @@ public class Rate implements Serializable {
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 2)</title>
-      <link>http://blog.idempotent.ca/2010/03/01/building-a-gaegwt-application-using-the-best-practices-part-2/</link>
+      <link>http://blog.idempotent.ca/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/</link>
       <pubDate>Mon, 01 Mar 2010 00:44:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/01/building-a-gaegwt-application-using-the-best-practices-part-2/</guid>
+      <guid>http://blog.idempotent.ca/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/</guid>
       <description>
 
-&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series:2859929280d6e4b28961f9ead41fa7c6&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
+&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.idempotent.ca/2010/02/26/building-a-gae-plus-gwt-application-using-the-best-practices-part-1/&#34;&gt;Part 1&lt;/a&gt;&lt;/li&gt;
@@ -773,7 +773,7 @@ public class Rate implements Serializable {
 
 &lt;p&gt;In Part 2, we&amp;rsquo;re going to go over project setup for GAE and GWT applications, and wire the server (servlet) using &lt;a href=&#34;http://code.google.com/p/google-guice/&#34;&gt;Guice&lt;/a&gt; and &lt;a href=&#34;http://code.google.com/p/gwt-dispatch/&#34;&gt;GWT-Dispatch&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;project-setup:2859929280d6e4b28961f9ead41fa7c6&#34;&gt;Project setup&lt;/h2&gt;
+&lt;h2 id=&#34;project-setup&#34;&gt;Project setup&lt;/h2&gt;
 
 &lt;p&gt;I&amp;rsquo;m using Eclipse as my development environment. Install &lt;a href=&#34;http://code.google.com/eclipse/&#34;&gt;Google Eclipse plugin&lt;/a&gt;, and install the provided GWT (2.0.2) and GAE (1.3.1) with the plugin. Create a new project in Eclipse using the &amp;ldquo;New web application project&amp;rdquo; wizard, and create a sample project.&lt;/p&gt;
 
@@ -781,11 +781,11 @@ public class Rate implements Serializable {
 
 &lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2010/03/screenshot.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-158&#34; title=&#34;Screenshot&#34; src=&#34;http://reminiscential.files.wordpress.com/2010/03/screenshot.png?w=168&#34; alt=&#34;&#34; width=&#34;168&#34; height=&#34;300&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;wiring-the-server:2859929280d6e4b28961f9ead41fa7c6&#34;&gt;&amp;ldquo;Wiring&amp;rdquo; the server&lt;/h2&gt;
+&lt;h2 id=&#34;wiring-the-server&#34;&gt;&amp;ldquo;Wiring&amp;rdquo; the server&lt;/h2&gt;
 
 &lt;p&gt;Now that the project is setup, we need to wire the server to utilize the dependency injection container Guice. The details can be found &lt;a href=&#34;http://code.google.com/p/google-guice/wiki/GoogleAppEngine&#34;&gt;here&lt;/a&gt; but in short, we need to do the following:&lt;/p&gt;
 
-&lt;h3 id=&#34;modify-web-xml:2859929280d6e4b28961f9ead41fa7c6&#34;&gt;Modify web.xml&lt;/h3&gt;
+&lt;h3 id=&#34;modify-web-xml&#34;&gt;Modify web.xml&lt;/h3&gt;
 
 &lt;p&gt;Find web.xml in /war/WEB-INF. In traditional GWT-RPC development, every service needs to be written as a servlet and declared in web.xml. For Guice + GWT-dispatch, we only need a filter and a listener (as the entry point).&lt;/p&gt;
 
@@ -939,13 +939,13 @@ public class LogProvider implements Provider&amp;lt;Log&amp;gt; {
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 1)</title>
-      <link>http://blog.idempotent.ca/2010/02/26/building-a-gaegwt-application-using-the-best-practices-part-1/</link>
+      <link>http://blog.idempotent.ca/2010/02/26/building-a-gae&#43;gwt-application-using-the-best-practices-part-1/</link>
       <pubDate>Fri, 26 Feb 2010 00:39:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/02/26/building-a-gaegwt-application-using-the-best-practices-part-1/</guid>
+      <guid>http://blog.idempotent.ca/2010/02/26/building-a-gae&#43;gwt-application-using-the-best-practices-part-1/</guid>
       <description>
 
-&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series:082ed3ec550cff9fbbf194f0f46972ce&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
+&lt;h2 id=&#34;building-a-gae-gwt-application-using-the-best-practices-series&#34;&gt;Building a GAE+GWT application using the best practices series&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Part 1&lt;/li&gt;
@@ -957,7 +957,7 @@ public class LogProvider implements Provider&amp;lt;Log&amp;gt; {
 
 &lt;p&gt;This is the first installment of the series Building a GAE+GWT application using the best practices.&lt;/p&gt;
 
-&lt;h2 id=&#34;introduction:082ed3ec550cff9fbbf194f0f46972ce&#34;&gt;Introduction&lt;/h2&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 
 &lt;p&gt;In the next few blog posts, I&amp;rsquo;m going to present my experience building a simple (but non-trivial) web application using GWT and Google App Engine, while applying the best practices introduced by Ray Ryan in his excellent &lt;a href=&#34;http://code.google.com/events/io/2009/sessions/GoogleWebToolkitBestPractices.html&#34;&gt;GWT best practices&lt;/a&gt; at Google IO last year.&lt;/p&gt;
 
@@ -966,7 +966,7 @@ public class LogProvider implements Provider&amp;lt;Log&amp;gt; {
 &lt;p&gt;Here&amp;rsquo;s a screenshot of the finished application:
 &lt;p style=&#34;text-align:center;&#34;&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2010/02/screenshot2.png&#34;&gt;&lt;img class=&#34;size-full wp-image-145 aligncenter&#34; title=&#34;RateChecker&#34; src=&#34;http://reminiscential.files.wordpress.com/2010/02/screenshot2.png&#34; alt=&#34;&#34; width=&#34;259&#34; height=&#34;216&#34; /&gt;&lt;/a&gt;&lt;/p&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;the-goals:082ed3ec550cff9fbbf194f0f46972ce&#34;&gt;The Goals&lt;/h2&gt;
+&lt;h2 id=&#34;the-goals&#34;&gt;The Goals&lt;/h2&gt;
 
 &lt;p&gt;I intend to use this minimal application to practice using the following technologies/techniques:
 * Server/Persistence tier:

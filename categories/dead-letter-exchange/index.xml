@@ -19,7 +19,7 @@
 
 &lt;p&gt;In this post, I&amp;rsquo;m going to describe the experience at &lt;code&gt;$DAYJOB&lt;/code&gt; regarding implementing delayed retry using &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;DLX&lt;/a&gt; combined with a TTL. The technique has been described at a few &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;places&lt;/a&gt; but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-problem:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The problem&lt;/h1&gt;
+&lt;h1 id=&#34;the-problem&#34;&gt;The problem&lt;/h1&gt;
 
 &lt;p&gt;At &lt;code&gt;$DAYJOB&lt;/code&gt; we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status. Pretty straight-forward stuff. However, lately we&amp;rsquo;ve been experiencing an elevated amount of random failures from our service provider.&lt;/p&gt;
 
@@ -27,15 +27,15 @@
 
 &lt;p&gt;We checked with our service provider and were told that they have been experiencing increased volumes and their infrastructure currently can&amp;rsquo;t keep up. However, they suggest that we use an undocumented feature which allows a &lt;code&gt;unique_id&lt;/code&gt; to be passed in along with the checkout call. The &lt;code&gt;unique_id&lt;/code&gt; serves as an idempotent key (similar to &lt;a href=&#34;https://stripe.com/docs/api?lang=curl#idempotent_requests&#34;&gt;Stripe&amp;rsquo;s&lt;/a&gt;). Multiple calls with the same &lt;code&gt;unique_id&lt;/code&gt; won&amp;rsquo;t create multiple checkout objects on their end and thus ensuring the checkout is made but won&amp;rsquo;t double/triple charge the customer&amp;rsquo;s car.&lt;/p&gt;
 
-&lt;h1 id=&#34;architecting-the-solution:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Architecting the solution&lt;/h1&gt;
+&lt;h1 id=&#34;architecting-the-solution&#34;&gt;Architecting the solution&lt;/h1&gt;
 
 &lt;p&gt;Armed with this new secret API feature, our team goes back to the drawing board. At work, we use &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt; extensively for asynchronous processing. If some operation doesn&amp;rsquo;t have to be carried out synchronously with a web request, we throw a message on the queue and have a queue consumer process that message and update states. We use a library called &lt;a href=&#34;https://github.com/ojacobson/sparkplug&#34;&gt;sparkplug&lt;/a&gt; that makes writing queue consumer super-easy. So, everything seems to fall in friendly terrotiries: we make a checkout call with a random id and when we encounter timeout or unknown error, instead of returning an error response to the user, we return &lt;code&gt;202 Accepted&lt;/code&gt; to our user and throw a message on the queue, so a consumer can grab it and retry the checkout with the same original &lt;code&gt;unique_id&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-missing-piece:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The missing piece&lt;/h1&gt;
+&lt;h1 id=&#34;the-missing-piece&#34;&gt;The missing piece&lt;/h1&gt;
 
 &lt;p&gt;However, we quickly realized it&amp;rsquo;s not that simple. What if the retry encountered the same error? We can put it back on the queue, but when does it get processed by the consumer again? We want to add a time delay to the subsequent retries, and the orginal retry as well.&lt;/p&gt;
 
-&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
 
 &lt;p&gt;After some research on the internet, seems like this problem has been &lt;a href=&#34;https://www.cloudamqp.com/docs/delayed-messages.html&#34;&gt;solved&lt;/a&gt; &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;before&lt;/a&gt;.&lt;/p&gt;
 
@@ -73,15 +73,15 @@
 &lt;/figure&gt;
 
 
-&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
+&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
 
-&lt;h2 id=&#34;implementation:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation&lt;/h2&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
 
 &lt;p&gt;Implementation is probably the most straight-forward phase of the project once we have the design on paper.  The only obstacle is that the library we use for writing rabbitmq consumers (sparkplug) does not support declaring queues with extra parameters, and the DLX related parameters: &lt;code&gt;x-dead-letter-exchange&lt;/code&gt; &lt;code&gt;x-dead-letter-routing-key&lt;/code&gt;, and &lt;code&gt;x-message-ttl&lt;/code&gt; are all &amp;ldquo;extra parameters&amp;rdquo; according to &lt;code&gt;amqplib&lt;/code&gt;, which is used by sparkplug. To solve this, I sent this &lt;a href=&#34;https://github.com/ojacobson/sparkplug/pull/10/files&#34;&gt;PR&lt;/a&gt; to sparkplug, so it recognizes extra parameters and pass them down to amqp library.&lt;/p&gt;
 
 &lt;p&gt;Another road block appeared when we ran the system on our dev images for the first time. The underlying amqplib would error out on startup. Upon closer investigation, it appeared the error happened while talking to rabbitmq and the amqplib can&amp;rsquo;t handle certain rabbitmq frames. So I went searching for the amqp project, only to find out that it was deprecated &lt;a href=&#34;https://pypi.python.org/pypi/amqplib&#34;&gt;long ago&lt;/a&gt;. Fortunately, there&amp;rsquo;s a fork of the library &lt;a href=&#34;https://pypi.python.org/pypi/amqp&#34;&gt;amqp&lt;/a&gt; that&amp;rsquo;s maintained by the reputable &lt;a href=&#34;http://www.celeryproject.org/&#34;&gt;Celery project&lt;/a&gt;. It&amp;rsquo;s has API compatibility with amqplib and appeared to be a drop-in replacement. We dropped it in and everything seems to work. Reading the online literature, it seems to be the case that the old library does not handle the &lt;code&gt;TTL&lt;/code&gt; amqp extension.&lt;/p&gt;
 
-&lt;h2 id=&#34;testing-strategy:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Testing Strategy&lt;/h2&gt;
+&lt;h2 id=&#34;testing-strategy&#34;&gt;Testing Strategy&lt;/h2&gt;
 
 &lt;p&gt;So, since the 3rd party API timeout is an edge case, they did not provide a way trigger this behaviour the same way we can trigger, say, a declined transaction. We could fake the URL for the 3rd party service in DNS or &lt;code&gt;/etc/hosts&lt;/code&gt; or we can change the SDK to change the base url for their API to somewhere else and cause a timeout that way, but neither is ideal. The biggest disadvantage is that we have no way of getting a request out of the retry state.&lt;/p&gt;
 
@@ -89,7 +89,7 @@
 
 &lt;p&gt;We used this small nifty library &lt;a href=&#34;https://github.com/allfro/pymiproxy&#34;&gt;pymiproxy&lt;/a&gt; as a base for our proxy server. It turns out the proxy is pretty straight-forward as well, and a big shout-out to the author of pymiproxy.&lt;/p&gt;
 
-&lt;h2 id=&#34;deployment:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Deployment&lt;/h2&gt;
+&lt;h2 id=&#34;deployment&#34;&gt;Deployment&lt;/h2&gt;
 
 &lt;p&gt;Everything until now is like a cake walk. Sure, there are some problems with the underlying libraries but that requires patching but they were quite easy to identify and fix. Deployment, on the other hand, has been like riding on the &lt;a href=&#34;https://www.youtube.com/watch?v=Mgsbau5qkTE&#34;&gt;Behemoth in Canada&amp;rsquo;s Wonderland&lt;/a&gt;.&lt;/p&gt;
 
@@ -134,7 +134,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;Reading the rabbitmq 2.8.2 release notes, and they &lt;strong&gt;did&lt;/strong&gt; &lt;a href=&#34;https://www.rabbitmq.com/release-notes/README-2.8.2.txt&#34;&gt;mention&lt;/a&gt; this &amp;ldquo;feature&amp;rdquo;, but failed to mention that it could block your connection &lt;strong&gt;forever&lt;/strong&gt; and bring your site down&amp;hellip;&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;There you go.  That&amp;rsquo;s our adventure implementing and deploying delayed retry using rabbitmq&amp;rsquo;s DLX and TTL. It&amp;rsquo;s frustrating and rewarding at the same time, and there&amp;rsquo;s definitely something we can all take home with:&lt;/p&gt;
 
@@ -159,7 +159,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;In this post, I&amp;rsquo;m going to describe the experience at &lt;code&gt;$DAYJOB&lt;/code&gt; regarding implementing delayed retry using &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;DLX&lt;/a&gt; combined with a TTL. The technique has been described at a few &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;places&lt;/a&gt; but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-problem:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The problem&lt;/h1&gt;
+&lt;h1 id=&#34;the-problem&#34;&gt;The problem&lt;/h1&gt;
 
 &lt;p&gt;At &lt;code&gt;$DAYJOB&lt;/code&gt; we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status. Pretty straight-forward stuff. However, lately we&amp;rsquo;ve been experiencing an elevated amount of random failures from our service provider.&lt;/p&gt;
 
@@ -167,15 +167,15 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;We checked with our service provider and were told that they have been experiencing increased volumes and their infrastructure currently can&amp;rsquo;t keep up. However, they suggest that we use an undocumented feature which allows a &lt;code&gt;unique_id&lt;/code&gt; to be passed in along with the checkout call. The &lt;code&gt;unique_id&lt;/code&gt; serves as an idempotent key (similar to &lt;a href=&#34;https://stripe.com/docs/api?lang=curl#idempotent_requests&#34;&gt;Stripe&amp;rsquo;s&lt;/a&gt;). Multiple calls with the same &lt;code&gt;unique_id&lt;/code&gt; won&amp;rsquo;t create multiple checkout objects on their end and thus ensuring the checkout is made but won&amp;rsquo;t double/triple charge the customer&amp;rsquo;s car.&lt;/p&gt;
 
-&lt;h1 id=&#34;architecting-the-solution:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Architecting the solution&lt;/h1&gt;
+&lt;h1 id=&#34;architecting-the-solution&#34;&gt;Architecting the solution&lt;/h1&gt;
 
 &lt;p&gt;Armed with this new secret API feature, our team goes back to the drawing board. At work, we use &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt; extensively for asynchronous processing. If some operation doesn&amp;rsquo;t have to be carried out synchronously with a web request, we throw a message on the queue and have a queue consumer process that message and update states. We use a library called &lt;a href=&#34;https://github.com/ojacobson/sparkplug&#34;&gt;sparkplug&lt;/a&gt; that makes writing queue consumer super-easy. So, everything seems to fall in friendly terrotiries: we make a checkout call with a random id and when we encounter timeout or unknown error, instead of returning an error response to the user, we return &lt;code&gt;202 Accepted&lt;/code&gt; to our user and throw a message on the queue, so a consumer can grab it and retry the checkout with the same original &lt;code&gt;unique_id&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-missing-piece:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The missing piece&lt;/h1&gt;
+&lt;h1 id=&#34;the-missing-piece&#34;&gt;The missing piece&lt;/h1&gt;
 
 &lt;p&gt;However, we quickly realized it&amp;rsquo;s not that simple. What if the retry encountered the same error? We can put it back on the queue, but when does it get processed by the consumer again? We want to add a time delay to the subsequent retries, and the orginal retry as well.&lt;/p&gt;
 
-&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
 
 &lt;p&gt;After some research on the internet, seems like this problem has been &lt;a href=&#34;https://www.cloudamqp.com/docs/delayed-messages.html&#34;&gt;solved&lt;/a&gt; &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;before&lt;/a&gt;.&lt;/p&gt;
 
@@ -213,15 +213,15 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;/figure&gt;
 
 
-&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
+&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
 
-&lt;h2 id=&#34;implementation:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation&lt;/h2&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
 
 &lt;p&gt;Implementation is probably the most straight-forward phase of the project once we have the design on paper.  The only obstacle is that the library we use for writing rabbitmq consumers (sparkplug) does not support declaring queues with extra parameters, and the DLX related parameters: &lt;code&gt;x-dead-letter-exchange&lt;/code&gt; &lt;code&gt;x-dead-letter-routing-key&lt;/code&gt;, and &lt;code&gt;x-message-ttl&lt;/code&gt; are all &amp;ldquo;extra parameters&amp;rdquo; according to &lt;code&gt;amqplib&lt;/code&gt;, which is used by sparkplug. To solve this, I sent this &lt;a href=&#34;https://github.com/ojacobson/sparkplug/pull/10/files&#34;&gt;PR&lt;/a&gt; to sparkplug, so it recognizes extra parameters and pass them down to amqp library.&lt;/p&gt;
 
 &lt;p&gt;Another road block appeared when we ran the system on our dev images for the first time. The underlying amqplib would error out on startup. Upon closer investigation, it appeared the error happened while talking to rabbitmq and the amqplib can&amp;rsquo;t handle certain rabbitmq frames. So I went searching for the amqp project, only to find out that it was deprecated &lt;a href=&#34;https://pypi.python.org/pypi/amqplib&#34;&gt;long ago&lt;/a&gt;. Fortunately, there&amp;rsquo;s a fork of the library &lt;a href=&#34;https://pypi.python.org/pypi/amqp&#34;&gt;amqp&lt;/a&gt; that&amp;rsquo;s maintained by the reputable &lt;a href=&#34;http://www.celeryproject.org/&#34;&gt;Celery project&lt;/a&gt;. It&amp;rsquo;s has API compatibility with amqplib and appeared to be a drop-in replacement. We dropped it in and everything seems to work. Reading the online literature, it seems to be the case that the old library does not handle the &lt;code&gt;TTL&lt;/code&gt; amqp extension.&lt;/p&gt;
 
-&lt;h2 id=&#34;testing-strategy:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Testing Strategy&lt;/h2&gt;
+&lt;h2 id=&#34;testing-strategy&#34;&gt;Testing Strategy&lt;/h2&gt;
 
 &lt;p&gt;So, since the 3rd party API timeout is an edge case, they did not provide a way trigger this behaviour the same way we can trigger, say, a declined transaction. We could fake the URL for the 3rd party service in DNS or &lt;code&gt;/etc/hosts&lt;/code&gt; or we can change the SDK to change the base url for their API to somewhere else and cause a timeout that way, but neither is ideal. The biggest disadvantage is that we have no way of getting a request out of the retry state.&lt;/p&gt;
 
@@ -229,7 +229,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;We used this small nifty library &lt;a href=&#34;https://github.com/allfro/pymiproxy&#34;&gt;pymiproxy&lt;/a&gt; as a base for our proxy server. It turns out the proxy is pretty straight-forward as well, and a big shout-out to the author of pymiproxy.&lt;/p&gt;
 
-&lt;h2 id=&#34;deployment:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Deployment&lt;/h2&gt;
+&lt;h2 id=&#34;deployment&#34;&gt;Deployment&lt;/h2&gt;
 
 &lt;p&gt;Everything until now is like a cake walk. Sure, there are some problems with the underlying libraries but that requires patching but they were quite easy to identify and fix. Deployment, on the other hand, has been like riding on the &lt;a href=&#34;https://www.youtube.com/watch?v=Mgsbau5qkTE&#34;&gt;Behemoth in Canada&amp;rsquo;s Wonderland&lt;/a&gt;.&lt;/p&gt;
 
@@ -274,7 +274,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;Reading the rabbitmq 2.8.2 release notes, and they &lt;strong&gt;did&lt;/strong&gt; &lt;a href=&#34;https://www.rabbitmq.com/release-notes/README-2.8.2.txt&#34;&gt;mention&lt;/a&gt; this &amp;ldquo;feature&amp;rdquo;, but failed to mention that it could block your connection &lt;strong&gt;forever&lt;/strong&gt; and bring your site down&amp;hellip;&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;There you go.  That&amp;rsquo;s our adventure implementing and deploying delayed retry using rabbitmq&amp;rsquo;s DLX and TTL. It&amp;rsquo;s frustrating and rewarding at the same time, and there&amp;rsquo;s definitely something we can all take home with:&lt;/p&gt;
 

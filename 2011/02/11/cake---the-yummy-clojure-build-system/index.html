@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Cake - the yummy Clojure build system" />
 <meta property="og:description" content="" />
@@ -130,11 +130,11 @@
 <ul>
 <li>
 <ul>
-<li><a href="#blazingly-fast:d929fd0a90d9f52b34a81a1d3c5cf781">BLAZINGLY FAST!!!</a></li>
-<li><a href="#advanced-repl-functionalities-tab-completion-history:d929fd0a90d9f52b34a81a1d3c5cf781">Advanced REPL functionalities: tab completion, history</a></li>
-<li><a href="#run-clojure-files-directly:d929fd0a90d9f52b34a81a1d3c5cf781">run clojure files directly</a></li>
-<li><a href="#autotest:d929fd0a90d9f52b34a81a1d3c5cf781">autotest</a></li>
-<li><a href="#compatible-with-leiningen-project-definition-files:d929fd0a90d9f52b34a81a1d3c5cf781">compatible with leiningen project definition files</a></li>
+<li><a href="#blazingly-fast">BLAZINGLY FAST!!!</a></li>
+<li><a href="#advanced-repl-functionalities-tab-completion-history">Advanced REPL functionalities: tab completion, history</a></li>
+<li><a href="#run-clojure-files-directly">run clojure files directly</a></li>
+<li><a href="#autotest">autotest</a></li>
+<li><a href="#compatible-with-leiningen-project-definition-files">compatible with leiningen project definition files</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -174,23 +174,23 @@
 
 <p>About 10 minutes ago I heard about <a href="https://github.com/ninjudd/cake">cake</a> clojure build system, and gave it a try. And 10 minutes later, it won me over! Wow, it addresses all the pain points of <a href="https://github.com/technomancy/leiningen">leiningen</a>.</p>
 
-<h2 id="blazingly-fast:d929fd0a90d9f52b34a81a1d3c5cf781">BLAZINGLY FAST!!!</h2>
+<h2 id="blazingly-fast">BLAZINGLY FAST!!!</h2>
 
 <p>Sorry for using all CAPS but I&rsquo;m very excited about this improvement over leiningen &ndash; OK, it may not be the fault of leiningen that JVM cold startup time is non-trivial but hey, someone came up with an idea of having a long running JVM process in the background, so subsequent clojure tasks reuse the same JVM instance. Cake folks integrated that nicely. It takes about 10-15 seconds to boot up a JVM but subsequent cake tasks or execution of clojure code is virtually instant! Comparing to leiningen, which doesn&rsquo;t take this approach and every single task (such as common ones like lein test) takes around 5 seconds. This adds up quickly and makes you less efficient. The speed improvement alone is enough for me to switch to cake.</p>
 
-<h2 id="advanced-repl-functionalities-tab-completion-history:d929fd0a90d9f52b34a81a1d3c5cf781">Advanced REPL functionalities: tab completion, history</h2>
+<h2 id="advanced-repl-functionalities-tab-completion-history">Advanced REPL functionalities: tab completion, history</h2>
 
 <p>It just works. Very useful for having instant feedbacks while exploring the language and API. No more manually adding jLine to your classpath or hack around tab completion wrapper&hellip;It just works! (I know I said it already)</p>
 
-<h2 id="run-clojure-files-directly:d929fd0a90d9f52b34a81a1d3c5cf781">run clojure files directly</h2>
+<h2 id="run-clojure-files-directly">run clojure files directly</h2>
 
 <p>OK, leiningen can do this too, but through <a href="https://github.com/sids/lein-run">plugin</a>. I feel this is a very handy functionality, which probably should be included in the core.</p>
 
-<h2 id="autotest:d929fd0a90d9f52b34a81a1d3c5cf781">autotest</h2>
+<h2 id="autotest">autotest</h2>
 
 <p>Detects your code change and automatically run your test suites! Sweet.</p>
 
-<h2 id="compatible-with-leiningen-project-definition-files:d929fd0a90d9f52b34a81a1d3c5cf781">compatible with leiningen project definition files</h2>
+<h2 id="compatible-with-leiningen-project-definition-files">compatible with leiningen project definition files</h2>
 
 <p>Cake understand <code>project.clj</code>, so I don&rsquo;t need to do anything for my existing leiningen projects. Change directory to the project and <code>cake</code> away :D</p>
 

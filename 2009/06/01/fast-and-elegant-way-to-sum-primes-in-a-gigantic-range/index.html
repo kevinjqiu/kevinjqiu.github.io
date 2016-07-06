@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Fast and elegant way to sum primes in a gigantic range" />
 <meta property="og:description" content="" />
@@ -130,8 +130,8 @@
 <ul>
 <li>
 <ul>
-<li><a href="#traditional-approach:40dd4dba5fbcb1b1586b575833b72d48">Traditional Approach</a></li>
-<li><a href="#concurrency-oriented-programming:40dd4dba5fbcb1b1586b575833b72d48">Concurrency Oriented Programming</a></li>
+<li><a href="#traditional-approach">Traditional Approach</a></li>
+<li><a href="#concurrency-oriented-programming">Concurrency Oriented Programming</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -173,7 +173,7 @@
 
 <p>The problem is taken from <a href="http://projecteuler.net/">Project-Euler</a>, which asks what is the sum of all prime numbers under 2 million.</p>
 
-<h2 id="traditional-approach:40dd4dba5fbcb1b1586b575833b72d48">Traditional Approach</h2>
+<h2 id="traditional-approach">Traditional Approach</h2>
 
 <p>Project-Euler has many problems like this which looks ridiculously easy in theory, but practically impossible when using the old-school brute force way to solve them.</p>
 
@@ -212,7 +212,7 @@ sieve(List, Range) -&gt;
 </figure>
 
 
-<h2 id="concurrency-oriented-programming:40dd4dba5fbcb1b1586b575833b72d48">Concurrency Oriented Programming</h2>
+<h2 id="concurrency-oriented-programming">Concurrency Oriented Programming</h2>
 
 <p>In the concurrency oriented programming (COP, a term coined by Erlang’s inventor Joe Armstrong) model, you’re thinking in terms of separate entities and what responsibility is there for each of them. Think of them as individual human beings. They don’t have shared brains; one cannot influence the other by simply modify his or her brain tissues (well, under normal circumstance anyway). As human beings, our brains are disconnected from each other, <strong>but</strong> we share our knowledge through communication. We can modify other people’s memories by sending messages and vice versa. This is essentially what COP is – the entities are processes, and each has individual memories that’s not modifiable by other processes. Processes communicate with each other through message sending/receiving. This model is particularly good for scaling. Because the entities share nothing, it’s easy to get more entities without worrying that they don’t get along.</p>
 
@@ -318,7 +318,7 @@ sieve(List, Range) -&gt;
 
 <p>Also, as you may have guessed, all cores on the CPU are fully utilized.</p>
 
-<p>
+
 <figure >
     
         <img src="/images/cpu2.png" />
@@ -330,7 +330,7 @@ sieve(List, Range) -&gt;
     </figcaption>
     
 </figure>
-</p>
+
 
 <p>Programming in Erlang is fun!</p>
 

@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Ruby for Pythonistas" />
 <meta property="og:description" content="" />
@@ -128,42 +128,42 @@
 				<small class="toc-label">Contents</small>
 		   	 	<nav id="TableOfContents">
 <ul>
-<li><a href="#arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2">Arrays</a>
+<li><a href="#arrays">Arrays</a>
 <ul>
-<li><a href="#concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2">Concatenation</a></li>
-<li><a href="#access:d5bc6a4bd55e5a8752ca6c90bf0813d2">Access</a></li>
-<li><a href="#slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2">Slices and Ranges</a></li>
-<li><a href="#unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2">Unpacking</a></li>
+<li><a href="#concatenation">Concatenation</a></li>
+<li><a href="#access">Access</a></li>
+<li><a href="#slices-and-ranges">Slices and Ranges</a></li>
+<li><a href="#unpacking">Unpacking</a></li>
 </ul></li>
-<li><a href="#hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Hashes</a>
+<li><a href="#hashes">Hashes</a>
 <ul>
-<li><a href="#no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2">No <code>KeyError</code></a></li>
-<li><a href="#default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default value</a></li>
+<li><a href="#no-keyerror">No <code>KeyError</code></a></li>
+<li><a href="#default-value">Default value</a></li>
 </ul></li>
-<li><a href="#strings:d5bc6a4bd55e5a8752ca6c90bf0813d2">Strings</a></li>
-<li><a href="#symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2">Symbols</a></li>
-<li><a href="#methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Methods</a>
+<li><a href="#strings">Strings</a></li>
+<li><a href="#symbols">Symbols</a></li>
+<li><a href="#methods">Methods</a>
 <ul>
-<li><a href="#default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default values</a></li>
-<li><a href="#variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Variadic arguments</a></li>
-<li><a href="#invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2">Invocation and Return</a></li>
-<li><a href="#keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Keyword arguments</a></li>
+<li><a href="#default-values">Default values</a></li>
+<li><a href="#variadic-arguments">Variadic arguments</a></li>
+<li><a href="#invocation-and-return">Invocation and Return</a></li>
+<li><a href="#keyword-arguments">Keyword arguments</a></li>
 </ul></li>
-<li><a href="#constants:d5bc6a4bd55e5a8752ca6c90bf0813d2">Constants</a></li>
-<li><a href="#truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2">Truthiness</a></li>
-<li><a href="#exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2">Exceptions</a></li>
-<li><a href="#map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2">Map/Reduce/Filter</a></li>
-<li><a href="#blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2">Blocks</a></li>
-<li><a href="#classes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Classes</a>
+<li><a href="#constants">Constants</a></li>
+<li><a href="#truthiness">Truthiness</a></li>
+<li><a href="#exceptions">Exceptions</a></li>
+<li><a href="#map-reduce-filter">Map/Reduce/Filter</a></li>
+<li><a href="#blocks">Blocks</a></li>
+<li><a href="#classes">Classes</a>
 <ul>
-<li><a href="#self:d5bc6a4bd55e5a8752ca6c90bf0813d2">self</a></li>
-<li><a href="#private:d5bc6a4bd55e5a8752ca6c90bf0813d2">private</a></li>
-<li><a href="#define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Define class methods</a></li>
-<li><a href="#open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2">Open class</a></li>
-<li><a href="#inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2">Inheritance</a></li>
-<li><a href="#mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2">Mixin</a></li>
+<li><a href="#self">self</a></li>
+<li><a href="#private">private</a></li>
+<li><a href="#define-class-methods">Define class methods</a></li>
+<li><a href="#open-class">Open class</a></li>
+<li><a href="#inheritance">Inheritance</a></li>
+<li><a href="#mixin">Mixin</a></li>
 </ul></li>
-<li><a href="#message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2">Message Passing</a></li>
+<li><a href="#message-passing">Message Passing</a></li>
 </ul>
 </nav>
 		    </div>
@@ -205,11 +205,11 @@
 <li>Most of the points here are my notes while going through the excellent <a href="http://rubykoans.com/">Ruby Koan</a> exercises. A big shout out to them!</li>
 </ul>
 
-<h1 id="arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2">Arrays</h1>
+<h1 id="arrays">Arrays</h1>
 
 <p>In my opinion, Ruby arrays are a lot richer than Python lists.</p>
 
-<h2 id="concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2">Concatenation</h2>
+<h2 id="concatenation">Concatenation</h2>
 
 <p>Use the <code>&lt;&lt;</code> operator on arrays:</p>
 
@@ -221,7 +221,7 @@
 <pre><code class="language-python">a.append(3)
 </code></pre>
 
-<h2 id="access:d5bc6a4bd55e5a8752ca6c90bf0813d2">Access</h2>
+<h2 id="access">Access</h2>
 
 <p>To access an array, you can use the array index just like it is in almost every other language. However, Ruby&rsquo;s <code>Array</code> class also implements convenient methods to access the first and last element of the array:</p>
 
@@ -237,7 +237,7 @@ irb(main):008:0&gt; a.first
 =&gt; 1
 </code></pre>
 
-<h2 id="slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2">Slices and Ranges</h2>
+<h2 id="slices-and-ranges">Slices and Ranges</h2>
 
 <p>Both Python and Ruby support slicing although the syntax are slightly different:</p>
 
@@ -281,7 +281,7 @@ irb(main):011:0&gt; (1...5).to_a
 
 <p>Python&rsquo;s slicing is also pretty flexible. Python&rsquo;s special method <code>__getitem__</code> is able to take a range object (or any object for that matter) and override the behaviour of <code>[]</code> operator.</p>
 
-<h2 id="unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2">Unpacking</h2>
+<h2 id="unpacking">Unpacking</h2>
 
 <p>One of the nice features of Python is list/tuple unpacking, e.g.,</p>
 
@@ -358,11 +358,11 @@ irb(main):037:0&gt; b
 =&gt; 1
 </code></pre>
 
-<h1 id="hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Hashes</h1>
+<h1 id="hashes">Hashes</h1>
 
 <p>Ruby hashes are equivalent of Python dictionaries. They can be constructed and accessed using similar syntax.</p>
 
-<h2 id="no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2">No <code>KeyError</code></h2>
+<h2 id="no-keyerror">No <code>KeyError</code></h2>
 
 <p>In Python, when accessing a key that doesn&rsquo;t exist in the dictionary, you get a <code>KeyError</code>:</p>
 
@@ -390,7 +390,7 @@ KeyError: key not found: :c
     from /usr/bin/irb:11:in `&lt;main&gt;'
 </code></pre>
 
-<h2 id="default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default value</h2>
+<h2 id="default-value">Default value</h2>
 
 <p>In Ruby, default value functionality is built-in with <code>Hash</code> class:</p>
 
@@ -438,7 +438,7 @@ irb(main):050:0&gt; x[:two]
 
 <p><a href="http://rubylearning.com/satishtalim/ruby_blocks.html">Block</a> is one of my favourite Ruby language features.</p>
 
-<h1 id="strings:d5bc6a4bd55e5a8752ca6c90bf0813d2">Strings</h1>
+<h1 id="strings">Strings</h1>
 
 <p>Strings are similar in both languages, except Ruby strings are mutable, while Pythons&rsquo; are immutable. Ruby also has more ways to escape quotes:</p>
 
@@ -463,7 +463,7 @@ irb(main):056:0&quot; strings%}
 =&gt; &quot;34&quot;
 </code></pre>
 
-<h1 id="symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2">Symbols</h1>
+<h1 id="symbols">Symbols</h1>
 
 <p>Symbols are a unique in Ruby that&rsquo;s not present in Python (although I wish). It has permeated into the design of other modern languages, like Clojure and Elixir. You can think of symbols as a way to do free-form enums, a way to name something, as oppose to just some free form texts.</p>
 
@@ -485,16 +485,16 @@ irb(main):056:0&quot; strings%}
 =&gt; :abc
 </code></pre>
 
-<h1 id="methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Methods</h1>
+<h1 id="methods">Methods</h1>
 
-<h2 id="default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2">Default values</h2>
+<h2 id="default-values">Default values</h2>
 
 <p>Same as Python:</p>
 
 <pre><code>def foo(a, b='default') 
 </code></pre>
 
-<h2 id="variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Variadic arguments</h2>
+<h2 id="variadic-arguments">Variadic arguments</h2>
 
 <p>Same as Python:</p>
 
@@ -503,7 +503,7 @@ irb(main):056:0&quot; strings%}
 
 <p>Inside the method, <code>c</code> is available as an <code>Array</code>.</p>
 
-<h2 id="invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2">Invocation and Return</h2>
+<h2 id="invocation-and-return">Invocation and Return</h2>
 
 <p>Ruby method invocation does not require parentheses, unless it&rsquo;s it results in ambiguity. e.g., you can omit parens in:</p>
 
@@ -529,7 +529,7 @@ bar(foo arg)
 
 <p>In Ruby, almost everything is an expression. In the case of a method definition, the last expression becomes the return value of the method. Some people call it implicit returns, and people have mixed feelings about it. Personally I like the everything-is-an-expression model and using the last expression as the return value feels natural. In Python, you have to use <code>return</code>, otherwise, it implicitly returns <code>None</code>.</p>
 
-<h2 id="keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2">Keyword arguments</h2>
+<h2 id="keyword-arguments">Keyword arguments</h2>
 
 <p>Ruby 1.x doesn&rsquo;t have keyword arguments as a language feature. This is a little disappointing. However, it&rsquo;s idiomatic in Ruby to have a method accept a hash, and use symbols to simulate keyword arguments:</p>
 
@@ -545,7 +545,7 @@ irb(main):071:0&gt; foo(a: 5, b: 6)
 
 <p>In Ruby 2.x, this pattern has been elevated as a language feature, so now Ruby has proper keyword argument support. However, I have not seen an equivalent of Python&rsquo;s <a href="https://www.python.org/dev/peps/pep-3102/">keyword-only argument</a> feature.</p>
 
-<h1 id="constants:d5bc6a4bd55e5a8752ca6c90bf0813d2">Constants</h1>
+<h1 id="constants">Constants</h1>
 
 <p>Ruby symbols start with capital letters are &ldquo;constants&rdquo;, so classes are also &ldquo;constants&rdquo;:</p>
 
@@ -565,7 +565,7 @@ irb(main):077:0&gt; A=2
 =&gt; 2
 </code></pre>
 
-<h1 id="truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2">Truthiness</h1>
+<h1 id="truthiness">Truthiness</h1>
 
 <p>Truthiness in Ruby is a lot different from Python. Python has the concept of &ldquo;falsy&rdquo;, in which <code>0</code>, <code>[]</code>, <code>{}</code>, <code>''</code> are all evaluated to <code>False</code>. In Ruby, however, only <code>false</code> is false, and everything else is treated as <code>true</code>:</p>
 
@@ -591,7 +591,7 @@ irb(main):104:0&gt; is_true?(false)
 =&gt; :false
 </code></pre>
 
-<h1 id="exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2">Exceptions</h1>
+<h1 id="exceptions">Exceptions</h1>
 
 <p>Ruby&rsquo;s exception hierarchy is a lot like Python&rsquo;s, at least in name:</p>
 
@@ -600,7 +600,7 @@ irb(main):104:0&gt; is_true?(false)
 
 <p>To handle exceptions, you use <code>begin...rescue...ensure</code> rather than <code>try...except...finally</code>.</p>
 
-<h1 id="map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2">Map/Reduce/Filter</h1>
+<h1 id="map-reduce-filter">Map/Reduce/Filter</h1>
 
 <p>Ruby the language itself is not a functional language, although it provides machinery for you to program in a functional way, such as using high-order functions.</p>
 
@@ -626,7 +626,7 @@ irb(main):106:0&gt; [1,2,3,4,5].find_all { |x| x % 2 == 0 }
 =&gt; 15
 </code></pre>
 
-<h1 id="blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2">Blocks</h1>
+<h1 id="blocks">Blocks</h1>
 
 <p>As I eluded to before, blocks are one of my favourite Ruby language features. It&rsquo;s comparable to Python&rsquo;s <a href="https://docs.python.org/2/reference/compound_stmts.html#with">context managers</a>, but it can be invoked without using a keyword and can be added to any method calls. It feels more natural.</p>
 
@@ -654,15 +654,15 @@ do_with_logging {
 end
 </code></pre>
 
-<h1 id="classes:d5bc6a4bd55e5a8752ca6c90bf0813d2">Classes</h1>
+<h1 id="classes">Classes</h1>
 
 <p>Ruby classes are defined in a similar way as Python.</p>
 
-<h2 id="self:d5bc6a4bd55e5a8752ca6c90bf0813d2">self</h2>
+<h2 id="self">self</h2>
 
 <p>Ruby&rsquo;s <code>self</code> can reference different things in different scopes. For example, inside a class definition, <code>self</code> refers to the class object (kind of like when you define a <code>classmethod</code> in Python), but inside an instance method, <code>self</code> refers to the instance of the class.</p>
 
-<h2 id="private:d5bc6a4bd55e5a8752ca6c90bf0813d2">private</h2>
+<h2 id="private">private</h2>
 
 <p>Python doesn&rsquo;t have <code>private</code> members or methods. With Ruby however, you <em>can</em> define &ldquo;private&rdquo; methods if you put <code>private</code> in front of your method definition.</p>
 
@@ -711,7 +711,7 @@ foo.instance_variable_get(&quot;@name&quot;)
 
 <p>Overall, I think Ruby encourages more encapsulation and better design.</p>
 
-<h2 id="define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2">Define class methods</h2>
+<h2 id="define-class-methods">Define class methods</h2>
 
 <p>You can refer to the class by name when defining methods to make class methods:</p>
 
@@ -741,7 +741,7 @@ end
 
 <p>This is good if you want to group class methods together.</p>
 
-<h2 id="open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2">Open class</h2>
+<h2 id="open-class">Open class</h2>
 
 <p>A powerful (yet controversial) feature of Ruby is that you can &ldquo;amend&rdquo; any Ruby classes (even the builtin ones) during runtime. It&rsquo;s like monkey-patching on steroids.</p>
 
@@ -754,17 +754,17 @@ end
 
 <p>Now suddenly <code>2.even?</code> is a thing. It certainly makes writing your own DSL a lot easier, but it may lead to magical code that&rsquo;s hard to track down.</p>
 
-<h2 id="inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2">Inheritance</h2>
+<h2 id="inheritance">Inheritance</h2>
 
 <p>Ruby uses <code>A &lt; B</code> to mean class <code>A</code> inherits from class <code>B</code>. <code>super</code> is available to refer to the same-named methods in the super class. Because Ruby is single inheritance, there&rsquo;s no ambiguity of <code>super</code> here.</p>
 
-<h2 id="mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2">Mixin</h2>
+<h2 id="mixin">Mixin</h2>
 
 <p>Ruby&rsquo;s class can only have a single parent, but you can &ldquo;mixin&rdquo; behaviour into your class by <code>include</code> other modules. Compared to Python, which does support multiple inheritance, and extra attention has to be paid to avoid diamond inheritance problem.</p>
 
 <p>I feel the Ruby design is more thought-out. As oppose to give more ropes to developers to hang themselves, it makes the use case of multiple inheritance more clear (only for mixins).</p>
 
-<h1 id="message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2">Message Passing</h1>
+<h1 id="message-passing">Message Passing</h1>
 
 <p>Ruby&rsquo;s object-oriented model is based on the idea of message passing. As opposed to invoking using <code>obj.method</code>, you can pass a message <code>method</code> to object <code>obj</code>:</p>
 
@@ -791,6 +791,11 @@ end
 				<div class="paging">
 					<span class="paging-label">More Reading</span>
 					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2016/06/19/docker-security/">Docker Security</a>
+		            </div>
+		            
 
 					
 					<div class="paging-older">

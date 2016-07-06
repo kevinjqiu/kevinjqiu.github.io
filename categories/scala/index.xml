@@ -62,49 +62,49 @@ java.lang.OutOfMemoryError: PermGen space
 
 &lt;p&gt;What I like about Scala:&lt;/p&gt;
 
-&lt;h2 id=&#34;0-it-s-statically-typed-language:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;0) It&amp;rsquo;s statically-typed language.&lt;/h2&gt;
+&lt;h2 id=&#34;0-it-s-statically-typed-language&#34;&gt;0) It&amp;rsquo;s statically-typed language.&lt;/h2&gt;
 
 &lt;p&gt;That&amp;rsquo;s right! I don&amp;rsquo;t care what you ninjas say. As much as I love dynamic languages, I just prefer statically typed language for big projects. The benefit of having type information is enormous for a project with a large code base. I know you have to write unit tests for it anyways, but when 80% of your unit test code is checking types, it&amp;rsquo;s just counter-productive.&lt;/p&gt;
 
-&lt;h2 id=&#34;1-the-ability-to-combine-functional-programming-style-with-oop:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;1) The ability to combine functional programming style with OOP.&lt;/h2&gt;
+&lt;h2 id=&#34;1-the-ability-to-combine-functional-programming-style-with-oop&#34;&gt;1) The ability to combine functional programming style with OOP.&lt;/h2&gt;
 
 &lt;p&gt;This is what Scala is known for - a hybrid language that boasts the better in both OOP world and FP world. I&amp;rsquo;m not a functional programming purist, but I think Scala did a good job blending the functional programming elements into OOP. Writing Scala programs, I find myself much more empowered to be able to choose from both styles where I see fit. The ability to pass functions around and apply high order functions can significantly reduce boilerplate code and visual clutter.&lt;/p&gt;
 
-&lt;h2 id=&#34;2-the-ability-to-create-your-own-control-flow-well-sort-of:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;2) The ability to create your own control flow (well, sort of).&lt;/h2&gt;
+&lt;h2 id=&#34;2-the-ability-to-create-your-own-control-flow-well-sort-of&#34;&gt;2) The ability to create your own control flow (well, sort of).&lt;/h2&gt;
 
 &lt;p&gt;I had a &lt;a href=&#34;http://reminiscential.wordpress.com/2010/09/29/scala-use-function-currying/&#34;&gt;blog post&lt;/a&gt; about how to use function curry to create a customized control flow. This is very empowering and yet, it&amp;rsquo;s not an one-off syntactic sugar that&amp;rsquo;s sprinkled randomly into the language like some other language would do. Customization of control flow is a result of combining generic language features (such as currying, by-name parameter, implicit conversion, etc).&lt;/p&gt;
 
-&lt;h2 id=&#34;3-object-instead-of-static:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;3) Object instead of static&lt;/h2&gt;
+&lt;h2 id=&#34;3-object-instead-of-static&#34;&gt;3) Object instead of static&lt;/h2&gt;
 
 &lt;p&gt;Scala does away with the Java static keyword. Instead, it provides &amp;ldquo;object&amp;rdquo; keyword to define a class that only has one instance. It has the same power as singleton design pattern, without the extra boilerplate code. (if you think implementing singleton in Java is simple, think again. Especially in the multi-threaded context). Also, you can use the same construct to define &amp;ldquo;companion&amp;rdquo; objects, which can be used to implement the factory pattern, and put in miscellaneous methods, implicit conversion methods and so on. Extremely powerful yet elegant.&lt;/p&gt;
 
-&lt;h2 id=&#34;4-operator-overloading-well-sort-of:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;4) Operator overloading (well, sort of).&lt;/h2&gt;
+&lt;h2 id=&#34;4-operator-overloading-well-sort-of&#34;&gt;4) Operator overloading (well, sort of).&lt;/h2&gt;
 
 &lt;p&gt;OK, it&amp;rsquo;s not exactly operator overloading - Scala allows many non-alpha-numeric characters in the method name, so operators are essentially methods. duh! if you think about it&amp;hellip;why should + be treated any different from &lt;code&gt;add()&lt;/code&gt;? Being able to use special characters in method names makes code easy to understand. However, I&amp;rsquo;m a bit disappointed that question mark &lt;code&gt;?&lt;/code&gt; cannot be used in method names&amp;hellip;One of the things I liked about LISP is you can define a function &lt;code&gt;(odd? (x) (...))&lt;/code&gt; and readers immediately know this function returns a boolean. I don&amp;rsquo;t have to ponder whether I should name it &lt;code&gt;isOdd()&lt;/code&gt; or &lt;code&gt;hasChildren()&lt;/code&gt;. Anyway&amp;hellip;&lt;/p&gt;
 
-&lt;h2 id=&#34;5-traits:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;5) Traits&lt;/h2&gt;
+&lt;h2 id=&#34;5-traits&#34;&gt;5) Traits&lt;/h2&gt;
 
 &lt;p&gt;In most cases, multiple inheritance is manageable. Seems Java threw the baby out with the bath water - rejecting multiple inheritance completely. It&amp;rsquo;s ironic that the AOP guys cracks open Java classes in the byte code level to do the &amp;ldquo;mixins&amp;rdquo;&amp;hellip;With Scala, this seems to be natural.&lt;/p&gt;
 
-&lt;h2 id=&#34;6-built-in-parser-combinator-library:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;6) Built-in parser-combinator library&lt;/h2&gt;
+&lt;h2 id=&#34;6-built-in-parser-combinator-library&#34;&gt;6) Built-in parser-combinator library&lt;/h2&gt;
 
 &lt;p&gt;It&amp;rsquo;s easy to do some non-mission critical parsing using the Scala standard library. The library itself is implemented as an internal DSL such that writing parser rules feels like writing EBNF directly.&lt;/p&gt;
 
 &lt;p&gt;Here&amp;rsquo;s what&amp;rsquo;s not so hot for me so far:&lt;/p&gt;
 
-&lt;h2 id=&#34;1-the-generics-still-is-obtrusive-sometimes:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;1) The generics still is obtrusive sometimes.&lt;/h2&gt;
+&lt;h2 id=&#34;1-the-generics-still-is-obtrusive-sometimes&#34;&gt;1) The generics still is obtrusive sometimes.&lt;/h2&gt;
 
 &lt;p&gt;That said, however, it&amp;rsquo;s vastly superior than Java&amp;rsquo;s generics system with far better type inferencing. But sometimes, you still have to write down a lot of types especially on a parameterized method. What&amp;rsquo;s worse is because Scala is more strict than Java wrt types, you cannot ignore generic types the way you can in Java code. Moreover, because Scala runs on JVM, and because of type-erasure, you still can&amp;rsquo;t write code such as val t = new T()&amp;hellip;although we can&amp;rsquo;t blame this on Scala.&lt;/p&gt;
 
-&lt;h2 id=&#34;2-the-collection-library:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;2) The collection library.&lt;/h2&gt;
+&lt;h2 id=&#34;2-the-collection-library&#34;&gt;2) The collection library.&lt;/h2&gt;
 
 &lt;p&gt;For each collection data structure, Scala has the mutable implementation, immutable implementation, and the native Java Collection Library. If you&amp;rsquo;re writing code that calls Java library, very often you have to wrap JCL lists/maps/sets into the Scala ones, because you want to use the nice functional features Scala provides. I&amp;rsquo;m not smart enough to know a better solution to this, I&amp;rsquo;m just merely pointing out a sore spot. Clojure has a very clever and elegant way of integrating JCL data structures into Clojure code, but since Clojure and Scala are vastly different, I don&amp;rsquo;t know how relevant this is.&lt;/p&gt;
 
-&lt;h2 id=&#34;3-start-up-time:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;3) Start up time&lt;/h2&gt;
+&lt;h2 id=&#34;3-start-up-time&#34;&gt;3) Start up time&lt;/h2&gt;
 
 &lt;p&gt;One of Scala&amp;rsquo;s goal is to be able to both scale up and scale down. Scala programs can be run as scripts by the interpreter, but it can&amp;rsquo;t compete with Python or Ruby in terms of development turn-around time in terms of scripting. Again, this is because of the dreadful JVM startup process.&lt;/p&gt;
 
-&lt;h2 id=&#34;4-lack-of-good-tooling:ca642cfe973ff485150ec7ab550d1a93&#34;&gt;4) Lack of good tooling&lt;/h2&gt;
+&lt;h2 id=&#34;4-lack-of-good-tooling&#34;&gt;4) Lack of good tooling&lt;/h2&gt;
 
 &lt;p&gt;The best Scala development environment I found so far is the Scala plugin for IntelliJ. It&amp;rsquo;s still not great for debugging, but for coding and integration with Maven and such, it&amp;rsquo;s great. The Eclipse plugin lags significantly, despite having built a brand new website and seemingly having more resource pour into it&amp;hellip;I know I shouldn&amp;rsquo;t be overly critical of a community effort, but it&amp;rsquo;s just frustrating that it can&amp;rsquo;t even do auto import of classes&amp;hellip;&lt;/p&gt;
 

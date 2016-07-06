@@ -6,8 +6,464 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 31 May 2016 23:04:13 -0400</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jun 2016 21:49:51 -0700</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Docker Security</title>
+      <link>http://blog.idempotent.ca/2016/06/19/docker-security/</link>
+      <pubDate>Sun, 19 Jun 2016 21:49:51 -0700</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2016/06/19/docker-security/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;http://2016.dockercon.com/&#34;&gt;DockerCon 2016&lt;/a&gt; is here and this is the very first day with workshops on various topics. I chose to attend the Docker Security workshop as I&amp;rsquo;m interested in seeing how Docker tackles some security challenges. This blog post is my notes taken from the workshop.&lt;/p&gt;
+
+&lt;p&gt;In order to talk about security, we first have to know how docker works on a higher level to know what to secure. The workshop addresses that question early on. Container security is different from, say, securing a hypervisor, since they work differently. Docker is essentially an abstraction layer on top of &lt;a href=&#34;http://man7.org/linux/man-pages/man7/namespaces.7.html&#34;&gt;namespaces&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Cgroups&#34;&gt;cgroups&lt;/a&gt; so we have to talk about security in those contexts. On a higher level, namespaces govern what a container can see, and cgroups govern what a container can use.&lt;/p&gt;
+
+&lt;h1 id=&#34;docker-internals&#34;&gt;Docker Internals&lt;/h1&gt;
+
+&lt;h2 id=&#34;namespaces&#34;&gt;Namespaces&lt;/h2&gt;
+
+&lt;p&gt;When forking a child process on Linux, you can specify what system resource is shared from the parent process and what is &amp;ldquo;unshared&amp;rdquo;, and the &amp;ldquo;unshared&amp;rdquo; resource becomes the namespace isolation provided by the kernel to the process. Such resources are:
+* mount
+* UTS
+* IPC
+* network
+* pid
+* cgroup
+* user
+See &lt;code&gt;man unshare&lt;/code&gt; for more detailed description.&lt;/p&gt;
+
+&lt;p&gt;What this means is changes made within a namespace by a process isn&amp;rsquo;t visible to other processes outside of the namespace, which effectively provided process isolation, and made a docker container appears to be like a virtual machine on the surface.&lt;/p&gt;
+
+&lt;p&gt;Namespaces appear as files under &lt;code&gt;/proc/&amp;lt;pid&amp;gt;/ns&lt;/code&gt; folder, e.g.,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# ls -l /proc/1/ns
+total 0
+lrwxrwxrwx 1 root root 0 Jun 28 03:56 cgroup -&amp;gt; cgroup:[4026531835]
+lrwxrwxrwx 1 root root 0 Jun 28 03:56 ipc -&amp;gt; ipc:[4026532440]
+lrwxrwxrwx 1 root root 0 Jun 28 03:56 mnt -&amp;gt; mnt:[4026532438]
+lrwxrwxrwx 1 root root 0 Jun 28 03:56 net -&amp;gt; net:[4026532443]
+lrwxrwxrwx 1 root root 0 Jun 28 03:56 pid -&amp;gt; pid:[4026532441]
+lrwxrwxrwx 1 root root 0 Jun 28 03:56 uts -&amp;gt; uts:[4026532439]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and if you are within a container, can you find out the container id by querying &lt;code&gt;/proc/1/cgroup&lt;/code&gt; file, which lists the name of the namespaces.&lt;/p&gt;
+
+&lt;h2 id=&#34;cgroups&#34;&gt;Cgroups&lt;/h2&gt;
+
+&lt;p&gt;cgroups, or control groups is a kernel feature that provides resource tracking and limitations for a group of tasks. In docker terms, the docker daemon creates and assigns a cgroup for each running container, and you can set what resource container is able to get, e.g., CPU, memory or pid limits.&lt;/p&gt;
+
+&lt;p&gt;e.g., &lt;code&gt;docker run&lt;/code&gt; takes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--cpuset-cpus&lt;/code&gt;: CPUs in which to allow execution&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--cpuset-mems&lt;/code&gt;: MEMs in which to allow execution&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--memory-reservation&lt;/code&gt;: Memory soft limit&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--pids-limit&lt;/code&gt;: Tune container pids limit&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Docker names the cgroup it creates using the container id, so a handy way to find out the container id within the container is to inspect &lt;code&gt;/proc/1/cgroup&lt;/code&gt; file in the container:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@48b83d3621b5:/proc/1# cat cgroup
+9:pids:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+8:cpu,cpuacct:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+7:net_cls:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+6:devices:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+5:memory:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+4:blkio:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+3:freezer:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+2:cpuset:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+1:name=systemd:/docker/48b83d3621b5c176b22885e799e73f2cec6e14d821c83b2ecb4fc73324212631
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here the container id is &lt;code&gt;48b83...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;docker-security-best-practices&#34;&gt;Docker Security Best Practices&lt;/h1&gt;
+
+&lt;h2 id=&#34;secure-the-containers&#34;&gt;Secure the Containers&lt;/h2&gt;
+
+&lt;h3 id=&#34;use-minimal-base-images&#34;&gt;Use minimal base images&lt;/h3&gt;
+
+&lt;p&gt;In a secured environment, every image you build has to come from a known and trusted source. The minimal the base image, the narrower the attack surface is going to be. &lt;a href=&#34;https://www.alpinelinux.org/&#34;&gt;Alpine Linux&lt;/a&gt; has gain significantly in popularity as it&amp;rsquo;s a very minimal Linux distribution. I personally build almost everything from Alpine when I can. The caveat is it&amp;rsquo;s built using &lt;a href=&#34;https://www.musl-libc.org/&#34;&gt;musl libc&lt;/a&gt; instead of the ubiquitous glibc so your mileage may vary depending on how your code or your dependency rely on specifics of glibc.&lt;/p&gt;
+
+&lt;h3 id=&#34;verify-content&#34;&gt;Verify content&lt;/h3&gt;
+
+&lt;p&gt;In order to build the chain of trust, we want to know where our software dependencies come from when building the image. Different package management systems have ways to verify the authenticity and integrity of the packages you want to install. For example, when using &lt;code&gt;apt-get&lt;/code&gt; to install software from 3rd party source, always obtain it from the official channel and verify the keys.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RUN apt-key adv \
+    --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys ... \
+    &amp;amp;&amp;amp; echo deb http://repository.example.com stable non-free \
+    | tee /etc/apt/sources.list.d/example.list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;create-read-only-containers-volumes&#34;&gt;Create read-only containers/volumes&lt;/h3&gt;
+
+&lt;p&gt;By default, &lt;code&gt;docker run ...&lt;/code&gt; creates and runs a container in read-write mode. The process in the container is able to write to the root file system of the container. According to the &lt;a href=&#34;https://en.wikipedia.org/wiki/Principle_of_least_privilege&#34;&gt;security principle of least privilege&lt;/a&gt;, if you don&amp;rsquo;t expect the container process to write to the disk, you should run the container with &lt;code&gt;--read-only&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --rm --read-only alpine sh
+/ # touch foo
+touch: foo: Read-only file system
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Same applies to moounted volumes. If you volume mount a folder from the host not for persistence (e.g., for configuration), you don&amp;rsquo;t need write permission for the mapped folder. You can use &lt;code&gt;-v host_dir:container_dir:ro&lt;/code&gt; to tell docker to mount the folder in read-only mode:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --rm -v $(pwd):/content:ro alpine sh
+/ # cd /content
+/content # touch foo
+touch: foo: Read-only file system
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;networking&#34;&gt;Networking&lt;/h2&gt;
+
+&lt;h3 id=&#34;use-network-namespaces&#34;&gt;Use network namespaces&lt;/h3&gt;
+
+&lt;p&gt;Containers can be &amp;ldquo;linked&amp;rdquo; by specifying &lt;code&gt;--link&lt;/code&gt; during run. e.g., if your &lt;code&gt;app&lt;/code&gt; container has a link to &lt;code&gt;redis&lt;/code&gt; container, within your app container, you can use &lt;code&gt;redis&lt;/code&gt; as the host name for the redis instance:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d --name redis redis:latest
+docker run -d --name app --link redis:redis app_image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, this is considered a bad practice with the newer docker versions. Links do not survive a container restart, so if either the &lt;code&gt;redis&lt;/code&gt; or the &lt;code&gt;app&lt;/code&gt; container gets restarted, the linkage is gone and hence it&amp;rsquo;s pretty brittle.&lt;/p&gt;
+
+&lt;p&gt;Since docker 1.9, network is a top-level concept and is now a recommended way of connecting containers.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker network create test
+704c22d89347f18ca1d369af02af5aa89b25a78b8fa0f243bef0978c7aa4fedf
+
+$ docker network ls
+NETWORK ID          NAME                DRIVER
+ab205c46f52f        bridge              bridge
+9ef569719a04        host                host
+29053ecdedda        none                null
+4e4f01be3f14        onebody_default     bridge
+704c22d89347        test                bridge
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The network &lt;code&gt;test&lt;/code&gt; we just created is not tied to any containers. The network is its own subnet under the docker0:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker network inspect test
+[
+    {
+        &amp;quot;Name&amp;quot;: &amp;quot;test&amp;quot;,
+		...
+        &amp;quot;IPAM&amp;quot;: {
+			...
+            &amp;quot;Config&amp;quot;: [
+                {
+                    &amp;quot;Subnet&amp;quot;: &amp;quot;172.19.0.0/16&amp;quot;,
+                    &amp;quot;Gateway&amp;quot;: &amp;quot;172.19.0.1/16&amp;quot;
+                }
+            ]
+        },
+		...
+    }
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A container can join the network by specifying &lt;code&gt;--network&lt;/code&gt; during runtime:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --net=test --rm --name app1 alpine sh
+/ # ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:13:00:02
+          inet addr:172.19.0.2  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe13:2%32744/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:71 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:9084 (8.8 KiB)  TX bytes:738 (738.0 B)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see the container is assigned an IP address in the subnet. Let&amp;rsquo;s run another container in the network, and take a look at the network:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker network inspect test
+[
+    {
+        ...
+        &amp;quot;Containers&amp;quot;: {
+            &amp;quot;aac7e82e2b89fc021606541ec46bd11b734bc4fd97296b2f343d622e8ccb6a49&amp;quot;: {
+                &amp;quot;Name&amp;quot;: &amp;quot;stupefied_albattani&amp;quot;,
+                &amp;quot;EndpointID&amp;quot;: &amp;quot;5213b7177348929fae12273c4ed6df6c5894bcfeef246b3fd6ee81789533153e&amp;quot;,
+                &amp;quot;MacAddress&amp;quot;: &amp;quot;02:42:ac:13:00:03&amp;quot;,
+                &amp;quot;IPv4Address&amp;quot;: &amp;quot;172.19.0.3/16&amp;quot;,
+                &amp;quot;IPv6Address&amp;quot;: &amp;quot;&amp;quot;
+            },
+            &amp;quot;e2d5d159dc1cbb1f671c01286138704128bbbf6f9c428605155dbe8b7df4de1f&amp;quot;: {
+                &amp;quot;Name&amp;quot;: &amp;quot;app1&amp;quot;,
+                &amp;quot;EndpointID&amp;quot;: &amp;quot;b8fb80f16e8b9d4ec53707fce4d7e49fc901b82f0d727d280fc859684cce1056&amp;quot;,
+                &amp;quot;MacAddress&amp;quot;: &amp;quot;02:42:ac:13:00:02&amp;quot;,
+                &amp;quot;IPv4Address&amp;quot;: &amp;quot;172.19.0.2/16&amp;quot;,
+                &amp;quot;IPv6Address&amp;quot;: &amp;quot;&amp;quot;
+            }
+        },
+        ...
+    }
+]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The name associated with the containers are accessible to other containers in the network:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --rm --net=test alpine sh
+/ # ping app1
+PING app1 (172.19.0.2): 56 data bytes
+64 bytes from 172.19.0.2: seq=0 ttl=64 time=0.378 ms
+64 bytes from 172.19.0.2: seq=1 ttl=64 time=0.193 ms
+64 bytes from 172.19.0.2: seq=2 ttl=64 time=0.294 ms
+64 bytes from 172.19.0.2: seq=3 ttl=64 time=0.200 ms
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, if you start a container outside of the &lt;code&gt;test&lt;/code&gt; network, none of the containers are going to be accessible:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --rm --name outsider alpine sh
+/ # ping app1
+ping: bad address &#39;app1&#39;
+/ # ping 172.19.0.2
+PING 172.19.0.2 (172.19.0.2): 56 data bytes
+^C
+--- 172.19.0.2 ping statistics ---
+4 packets transmitted, 0 packets received, 100% packet loss
+/ #
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;be-cautious-with-net-host&#34;&gt;Be cautious with &lt;code&gt;--net=host&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;I have to confess that I&amp;rsquo;m guilty of this :) When I have container connectivity issues, I slap on &lt;code&gt;--net=host&lt;/code&gt; on &lt;code&gt;docker run&lt;/code&gt; and everything just worked. This is a bad security practice as called out during the workshop. Because &lt;code&gt;--net=host&lt;/code&gt; puts the container in the same network namespace as the host, the container can see &lt;em&gt;all&lt;/em&gt; traffic on the host:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -it --net=host alpine sh
+/ # ip a
+1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: wlp1s0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc mq state UP qlen 1000
+    link/ether c8:ff:28:62:80:29 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.132/24 brd 192.168.1.255 scope global dynamic wlp1s0
+       valid_lft 78812sec preferred_lft 78812sec
+    inet 192.168.1.125/24 brd 192.168.1.255 scope global secondary wlp1s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::2475:8b1:aafd:3dde/64 scope link
+       valid_lft forever preferred_lft forever
+4: docker0: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc noqueue state DOWN
+    link/ether 02:42:c8:75:9f:71 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.3/16 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:c8ff:fe75:9f71/64 scope link
+       valid_lft forever preferred_lft forever
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As demonstrated above, all interfaces on the host is visible inside the container.&lt;/p&gt;
+
+&lt;h3 id=&#34;be-cautious-with-exposed-ports&#34;&gt;Be cautious with exposed ports&lt;/h3&gt;
+
+&lt;p&gt;When you&amp;rsquo;re connecting containers together with network namespace, you don&amp;rsquo;t need to bind the container port to the host port with the &lt;code&gt;-p&lt;/code&gt; option. Exposed ports may create conflict with port bindings on the host. However, if your container is the entrypoint to your web app, then I can&amp;rsquo;t think of a specific reason &lt;em&gt;not&lt;/em&gt; to use port binding, since otherwise, you will have to setup iptable rules to route traffic from the host interface to container IP.&lt;/p&gt;
+
+&lt;h2 id=&#34;user-management&#34;&gt;User Management&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;root&lt;/code&gt; in the container &lt;em&gt;is&lt;/em&gt; root on the host by default. I discovered &lt;a href=&#34;http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/&#34;&gt;this hack&lt;/a&gt; that exploits read/write mount and &lt;code&gt;root&lt;/code&gt; user in the container. Consider this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run --rm alpine whoami
+root
+
+$ docker run --rm alpine id
+uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and you can do more damaging things like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -v /:/mnt alpine rm -rf /mnt  # DON&#39;T RUN THIS!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;run-as-non-privileged-user&#34;&gt;Run as non-privileged user&lt;/h3&gt;
+
+&lt;p&gt;Since Docker 1.7, you can provide &lt;code&gt;-u&lt;/code&gt;|&lt;code&gt;--user&lt;/code&gt; to &lt;code&gt;run&lt;/code&gt; command to run the container as a specific user:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -u 1000:1000 --rm -v /:/mnt alpine id
+uid=1000 gid=1000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the cuser in the container doesn&amp;rsquo;t have the root privileges:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -u 1000:1000 --rm -v /:/mnt alpine rm -rf /mnt/bin/sh
+rm: can&#39;t remove &#39;/mnt/bin/sh&#39;: Permission denied
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;use-user-namespace-remapping&#34;&gt;Use user namespace remapping&lt;/h3&gt;
+
+&lt;p&gt;Since Docker 1.10, Docker added &lt;a href=&#34;https://integratedcode.us/2015/10/13/user-namespaces-have-arrived-in-docker/&#34;&gt;support&lt;/a&gt; for user namespace for the docker daemon. With this feature, the container is able to run with the root user inside the container but an unprivileged user on the host.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see an example. To activate it, we need to rerun the docker daemon with &lt;code&gt;--userns-remap&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;First, stop docker daemon:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;systemctl stop docker.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;User namespace uses two config files &lt;code&gt;/etc/subuid&lt;/code&gt; and &lt;code&gt;/etc/subgid&lt;/code&gt;. See full description using &lt;code&gt;man subuid&lt;/code&gt; and &lt;code&gt;man subgid&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Touch these files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;touch /etc/subuid &amp;amp;&amp;amp; touch /etc/subgid
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run docker daemon:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo docker daemon --userns-remap=default
+[...]
+INFO[0001] User namespaces: ID ranges will be mapped to subuid/subgid ranges of: dockremap:dockremap
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, user namespaces have been activated. Furthermore:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat /etc/subuid
+dockremap:100000:65536
+
+$ cat /etc/subgid
+dockremap:100000:65536
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What this means is the &lt;code&gt;dockremap&lt;/code&gt; user is allocated a block of 65536 user/group ids. Container started henceforth will be using user &lt;code&gt;root&lt;/code&gt; in the container, but to the host, it&amp;rsquo;s going to be user &lt;code&gt;dockremap&lt;/code&gt;&amp;rsquo;s subordinate users.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, this feature requires the kernel to be compiled with user namespaces turned on. Most distributions don&amp;rsquo;t ship with this kernel config by default. Moreover, there have been security vulnerabilities related to &lt;a href=&#34;https://lwn.net/Articles/543273/&#34;&gt;user namespaces&lt;/a&gt; which hampers mainstream adoption.&lt;/p&gt;
+
+&lt;p&gt;Another caveat about user namespace is once the daemon is run with &lt;code&gt;--userns-remap&lt;/code&gt;, the images pulled previously pulled by the daemon without the flag are going to be pulled again, since the permissioning on the file system layers are no longer valid. So, if you decide to use user namespace remap in production, do it early on and do not switch back and forth.&lt;/p&gt;
+
+&lt;h2 id=&#34;image-distribution&#34;&gt;Image Distribution&lt;/h2&gt;
+
+&lt;p&gt;The security goals are image provenance and trust. Provenance verifies the publisher of the image whereas trust verifies the integrity of the image.&lt;/p&gt;
+
+&lt;h3 id=&#34;pull-by-digest-as-oppose-to-by-tag&#34;&gt;Pull by digest (as oppose to by tag)&lt;/h3&gt;
+
+&lt;p&gt;Pulling images by tag name is surely convenient, but tags do not guarantee integrity. The same tag may not refer to the same image. This is surely the case when the tag name is &lt;code&gt;latest&lt;/code&gt;, as it always points to the latest image being pushed in the repository. Other named tags are not immutable either, since one can always untag (through &lt;code&gt;docker rmi&lt;/code&gt;) and re-tag and push image to change the image being pointed by the tag.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, pull by digest to ensure integrity and immutability. The repo digest is shown to you when you push an image to a registry:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# running the registry
+# docker run -p 5000:5000 -v ~/registry:/var/lib/registry --name=registry registry:2  # only works with registry version 2
+
+# building an image...
+# docker build -t localhost:5000/test .
+
+# push the image
+$ docker push localhost:5000/test
+The push refers to a repository [localhost:5000/test]
+6102f0d2ad33: Pushed
+latest: digest: sha256:04298820c9063b955614868b5cb2d60be91a3d7c560e0d6c377b0c3add764504 size: 528
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can subsequently pull the image using the digest:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker pull localhost:5000/test@sha256:04298820c9063b955614868b5cb2d60be91a3d7c560e0d6c377b0c3add764504
+sha256:04298820c9063b955614868b5cb2d60be91a3d7c560e0d6c377b0c3add764504: Pulling from test
+Digest: sha256:04298820c9063b955614868b5cb2d60be91a3d7c560e0d6c377b0c3add764504
+Status: Downloaded newer image for localhost:5000/test@sha256:04298820c9063b955614868b5cb2d60be91a3d7c560e0d6c377b0c3add764504
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This works well for registries you do control. However, I haven&amp;rsquo;t found an easy way to find out the repo disgest for images hosted on the official docker hub, unless I&amp;rsquo;m missing something glaringly obvious, this sort of defeats the purpose if the official docker hub doesn&amp;rsquo;t make pulling by digest easy for users.&lt;/p&gt;
+
+&lt;h3 id=&#34;content-trust&#34;&gt;Content Trust&lt;/h3&gt;
+
+&lt;h4 id=&#34;when-pulling&#34;&gt;When pulling&lt;/h4&gt;
+
+&lt;p&gt;Docker 1.10 added content trust, which adds a layer of trust between the docker CLI and engine when pulling and pushing images. To enable it, set &lt;code&gt;DOCKER_CONTENT_TRUST&lt;/code&gt; to 1.&lt;/p&gt;
+
+&lt;p&gt;When &lt;code&gt;DOCKER_CONTENT_TRUST&lt;/code&gt; is not set, what &lt;code&gt;docker pull&lt;/code&gt; does is like the following (diagram provided by the workshop)&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/docker-pull-wo-ct.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;When content trust is turned on, what happens behind the scene is a notary server is contacted by the docker CLI, which responds with notary data for the CLI to verify, and when everything is checked out, the CLI obtains a repo digest, and asks the docker engine for the image given the repo digest. See the figure below. See the following diagram (provided by the workshop)&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://blog.idempotent.ca/images/docker-pull-w-ct.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h4 id=&#34;when-pushing&#34;&gt;When pushing&lt;/h4&gt;
+
+&lt;p&gt;Same as pulling, you set &lt;code&gt;DOCKER_CONTENT_TRUST&lt;/code&gt; to &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;docker push&lt;/code&gt; as usual. The difference is the metadata of the repo is signed by your key that you register with the notary service.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see it in action. First let&amp;rsquo;s pull an official image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker pull alpine
+Using default tag: latest
+Pull (1 of 1): alpine:latest@sha256:3dcdb92d7432d56604d4545cbd324b14e647b313626d99b889d0626de158f73a
+sha256:3dcdb92d7432d56604d4545cbd324b14e647b313626d99b889d0626de158f73a: Pulling from library/alpine
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Tag it with my repo:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker tag kevinjqiu/alpine-test:trusted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Push the image to my docker hub account:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker push kevinjqiu/alpine-test:trusted
+The push refers to a repository [docker.io/kevinjqiu/alpine-test]
+4fe15f8d0ae6: Layer already exists
+trusted: digest: sha256:3dcdb92d7432d56604d4545cbd324b14e647b313626d99b889d0626de158f73a size: 506
+Signing and pushing trust metadata
+You are about to create a new root signing key passphrase. This passphrase
+will be used to protect the most sensitive key in your signing system. Please
+choose a long, complex passphrase and be careful to keep the password and the
+key file itself secure and backed up. It is highly recommended that you use a
+password manager to generate the passphrase and keep it safe. There will be no
+way to recover this key. You can find the key in your config directory.
+Enter passphrase for new root key with ID 80375a3:
+Repeat passphrase for new root key with ID 80375a3:
+Enter passphrase for new repository key with ID bb34875 (docker.io/kevinjqiu/alpine-test):
+Repeat passphrase for new repository key with ID bb34875 (docker.io/kevinjqiu/alpine-test):
+Finished initializing &amp;quot;docker.io/kevinjqiu/alpine-test&amp;quot;
+Successfully signed &amp;quot;docker.io/kevinjqiu/alpine-test&amp;quot;:trusted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As this is the first time I&amp;rsquo;m pushing an image with &lt;code&gt;CONTENT_TRUST&lt;/code&gt; set, it prompts me for a passphrase to sign a generated root key, and then a passphrase to sign the key used with the repo I&amp;rsquo;m pushing to (in this case, &lt;code&gt;kevinjqiu/alpine-test&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;The generated keys will be stored under &lt;code&gt;$HOME/.docker/trust/private/root_keys&lt;/code&gt; and &lt;code&gt;$HOME/.docker/trust/tuf_keys/&lt;/code&gt; folders.&lt;/p&gt;
+
+&lt;h3 id=&#34;docker-security-scanning&#34;&gt;Docker Security Scanning&lt;/h3&gt;
+
+&lt;p&gt;Docker security scanning (Nautilus) is a service provided by Docker Inc that routinely scan your file system layers for known security vulnerabilities (from &lt;a href=&#34;https://cve.mitre.org/&#34;&gt;CVE&lt;/a&gt; database). It also performs binary scan on statically linked binaries.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s worth noting that it&amp;rsquo;s not the only solution out there. There are a few other &lt;a href=&#34;https://www.aquasec.com/&#34;&gt;vendors&lt;/a&gt; at DockerCon that provide container security.&lt;/p&gt;
+
+&lt;h2 id=&#34;capabilities-seccomp-and-linux-security-modules&#34;&gt;Capabilities, seccomp and Linux Security Modules&lt;/h2&gt;
+
+&lt;p&gt;Now we&amp;rsquo;re in the more hardcore territory of Linux security and is frankly beyond my understanding of Linux. However, the advice given by the workshop is an easy one: use the default, and do not give more privilege than that&amp;rsquo;s required.&lt;/p&gt;
+
+&lt;h3 id=&#34;do-not-run-container-with-privileged&#34;&gt;Do not run container with &amp;ndash;privileged&amp;hellip;&lt;/h3&gt;
+
+&lt;p&gt;Root user on the container by default doesn&amp;rsquo;t get all the capabilities granted by the kernel. See &lt;code&gt;man capabilities&lt;/code&gt; for a list of capabilities. By default, docker container&amp;rsquo;s root user gets about a dozen capabilities. You can add or remove capabilities during runtime by specifying &lt;code&gt;--cap-add&lt;/code&gt; or &lt;code&gt;--cap-drop&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s worth pointing out that capabilities only apply to root users. If a container is run with &lt;code&gt;--user&lt;/code&gt;, then &lt;code&gt;--cap-add&lt;/code&gt; or &lt;code&gt;--cap-drop&lt;/code&gt; don&amp;rsquo;t apply, since non-root users don&amp;rsquo;t have capabilities.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;--privileged&lt;/code&gt; gives a root user all capabilities, so unless you know what you&amp;rsquo;re doing, don&amp;rsquo;t do it. For docker development, it&amp;rsquo;s recommended that you run the development container in privileged mode, but in general, there&amp;rsquo;s never a reason to run with &lt;code&gt;--privileged&lt;/code&gt; on production, since it gives &lt;em&gt;ALL&lt;/em&gt; privileges.&lt;/p&gt;
+
+&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/engine/security/security/&#34;&gt;https://docs.docker.com/engine/security/security/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/riyazdf/dockercon-workshop/tree/master/capabilities&#34;&gt;https://github.com/riyazdf/dockercon-workshop/tree/master/capabilities&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/riyazdf/dockercon-workshop/tree/master/apparmor&#34;&gt;https://github.com/riyazdf/dockercon-workshop/tree/master/apparmor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/riyazdf/dockercon-workshop/tree/master/seccomp&#34;&gt;https://github.com/riyazdf/dockercon-workshop/tree/master/seccomp&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Ruby for Pythonistas</title>
@@ -28,11 +484,11 @@
 &lt;li&gt;Most of the points here are my notes while going through the excellent &lt;a href=&#34;http://rubykoans.com/&#34;&gt;Ruby Koan&lt;/a&gt; exercises. A big shout out to them!&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;arrays:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Arrays&lt;/h1&gt;
+&lt;h1 id=&#34;arrays&#34;&gt;Arrays&lt;/h1&gt;
 
 &lt;p&gt;In my opinion, Ruby arrays are a lot richer than Python lists.&lt;/p&gt;
 
-&lt;h2 id=&#34;concatenation:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Concatenation&lt;/h2&gt;
+&lt;h2 id=&#34;concatenation&#34;&gt;Concatenation&lt;/h2&gt;
 
 &lt;p&gt;Use the &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt; operator on arrays:&lt;/p&gt;
 
@@ -44,7 +500,7 @@
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;a.append(3)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;access:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Access&lt;/h2&gt;
+&lt;h2 id=&#34;access&#34;&gt;Access&lt;/h2&gt;
 
 &lt;p&gt;To access an array, you can use the array index just like it is in almost every other language. However, Ruby&amp;rsquo;s &lt;code&gt;Array&lt;/code&gt; class also implements convenient methods to access the first and last element of the array:&lt;/p&gt;
 
@@ -60,7 +516,7 @@ irb(main):008:0&amp;gt; a.first
 =&amp;gt; 1
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;slices-and-ranges:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Slices and Ranges&lt;/h2&gt;
+&lt;h2 id=&#34;slices-and-ranges&#34;&gt;Slices and Ranges&lt;/h2&gt;
 
 &lt;p&gt;Both Python and Ruby support slicing although the syntax are slightly different:&lt;/p&gt;
 
@@ -104,7 +560,7 @@ irb(main):011:0&amp;gt; (1...5).to_a
 
 &lt;p&gt;Python&amp;rsquo;s slicing is also pretty flexible. Python&amp;rsquo;s special method &lt;code&gt;__getitem__&lt;/code&gt; is able to take a range object (or any object for that matter) and override the behaviour of &lt;code&gt;[]&lt;/code&gt; operator.&lt;/p&gt;
 
-&lt;h2 id=&#34;unpacking:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Unpacking&lt;/h2&gt;
+&lt;h2 id=&#34;unpacking&#34;&gt;Unpacking&lt;/h2&gt;
 
 &lt;p&gt;One of the nice features of Python is list/tuple unpacking, e.g.,&lt;/p&gt;
 
@@ -181,11 +637,11 @@ irb(main):037:0&amp;gt; b
 =&amp;gt; 1
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;hashes:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Hashes&lt;/h1&gt;
+&lt;h1 id=&#34;hashes&#34;&gt;Hashes&lt;/h1&gt;
 
 &lt;p&gt;Ruby hashes are equivalent of Python dictionaries. They can be constructed and accessed using similar syntax.&lt;/p&gt;
 
-&lt;h2 id=&#34;no-keyerror:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;No &lt;code&gt;KeyError&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;no-keyerror&#34;&gt;No &lt;code&gt;KeyError&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;In Python, when accessing a key that doesn&amp;rsquo;t exist in the dictionary, you get a &lt;code&gt;KeyError&lt;/code&gt;:&lt;/p&gt;
 
@@ -213,7 +669,7 @@ KeyError: key not found: :c
     from /usr/bin/irb:11:in `&amp;lt;main&amp;gt;&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;default-value:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Default value&lt;/h2&gt;
+&lt;h2 id=&#34;default-value&#34;&gt;Default value&lt;/h2&gt;
 
 &lt;p&gt;In Ruby, default value functionality is built-in with &lt;code&gt;Hash&lt;/code&gt; class:&lt;/p&gt;
 
@@ -261,7 +717,7 @@ irb(main):050:0&amp;gt; x[:two]
 
 &lt;p&gt;&lt;a href=&#34;http://rubylearning.com/satishtalim/ruby_blocks.html&#34;&gt;Block&lt;/a&gt; is one of my favourite Ruby language features.&lt;/p&gt;
 
-&lt;h1 id=&#34;strings:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Strings&lt;/h1&gt;
+&lt;h1 id=&#34;strings&#34;&gt;Strings&lt;/h1&gt;
 
 &lt;p&gt;Strings are similar in both languages, except Ruby strings are mutable, while Pythons&amp;rsquo; are immutable. Ruby also has more ways to escape quotes:&lt;/p&gt;
 
@@ -286,7 +742,7 @@ irb(main):056:0&amp;quot; strings%}
 =&amp;gt; &amp;quot;34&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;symbols:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Symbols&lt;/h1&gt;
+&lt;h1 id=&#34;symbols&#34;&gt;Symbols&lt;/h1&gt;
 
 &lt;p&gt;Symbols are a unique in Ruby that&amp;rsquo;s not present in Python (although I wish). It has permeated into the design of other modern languages, like Clojure and Elixir. You can think of symbols as a way to do free-form enums, a way to name something, as oppose to just some free form texts.&lt;/p&gt;
 
@@ -308,16 +764,16 @@ irb(main):056:0&amp;quot; strings%}
 =&amp;gt; :abc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;methods:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Methods&lt;/h1&gt;
+&lt;h1 id=&#34;methods&#34;&gt;Methods&lt;/h1&gt;
 
-&lt;h2 id=&#34;default-values:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Default values&lt;/h2&gt;
+&lt;h2 id=&#34;default-values&#34;&gt;Default values&lt;/h2&gt;
 
 &lt;p&gt;Same as Python:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;def foo(a, b=&#39;default&#39;) 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;variadic-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Variadic arguments&lt;/h2&gt;
+&lt;h2 id=&#34;variadic-arguments&#34;&gt;Variadic arguments&lt;/h2&gt;
 
 &lt;p&gt;Same as Python:&lt;/p&gt;
 
@@ -326,7 +782,7 @@ irb(main):056:0&amp;quot; strings%}
 
 &lt;p&gt;Inside the method, &lt;code&gt;c&lt;/code&gt; is available as an &lt;code&gt;Array&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;invocation-and-return:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Invocation and Return&lt;/h2&gt;
+&lt;h2 id=&#34;invocation-and-return&#34;&gt;Invocation and Return&lt;/h2&gt;
 
 &lt;p&gt;Ruby method invocation does not require parentheses, unless it&amp;rsquo;s it results in ambiguity. e.g., you can omit parens in:&lt;/p&gt;
 
@@ -352,7 +808,7 @@ bar(foo arg)
 
 &lt;p&gt;In Ruby, almost everything is an expression. In the case of a method definition, the last expression becomes the return value of the method. Some people call it implicit returns, and people have mixed feelings about it. Personally I like the everything-is-an-expression model and using the last expression as the return value feels natural. In Python, you have to use &lt;code&gt;return&lt;/code&gt;, otherwise, it implicitly returns &lt;code&gt;None&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;keyword-arguments:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Keyword arguments&lt;/h2&gt;
+&lt;h2 id=&#34;keyword-arguments&#34;&gt;Keyword arguments&lt;/h2&gt;
 
 &lt;p&gt;Ruby 1.x doesn&amp;rsquo;t have keyword arguments as a language feature. This is a little disappointing. However, it&amp;rsquo;s idiomatic in Ruby to have a method accept a hash, and use symbols to simulate keyword arguments:&lt;/p&gt;
 
@@ -368,7 +824,7 @@ irb(main):071:0&amp;gt; foo(a: 5, b: 6)
 
 &lt;p&gt;In Ruby 2.x, this pattern has been elevated as a language feature, so now Ruby has proper keyword argument support. However, I have not seen an equivalent of Python&amp;rsquo;s &lt;a href=&#34;https://www.python.org/dev/peps/pep-3102/&#34;&gt;keyword-only argument&lt;/a&gt; feature.&lt;/p&gt;
 
-&lt;h1 id=&#34;constants:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Constants&lt;/h1&gt;
+&lt;h1 id=&#34;constants&#34;&gt;Constants&lt;/h1&gt;
 
 &lt;p&gt;Ruby symbols start with capital letters are &amp;ldquo;constants&amp;rdquo;, so classes are also &amp;ldquo;constants&amp;rdquo;:&lt;/p&gt;
 
@@ -388,7 +844,7 @@ irb(main):077:0&amp;gt; A=2
 =&amp;gt; 2
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;truthiness:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Truthiness&lt;/h1&gt;
+&lt;h1 id=&#34;truthiness&#34;&gt;Truthiness&lt;/h1&gt;
 
 &lt;p&gt;Truthiness in Ruby is a lot different from Python. Python has the concept of &amp;ldquo;falsy&amp;rdquo;, in which &lt;code&gt;0&lt;/code&gt;, &lt;code&gt;[]&lt;/code&gt;, &lt;code&gt;{}&lt;/code&gt;, &lt;code&gt;&#39;&#39;&lt;/code&gt; are all evaluated to &lt;code&gt;False&lt;/code&gt;. In Ruby, however, only &lt;code&gt;false&lt;/code&gt; is false, and everything else is treated as &lt;code&gt;true&lt;/code&gt;:&lt;/p&gt;
 
@@ -414,7 +870,7 @@ irb(main):104:0&amp;gt; is_true?(false)
 =&amp;gt; :false
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;exceptions:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Exceptions&lt;/h1&gt;
+&lt;h1 id=&#34;exceptions&#34;&gt;Exceptions&lt;/h1&gt;
 
 &lt;p&gt;Ruby&amp;rsquo;s exception hierarchy is a lot like Python&amp;rsquo;s, at least in name:&lt;/p&gt;
 
@@ -423,7 +879,7 @@ irb(main):104:0&amp;gt; is_true?(false)
 
 &lt;p&gt;To handle exceptions, you use &lt;code&gt;begin...rescue...ensure&lt;/code&gt; rather than &lt;code&gt;try...except...finally&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h1 id=&#34;map-reduce-filter:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Map/Reduce/Filter&lt;/h1&gt;
+&lt;h1 id=&#34;map-reduce-filter&#34;&gt;Map/Reduce/Filter&lt;/h1&gt;
 
 &lt;p&gt;Ruby the language itself is not a functional language, although it provides machinery for you to program in a functional way, such as using high-order functions.&lt;/p&gt;
 
@@ -449,7 +905,7 @@ irb(main):106:0&amp;gt; [1,2,3,4,5].find_all { |x| x % 2 == 0 }
 =&amp;gt; 15
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;blocks:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Blocks&lt;/h1&gt;
+&lt;h1 id=&#34;blocks&#34;&gt;Blocks&lt;/h1&gt;
 
 &lt;p&gt;As I eluded to before, blocks are one of my favourite Ruby language features. It&amp;rsquo;s comparable to Python&amp;rsquo;s &lt;a href=&#34;https://docs.python.org/2/reference/compound_stmts.html#with&#34;&gt;context managers&lt;/a&gt;, but it can be invoked without using a keyword and can be added to any method calls. It feels more natural.&lt;/p&gt;
 
@@ -477,15 +933,15 @@ do_with_logging {
 end
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;classes:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Classes&lt;/h1&gt;
+&lt;h1 id=&#34;classes&#34;&gt;Classes&lt;/h1&gt;
 
 &lt;p&gt;Ruby classes are defined in a similar way as Python.&lt;/p&gt;
 
-&lt;h2 id=&#34;self:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;self&lt;/h2&gt;
+&lt;h2 id=&#34;self&#34;&gt;self&lt;/h2&gt;
 
 &lt;p&gt;Ruby&amp;rsquo;s &lt;code&gt;self&lt;/code&gt; can reference different things in different scopes. For example, inside a class definition, &lt;code&gt;self&lt;/code&gt; refers to the class object (kind of like when you define a &lt;code&gt;classmethod&lt;/code&gt; in Python), but inside an instance method, &lt;code&gt;self&lt;/code&gt; refers to the instance of the class.&lt;/p&gt;
 
-&lt;h2 id=&#34;private:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;private&lt;/h2&gt;
+&lt;h2 id=&#34;private&#34;&gt;private&lt;/h2&gt;
 
 &lt;p&gt;Python doesn&amp;rsquo;t have &lt;code&gt;private&lt;/code&gt; members or methods. With Ruby however, you &lt;em&gt;can&lt;/em&gt; define &amp;ldquo;private&amp;rdquo; methods if you put &lt;code&gt;private&lt;/code&gt; in front of your method definition.&lt;/p&gt;
 
@@ -534,7 +990,7 @@ foo.instance_variable_get(&amp;quot;@name&amp;quot;)
 
 &lt;p&gt;Overall, I think Ruby encourages more encapsulation and better design.&lt;/p&gt;
 
-&lt;h2 id=&#34;define-class-methods:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Define class methods&lt;/h2&gt;
+&lt;h2 id=&#34;define-class-methods&#34;&gt;Define class methods&lt;/h2&gt;
 
 &lt;p&gt;You can refer to the class by name when defining methods to make class methods:&lt;/p&gt;
 
@@ -564,7 +1020,7 @@ end
 
 &lt;p&gt;This is good if you want to group class methods together.&lt;/p&gt;
 
-&lt;h2 id=&#34;open-class:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Open class&lt;/h2&gt;
+&lt;h2 id=&#34;open-class&#34;&gt;Open class&lt;/h2&gt;
 
 &lt;p&gt;A powerful (yet controversial) feature of Ruby is that you can &amp;ldquo;amend&amp;rdquo; any Ruby classes (even the builtin ones) during runtime. It&amp;rsquo;s like monkey-patching on steroids.&lt;/p&gt;
 
@@ -577,17 +1033,17 @@ end
 
 &lt;p&gt;Now suddenly &lt;code&gt;2.even?&lt;/code&gt; is a thing. It certainly makes writing your own DSL a lot easier, but it may lead to magical code that&amp;rsquo;s hard to track down.&lt;/p&gt;
 
-&lt;h2 id=&#34;inheritance:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Inheritance&lt;/h2&gt;
+&lt;h2 id=&#34;inheritance&#34;&gt;Inheritance&lt;/h2&gt;
 
 &lt;p&gt;Ruby uses &lt;code&gt;A &amp;lt; B&lt;/code&gt; to mean class &lt;code&gt;A&lt;/code&gt; inherits from class &lt;code&gt;B&lt;/code&gt;. &lt;code&gt;super&lt;/code&gt; is available to refer to the same-named methods in the super class. Because Ruby is single inheritance, there&amp;rsquo;s no ambiguity of &lt;code&gt;super&lt;/code&gt; here.&lt;/p&gt;
 
-&lt;h2 id=&#34;mixin:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Mixin&lt;/h2&gt;
+&lt;h2 id=&#34;mixin&#34;&gt;Mixin&lt;/h2&gt;
 
 &lt;p&gt;Ruby&amp;rsquo;s class can only have a single parent, but you can &amp;ldquo;mixin&amp;rdquo; behaviour into your class by &lt;code&gt;include&lt;/code&gt; other modules. Compared to Python, which does support multiple inheritance, and extra attention has to be paid to avoid diamond inheritance problem.&lt;/p&gt;
 
 &lt;p&gt;I feel the Ruby design is more thought-out. As oppose to give more ropes to developers to hang themselves, it makes the use case of multiple inheritance more clear (only for mixins).&lt;/p&gt;
 
-&lt;h1 id=&#34;message-passing:d5bc6a4bd55e5a8752ca6c90bf0813d2&#34;&gt;Message Passing&lt;/h1&gt;
+&lt;h1 id=&#34;message-passing&#34;&gt;Message Passing&lt;/h1&gt;
 
 &lt;p&gt;Ruby&amp;rsquo;s object-oriented model is based on the idea of message passing. As opposed to invoking using &lt;code&gt;obj.method&lt;/code&gt;, you can pass a message &lt;code&gt;method&lt;/code&gt; to object &lt;code&gt;obj&lt;/code&gt;:&lt;/p&gt;
 
@@ -653,11 +1109,11 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.&lt;/p&gt;
 
-&lt;h1 id=&#34;disclaimer:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Disclaimer&lt;/h1&gt;
+&lt;h1 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h1&gt;
 
 &lt;p&gt;I&amp;rsquo;m not affiliated with any of the podcasts. Any comments I have on the podcasts are highly subjective. I&amp;rsquo;m mostly a backend web developer interested in devops, distributed systems and scalability, so I don&amp;rsquo;t subscribe to podcasts that are dedicated to iOS/Android development.&lt;/p&gt;
 
-&lt;h1 id=&#34;software-engineering-daily:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Software Engineering Daily&lt;/h1&gt;
+&lt;h1 id=&#34;software-engineering-daily&#34;&gt;Software Engineering Daily&lt;/h1&gt;
 
 
 &lt;figure &gt;
@@ -676,7 +1132,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;I highly recommend this podcast.&lt;/p&gt;
 
-&lt;h1 id=&#34;software-engineering-radio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Software Engineering Radio&lt;/h1&gt;
+&lt;h1 id=&#34;software-engineering-radio&#34;&gt;Software Engineering Radio&lt;/h1&gt;
 
 
 &lt;figure &gt;
@@ -692,7 +1148,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;This is one of the first podcasts I subscribed to. It&amp;rsquo;s published by IEEE computer society so it has a high profile. Sometimes the show gets a little too academic that it disconnects with what programmers do on a day-to-day basis. Don&amp;rsquo;t get me wrong, this is an awesome show, and very insightful. However, depending on the topics or the guests, you may or may not get as much out of the show. That said, however, this is still a very solid show with interesting topics and in-depth discussions.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-changelog:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;The Changelog&lt;/h1&gt;
+&lt;h1 id=&#34;the-changelog&#34;&gt;The Changelog&lt;/h1&gt;
 
 
 &lt;figure &gt;
@@ -708,7 +1164,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;I&amp;rsquo;ve been following thechangelog show from its infancy. The show was on hiatus for a while but since they&amp;rsquo;re are back a few years ago, they&amp;rsquo;ve been in full gear, putting together tons of excellent interviews. Its primary focus is on open source projects and have put lots of interesting projects on my tech radar, including Golang and Docker. The depth of the show has been improving as well, and show is not just &amp;ldquo;hey there&amp;rsquo;s this project you probably haven&amp;rsquo;t heard about but you should&amp;rdquo;. The hosts are able to ask some insightful questions and the guests are usually able to provide detailed answers. I also like the show for the fact that you can open suggestions via &lt;a href=&#34;https://github.com/thechangelog/ping&#34;&gt;github issue link&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h1 id=&#34;security-now:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Security Now&lt;/h1&gt;
+&lt;h1 id=&#34;security-now&#34;&gt;Security Now&lt;/h1&gt;
 
 
 &lt;figure &gt;
@@ -724,7 +1180,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;Another long-time tech podcast and a prominent one from the popular twit.tv network. It&amp;rsquo;s going on for more than 10 years filling a unique niche. I learned a lot from Steve Gibson, the host. He has a knack of explaining security topics in plain words. His series on &lt;a href=&#34;https://twit.tv/shows/security-now/episodes/309&#34;&gt;How the Internet works&lt;/a&gt; is highly recommended. However, nowadays, the show tends to have trouble staying on topic, with so many non-security related chitchats. However, it&amp;rsquo;s still a good source to stay informed on security news.&lt;/p&gt;
 
-&lt;h1 id=&#34;coderradio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;CoderRadio&lt;/h1&gt;
+&lt;h1 id=&#34;coderradio&#34;&gt;CoderRadio&lt;/h1&gt;
 
 
 &lt;figure &gt;
@@ -742,7 +1198,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;I do get some value out of the show but it&amp;rsquo;s not known for its depth.&lt;/p&gt;
 
-&lt;h1 id=&#34;turing-incomplete:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Turing-InComplete&lt;/h1&gt;
+&lt;h1 id=&#34;turing-incomplete&#34;&gt;Turing-InComplete&lt;/h1&gt;
 
 &lt;p&gt;
 &lt;figure &gt;
@@ -757,7 +1213,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;This is mostly a talk show among 4 software engineer friends. They have a good diversity: frontend/backend, devops, contractor and so on. They are all enthusiastic about software. The most I get out of the show is inspiration. They&amp;rsquo;re always experimenting with new technology: elixir, clojurescript, new hashicorp tools etc. Listening to their podcast makes me want to learn and be a better software engineer. In the first dozen of episodes, they have a single topic for each show such as TDD, code review, pair programming etc, but as time goes on, the show becomes a grabbag of everything and it gets chatty without a ton of substance. It&amp;rsquo;s a casual conversation among friends having fun, and I guess that could be viewed as a strength.&lt;/p&gt;
 
-&lt;h1 id=&#34;talk-python-to-me:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Talk Python to Me&lt;/h1&gt;
+&lt;h1 id=&#34;talk-python-to-me&#34;&gt;Talk Python to Me&lt;/h1&gt;
 
 &lt;p&gt;
 &lt;figure &gt;
@@ -772,7 +1228,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;This is a Python-specific podcast hosted by Michael Kennedy. Being primarily a Python developer, I followed the podcast since its infancy. The show started off with a couple really strong interviews with interviewees like Mike Bayer, Kenneith Reitz, Armin Ronacher and David Beazley. The show has good depth, although sometimes it could be a bit stronger. There are gems like the one &lt;a href=&#34;https://talkpython.fm/episodes/show/22/cpython-internals-and-learning-python-with-pythontutor.com&#34;&gt;episode&lt;/a&gt; with Philip Guo which lead me to Philip&amp;rsquo;s excellent CPython internals video series. Overall, a really solid podcast.&lt;/p&gt;
 
-&lt;h1 id=&#34;podcast-init:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Podcast.__init__&lt;/h1&gt;
+&lt;h1 id=&#34;podcast-init&#34;&gt;Podcast.__init__&lt;/h1&gt;
 
 &lt;p&gt;
 &lt;figure &gt;
@@ -787,7 +1243,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;Another Python specific podcast started around the same time as Talk Python to Me. Another solid show and I do find it&amp;rsquo;s a little bit more in-depth than TalkPython but it might just be my impression.&lt;/p&gt;
 
-&lt;h1 id=&#34;scale-your-code:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;Scale Your Code&lt;/h1&gt;
+&lt;h1 id=&#34;scale-your-code&#34;&gt;Scale Your Code&lt;/h1&gt;
 
 &lt;p&gt;
 &lt;figure &gt;
@@ -802,7 +1258,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;I learned about this podcast on an &lt;a href=&#34;http://softwareengineeringdaily.com/2016/04/27/scale-code-christophe-limpalair/&#34;&gt;episode&lt;/a&gt; of another podcast software engineering daily. The host Christophe Limpalair is a super energetic and passionate guy. It&amp;rsquo;s inspiring to hear his journey. I&amp;rsquo;ve only discovered it not too long ago, but the topics are very relevant to what I do and what I interest in. I can&amp;rsquo;t wait to dive into its archive of back episodes.&lt;/p&gt;
 
-&lt;h1 id=&#34;fullstack-radio:65ddeccc423623ce3a17ee1e09e5bc05&#34;&gt;FullStack Radio&lt;/h1&gt;
+&lt;h1 id=&#34;fullstack-radio&#34;&gt;FullStack Radio&lt;/h1&gt;
 
 &lt;p&gt;
 &lt;figure &gt;
@@ -829,7 +1285,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
       <guid>http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</guid>
       <description>
 
-&lt;h2 id=&#34;learning-python-internals:6bf435374bd39002427720546dfc1a00&#34;&gt;Learning Python Internals&lt;/h2&gt;
+&lt;h2 id=&#34;learning-python-internals&#34;&gt;Learning Python Internals&lt;/h2&gt;
 
 &lt;p&gt;Recently I stumbled upon &lt;a href=&#34;https://www.youtube.com/playlist?list=PLwyG5wA5gIzgTFj5KgJJ15lxq5Cv6lo_0&#34;&gt;this wonderful set of videos on Python interpreter internals&lt;/a&gt;. (Thanks to &lt;a href=&#34;http://pgbovine.net/&#34;&gt;Philip Guo&lt;/a&gt; for creating them and thanks to Michael Kennedy (@mkennedy) and his &lt;a href=&#34;http://talkpython.fm/&#34;&gt;Talk Python to me&lt;/a&gt; show that brought this on my radar)&lt;/p&gt;
 
@@ -839,7 +1295,7 @@ boot  content  etc  initrd.img  lib             local  lost+found  mnt    proc  
 
 &lt;p&gt;Then I thought to myself, why not use this new found power to solve some Python mysterious that have been puzzling me?&lt;/p&gt;
 
-&lt;h2 id=&#34;the-puzzler:6bf435374bd39002427720546dfc1a00&#34;&gt;The puzzler&lt;/h2&gt;
+&lt;h2 id=&#34;the-puzzler&#34;&gt;The puzzler&lt;/h2&gt;
 
 &lt;p&gt;A few days ago, one of my former co-workers posted this puzzler:&lt;/p&gt;
 
@@ -1036,7 +1492,7 @@ b &amp;lt;- 5
 1. &lt;code&gt;a, b = {}, 5&lt;/code&gt;
 2. &lt;code&gt;a[5] = ({}, 5)&lt;/code&gt;, with &lt;code&gt;a&lt;/code&gt; refering to the dictionary&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:6bf435374bd39002427720546dfc1a00&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;Diving into the Python implementation is the next level ninjary that may come in handy in some cases. Granted, no one is going to write production code like the one in the puzzler, but stepping through and visualizing the virtual machine is a pretty useful and fun experience that makes me appreciate more the language I use everyday.&lt;/p&gt;
 
@@ -1054,7 +1510,7 @@ b &amp;lt;- 5
 
 &lt;p&gt;In this post, I&amp;rsquo;m going to describe the experience at &lt;code&gt;$DAYJOB&lt;/code&gt; regarding implementing delayed retry using &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;DLX&lt;/a&gt; combined with a TTL. The technique has been described at a few &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;places&lt;/a&gt; but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-problem:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The problem&lt;/h1&gt;
+&lt;h1 id=&#34;the-problem&#34;&gt;The problem&lt;/h1&gt;
 
 &lt;p&gt;At &lt;code&gt;$DAYJOB&lt;/code&gt; we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status. Pretty straight-forward stuff. However, lately we&amp;rsquo;ve been experiencing an elevated amount of random failures from our service provider.&lt;/p&gt;
 
@@ -1062,15 +1518,15 @@ b &amp;lt;- 5
 
 &lt;p&gt;We checked with our service provider and were told that they have been experiencing increased volumes and their infrastructure currently can&amp;rsquo;t keep up. However, they suggest that we use an undocumented feature which allows a &lt;code&gt;unique_id&lt;/code&gt; to be passed in along with the checkout call. The &lt;code&gt;unique_id&lt;/code&gt; serves as an idempotent key (similar to &lt;a href=&#34;https://stripe.com/docs/api?lang=curl#idempotent_requests&#34;&gt;Stripe&amp;rsquo;s&lt;/a&gt;). Multiple calls with the same &lt;code&gt;unique_id&lt;/code&gt; won&amp;rsquo;t create multiple checkout objects on their end and thus ensuring the checkout is made but won&amp;rsquo;t double/triple charge the customer&amp;rsquo;s car.&lt;/p&gt;
 
-&lt;h1 id=&#34;architecting-the-solution:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Architecting the solution&lt;/h1&gt;
+&lt;h1 id=&#34;architecting-the-solution&#34;&gt;Architecting the solution&lt;/h1&gt;
 
 &lt;p&gt;Armed with this new secret API feature, our team goes back to the drawing board. At work, we use &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;rabbitmq&lt;/a&gt; extensively for asynchronous processing. If some operation doesn&amp;rsquo;t have to be carried out synchronously with a web request, we throw a message on the queue and have a queue consumer process that message and update states. We use a library called &lt;a href=&#34;https://github.com/ojacobson/sparkplug&#34;&gt;sparkplug&lt;/a&gt; that makes writing queue consumer super-easy. So, everything seems to fall in friendly terrotiries: we make a checkout call with a random id and when we encounter timeout or unknown error, instead of returning an error response to the user, we return &lt;code&gt;202 Accepted&lt;/code&gt; to our user and throw a message on the queue, so a consumer can grab it and retry the checkout with the same original &lt;code&gt;unique_id&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h1 id=&#34;the-missing-piece:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;The missing piece&lt;/h1&gt;
+&lt;h1 id=&#34;the-missing-piece&#34;&gt;The missing piece&lt;/h1&gt;
 
 &lt;p&gt;However, we quickly realized it&amp;rsquo;s not that simple. What if the retry encountered the same error? We can put it back on the queue, but when does it get processed by the consumer again? We want to add a time delay to the subsequent retries, and the orginal retry as well.&lt;/p&gt;
 
-&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;dead-letter-exchange-https-www-rabbitmq-com-dlx-html-and-ttl-https-www-rabbitmq-com-ttl-html&#34;&gt;&lt;a href=&#34;https://www.rabbitmq.com/dlx.html&#34;&gt;Dead-Letter-Exchange&lt;/a&gt; and &lt;a href=&#34;https://www.rabbitmq.com/ttl.html&#34;&gt;TTL&lt;/a&gt;&lt;/h1&gt;
 
 &lt;p&gt;After some research on the internet, seems like this problem has been &lt;a href=&#34;https://www.cloudamqp.com/docs/delayed-messages.html&#34;&gt;solved&lt;/a&gt; &lt;a href=&#34;http://yuserinterface.com/dev/2013/01/08/how-to-schedule-delay-messages-with-rabbitmq-using-a-dead-letter-exchange/&#34;&gt;before&lt;/a&gt;.&lt;/p&gt;
 
@@ -1108,15 +1564,15 @@ b &amp;lt;- 5
 &lt;/figure&gt;
 
 
-&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
+&lt;h1 id=&#34;implementation-testing-strategy-and-deployment-saga&#34;&gt;Implementation, Testing Strategy and Deployment saga&lt;/h1&gt;
 
-&lt;h2 id=&#34;implementation:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Implementation&lt;/h2&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
 
 &lt;p&gt;Implementation is probably the most straight-forward phase of the project once we have the design on paper.  The only obstacle is that the library we use for writing rabbitmq consumers (sparkplug) does not support declaring queues with extra parameters, and the DLX related parameters: &lt;code&gt;x-dead-letter-exchange&lt;/code&gt; &lt;code&gt;x-dead-letter-routing-key&lt;/code&gt;, and &lt;code&gt;x-message-ttl&lt;/code&gt; are all &amp;ldquo;extra parameters&amp;rdquo; according to &lt;code&gt;amqplib&lt;/code&gt;, which is used by sparkplug. To solve this, I sent this &lt;a href=&#34;https://github.com/ojacobson/sparkplug/pull/10/files&#34;&gt;PR&lt;/a&gt; to sparkplug, so it recognizes extra parameters and pass them down to amqp library.&lt;/p&gt;
 
 &lt;p&gt;Another road block appeared when we ran the system on our dev images for the first time. The underlying amqplib would error out on startup. Upon closer investigation, it appeared the error happened while talking to rabbitmq and the amqplib can&amp;rsquo;t handle certain rabbitmq frames. So I went searching for the amqp project, only to find out that it was deprecated &lt;a href=&#34;https://pypi.python.org/pypi/amqplib&#34;&gt;long ago&lt;/a&gt;. Fortunately, there&amp;rsquo;s a fork of the library &lt;a href=&#34;https://pypi.python.org/pypi/amqp&#34;&gt;amqp&lt;/a&gt; that&amp;rsquo;s maintained by the reputable &lt;a href=&#34;http://www.celeryproject.org/&#34;&gt;Celery project&lt;/a&gt;. It&amp;rsquo;s has API compatibility with amqplib and appeared to be a drop-in replacement. We dropped it in and everything seems to work. Reading the online literature, it seems to be the case that the old library does not handle the &lt;code&gt;TTL&lt;/code&gt; amqp extension.&lt;/p&gt;
 
-&lt;h2 id=&#34;testing-strategy:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Testing Strategy&lt;/h2&gt;
+&lt;h2 id=&#34;testing-strategy&#34;&gt;Testing Strategy&lt;/h2&gt;
 
 &lt;p&gt;So, since the 3rd party API timeout is an edge case, they did not provide a way trigger this behaviour the same way we can trigger, say, a declined transaction. We could fake the URL for the 3rd party service in DNS or &lt;code&gt;/etc/hosts&lt;/code&gt; or we can change the SDK to change the base url for their API to somewhere else and cause a timeout that way, but neither is ideal. The biggest disadvantage is that we have no way of getting a request out of the retry state.&lt;/p&gt;
 
@@ -1124,7 +1580,7 @@ b &amp;lt;- 5
 
 &lt;p&gt;We used this small nifty library &lt;a href=&#34;https://github.com/allfro/pymiproxy&#34;&gt;pymiproxy&lt;/a&gt; as a base for our proxy server. It turns out the proxy is pretty straight-forward as well, and a big shout-out to the author of pymiproxy.&lt;/p&gt;
 
-&lt;h2 id=&#34;deployment:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Deployment&lt;/h2&gt;
+&lt;h2 id=&#34;deployment&#34;&gt;Deployment&lt;/h2&gt;
 
 &lt;p&gt;Everything until now is like a cake walk. Sure, there are some problems with the underlying libraries but that requires patching but they were quite easy to identify and fix. Deployment, on the other hand, has been like riding on the &lt;a href=&#34;https://www.youtube.com/watch?v=Mgsbau5qkTE&#34;&gt;Behemoth in Canada&amp;rsquo;s Wonderland&lt;/a&gt;.&lt;/p&gt;
 
@@ -1169,7 +1625,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;Reading the rabbitmq 2.8.2 release notes, and they &lt;strong&gt;did&lt;/strong&gt; &lt;a href=&#34;https://www.rabbitmq.com/release-notes/README-2.8.2.txt&#34;&gt;mention&lt;/a&gt; this &amp;ldquo;feature&amp;rdquo;, but failed to mention that it could block your connection &lt;strong&gt;forever&lt;/strong&gt; and bring your site down&amp;hellip;&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:f116081bb98b0fd4ebe93c08e96b2c34&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;There you go.  That&amp;rsquo;s our adventure implementing and deploying delayed retry using rabbitmq&amp;rsquo;s DLX and TTL. It&amp;rsquo;s frustrating and rewarding at the same time, and there&amp;rsquo;s definitely something we can all take home with:&lt;/p&gt;
 
@@ -1194,7 +1650,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;Below is my notes from watching the &lt;a href=&#34;https://www.youtube.com/watch?v=ZoLoIFW1H6g&#34;&gt;MySQL&amp;rsquo;s EXPLAIN demystified&lt;/a&gt; webinar.  All credits go to Baron Schwartz for this excellent intro to MySQL&amp;rsquo;s query explain.&lt;/p&gt;
 
-&lt;h2 id=&#34;how-does-mysql-execute-queries:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;How does MySQL execute queries?&lt;/h2&gt;
+&lt;h2 id=&#34;how-does-mysql-execute-queries&#34;&gt;How does MySQL execute queries?&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;SQL =&amp;gt; Parse Tree =&amp;gt; Execution plan&lt;/li&gt;
@@ -1202,13 +1658,13 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;li&gt;The executor makes storage engine calls&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;execution-plan:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;Execution plan&lt;/h2&gt;
+&lt;h2 id=&#34;execution-plan&#34;&gt;Execution plan&lt;/h2&gt;
 
 &lt;p&gt;&amp;ldquo;Deep left tree&amp;rdquo; &amp;ndash; always&lt;/p&gt;
 
-&lt;h2 id=&#34;explain-output-columns:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;Explain output columns&lt;/h2&gt;
+&lt;h2 id=&#34;explain-output-columns&#34;&gt;Explain output columns&lt;/h2&gt;
 
-&lt;h3 id=&#34;id:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;id&lt;/h3&gt;
+&lt;h3 id=&#34;id&#34;&gt;id&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;which &lt;code&gt;SELECT&lt;/code&gt; the row belongs to&lt;/li&gt;
@@ -1222,7 +1678,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;select-type:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;select_type&lt;/h3&gt;
+&lt;h3 id=&#34;select-type&#34;&gt;select_type&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;simple: there&amp;rsquo;s only one &lt;code&gt;SELECT&lt;/code&gt; in the whole query, &lt;code&gt;select_type&lt;/code&gt; is &lt;code&gt;PRIMARY&lt;/code&gt;&lt;/li&gt;
@@ -1235,7 +1691,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;table:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;table&lt;/h3&gt;
+&lt;h3 id=&#34;table&#34;&gt;table&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;table name or alias&lt;/li&gt;
@@ -1243,7 +1699,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;li&gt;&lt;code&gt;&amp;lt;unionM,N&amp;gt;&lt;/code&gt;, &lt;code&gt;M&lt;/code&gt;, &lt;code&gt;N&lt;/code&gt; correspond to &lt;code&gt;id&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;type:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;type&lt;/h3&gt;
+&lt;h3 id=&#34;type&#34;&gt;type&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;describes how MySQL will access the rows&lt;/li&gt;
@@ -1261,7 +1717,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;index-related-columns-possible-kes-key-key-len:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;Index-related columns (possible_kes, key, key_len)&lt;/h3&gt;
+&lt;h3 id=&#34;index-related-columns-possible-kes-key-key-len&#34;&gt;Index-related columns (possible_kes, key, key_len)&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;possible_keys: which indexes were considered?&lt;/li&gt;
@@ -1269,7 +1725,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;li&gt;key_len: how many bytes of the index will be used? if key_len less than the index (e.g., compound index), that means MySQL didn&amp;rsquo;t use the whole index&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;ref:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;ref&lt;/h3&gt;
+&lt;h3 id=&#34;ref&#34;&gt;ref&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;The source of values used for lookups&lt;/li&gt;
@@ -1277,13 +1733,13 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 &lt;li&gt;&lt;code&gt;NULL&lt;/code&gt; means not looking for a particular value for that table&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;rows:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;rows&lt;/h3&gt;
+&lt;h3 id=&#34;rows&#34;&gt;rows&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Estimated rows to examine in the table/index&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;extra:7ce5ad0d111b0d271669e2656bf8fe82&#34;&gt;extra&lt;/h3&gt;
+&lt;h3 id=&#34;extra&#34;&gt;extra&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Using index
@@ -1335,7 +1791,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;I wrote an Erlang version of this problem &lt;a href=&#34;http://blog.idempotent.ca/blog/2009/06/01/fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/&#34;&gt;before&lt;/a&gt;, but since then, Erlang kind of fell off my radar.  However, the problem and the concurrent solution is still relevant.&lt;/p&gt;
 
-&lt;h1 id=&#34;test-if-a-number-is-prime:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Test if a number is prime&lt;/h1&gt;
+&lt;h1 id=&#34;test-if-a-number-is-prime&#34;&gt;Test if a number is prime&lt;/h1&gt;
 
 &lt;p&gt;I&amp;rsquo;ll briefly go over primality test function, since it&amp;rsquo;s not the focus of this blog post:&lt;/p&gt;
 
@@ -1360,7 +1816,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
 
 &lt;p&gt;I understand there are other faster primality tests but I opted for this basic algorithm for simplicity.&lt;/p&gt;
 
-&lt;h1 id=&#34;non-concurrent-version:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Non-concurrent version&lt;/h1&gt;
+&lt;h1 id=&#34;non-concurrent-version&#34;&gt;Non-concurrent version&lt;/h1&gt;
 
 &lt;p&gt;A naive way to solve this problem is to call &lt;code&gt;isPrime&lt;/code&gt; on every number below 2 million, if it&amp;rsquo;s a prime, add it to the tally.&lt;/p&gt;
 
@@ -1402,7 +1858,7 @@ sys     0m0.029s
 
 &lt;p&gt;Not too bad.  I remember when I ran this algorithm 4 years ago on my previous laptop (Core-2 Duo) I wasn&amp;rsquo;t able to produce any result in a tolerable timeframe.  My current machine is a 3-year old Quad Core i7.&lt;/p&gt;
 
-&lt;h1 id=&#34;concurrent-version:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Concurrent version&lt;/h1&gt;
+&lt;h1 id=&#34;concurrent-version&#34;&gt;Concurrent version&lt;/h1&gt;
 
 &lt;p&gt;If you are on Linux and you open system monitor while the previous program was running, you can see that only one CPU was saturated and constantly running at near 100%, but all other cores are nearly idle.  Of course this is a huge waste of our computing resource.  &lt;code&gt;isPrime&lt;/code&gt; function is what takes up the CPU load, and because we&amp;rsquo;re running testing the primality of all 2 million numbers inside a single thread, all of them have to be tested one after the other.  This is not great.  Instead, because we have more than one CPU core, we can give the other cores chances to do some of the work for us.&lt;/p&gt;
 
@@ -1412,18 +1868,18 @@ sys     0m0.029s
 - spawn a new thread to do the primality test
 - inside the thread, if the primality test succeeds, lock the access to the &lt;code&gt;sum&lt;/code&gt; variable, update &lt;code&gt;sum&lt;/code&gt;, unlock&lt;/p&gt;
 
-&lt;p&gt;Programs like this have a higher complexity than it should.  It may not look like it&amp;rsquo;s too complicated for this case, but synchronization using &lt;a href=&#34;http://en.wikipedia.org/wiki/Lock_(computer_science&#34;&gt;locks&lt;/a&gt;#Disadvantages) has inherent problems and is usually a source of bugs and defects.  Also, spawning as many threads as you can normally won&amp;rsquo;t give you more throughput.  On the contrary, if you hand the OS more threads at once than the number of physical cores, context switching will happen and it will decrease your performance.&lt;/p&gt;
+&lt;p&gt;Programs like this have a higher complexity than it should.  It may not look like it&amp;rsquo;s too complicated for this case, but synchronization using &lt;a href=&#34;http://en.wikipedia.org/wiki/Lock_(computer_science)#Disadvantages&#34;&gt;locks&lt;/a&gt; has inherent problems and is usually a source of bugs and defects.  Also, spawning as many threads as you can normally won&amp;rsquo;t give you more throughput.  On the contrary, if you hand the OS more threads at once than the number of physical cores, context switching will happen and it will decrease your performance.&lt;/p&gt;
 
 &lt;p&gt;Go&amp;rsquo;s approach is very similar to Erlang&amp;rsquo;s in concept.  In Erlang, the actor processes can&amp;rsquo;t share variables, but instead, they can send data to the other processes.  In Go, goroutines normally don&amp;rsquo;t share variables, but they communicate via the use of channels.&lt;/p&gt;
 
-&lt;h2 id=&#34;channels:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Channels&lt;/h2&gt;
+&lt;h2 id=&#34;channels&#34;&gt;Channels&lt;/h2&gt;
 
 &lt;p&gt;For this problem, we need to have the following channels:
 - jobs: the outstanding jobs need to be performed.  Each job is a number whose primality needs to be tested.  It&amp;rsquo;s a buffered channel whose size is the number of physical cores.
 - results: the prime numbers that are already tested.  Buffered channel.  Can be as big as reasonable.
 - done: whether all workers have finished their job. Also a buffered channel whose size is the number of physical cores.&lt;/p&gt;
 
-&lt;h2 id=&#34;goroutines:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Goroutines&lt;/h2&gt;
+&lt;h2 id=&#34;goroutines&#34;&gt;Goroutines&lt;/h2&gt;
 
 &lt;p&gt;We need the following goroutines to:
 - take the next number and put it in the &lt;code&gt;jobs&lt;/code&gt; channel
@@ -1432,7 +1888,7 @@ sys     0m0.029s
 
 &lt;p&gt;Finally, we need to have a function to sum up all results.&lt;/p&gt;
 
-&lt;h2 id=&#34;data-structures:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Data structures&lt;/h2&gt;
+&lt;h2 id=&#34;data-structures&#34;&gt;Data structures&lt;/h2&gt;
 
 &lt;p&gt;We want an abstraction of a &lt;code&gt;Job&lt;/code&gt;.  In Go, that&amp;rsquo;s a struct:&lt;/p&gt;
 
@@ -1455,7 +1911,7 @@ sys     0m0.029s
 
 &lt;p&gt;In Go, a function with a receiver is practically a method on a struct and is able to be called with &lt;code&gt;receiver.method&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;rewrite-sumprimesupto:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Rewrite sumPrimesUpto&lt;/h2&gt;
+&lt;h2 id=&#34;rewrite-sumprimesupto&#34;&gt;Rewrite sumPrimesUpto&lt;/h2&gt;
 
 &lt;p&gt;Now, rewrite the &lt;code&gt;sumPrimesUpto&lt;/code&gt; function:&lt;/p&gt;
 
@@ -1532,7 +1988,7 @@ func sumPrimesUpto(n int) int {
 
 &lt;p&gt;The full gist can be found &lt;a href=&#34;https://gist.github.com/kevinjqiu/7568264#file-sumprimes-go&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;performance:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Performance&lt;/h2&gt;
+&lt;h2 id=&#34;performance&#34;&gt;Performance&lt;/h2&gt;
 
 &lt;p&gt;So how does this concurrent version faire?&lt;/p&gt;
 
@@ -1547,7 +2003,7 @@ func sumPrimesUpto(n int) int {
 
 &lt;p&gt;On my Quad Core i7, it takes 12 seconds, almost twice as fast as the non-concurrent version!  And if you open System Monitor, you can see all 4 cores are running near 100%.&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:57c5a9663df61474a0454bc0f84eec26&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;So there&amp;rsquo;s my first dip into Go&amp;rsquo;s concurrency with an old problem. I like the concurrency primitives Go provides, even though it takes some getting used to.  Conceptually, goroutines are very similar to Erlang&amp;rsquo;s actors.  Go has the advantage of a C-ish syntax that doesn&amp;rsquo;t look like Prolog and it doesn&amp;rsquo;t require a separate runtime as Erlang does.&lt;/p&gt;
 </description>
@@ -1561,7 +2017,7 @@ func sumPrimesUpto(n int) int {
       <guid>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</guid>
       <description>
 
-&lt;h2 id=&#34;level-3:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Level 3&lt;/h2&gt;
+&lt;h2 id=&#34;level-3&#34;&gt;Level 3&lt;/h2&gt;
 
 &lt;p&gt;Finally we get to level 3. Here&amp;rsquo;s the setup:&lt;/p&gt;
 
@@ -1591,7 +2047,7 @@ cursor.execute(query)
 
 &lt;p&gt;Now that we found the vulnerability, we need to find a way exploit it.&lt;/p&gt;
 
-&lt;h3 id=&#34;take-1:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 1&lt;/h3&gt;
+&lt;h3 id=&#34;take-1&#34;&gt;Take 1&lt;/h3&gt;
 
 &lt;p&gt;Normally, with SQL injection, you craft an input to terminate the previous statement, and inject the statement you want it to execute. Reading the code, it&amp;rsquo;s getting the user&amp;rsquo;s password hash and salt for the given user, and check it against the input hash and salt. The hashing method is &lt;a href=&#34;http://en.wikipedia.org/wiki/SHA-2&#34;&gt;sha256&lt;/a&gt;. With Python, we can quickly pre-calculate a salted hash to inject. Here&amp;rsquo;s an example, with password &lt;code&gt;1&lt;/code&gt; and salt &lt;code&gt;a&lt;/code&gt;.&lt;/p&gt;
 
@@ -1633,7 +2089,7 @@ cursor.execute(query)
 
 &lt;p&gt;&lt;code&gt;cursor&lt;/code&gt; cannot run more than one statement at a time! Smart, eh?&lt;/p&gt;
 
-&lt;h3 id=&#34;take-2:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 2&lt;/h3&gt;
+&lt;h3 id=&#34;take-2&#34;&gt;Take 2&lt;/h3&gt;
 
 &lt;p&gt;So the trick here is to use exactly 1 statement to inject our crafted data. We still want this to be returning the same fields. What if I &lt;code&gt;UNION&lt;/code&gt; two queries, with the second query selecting the injected data?&lt;/p&gt;
 
@@ -1649,7 +2105,7 @@ bob&#39; UNION select id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f224569
 &lt;pre&gt;&lt;code&gt;Welcome back! Your secret is: &amp;quot;...&amp;quot; (Log out)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;conclusion:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;This is a canonical SQL injection. Again, NEVER trust user input. Always sanitize user input.&lt;/p&gt;
 </description>
@@ -1663,9 +2119,9 @@ bob&#39; UNION select id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f224569
       <guid>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</guid>
       <description>
 
-&lt;h2 id=&#34;level-2:a321406c230dbace4963b77b7a2cde48&#34;&gt;Level 2&lt;/h2&gt;
+&lt;h2 id=&#34;level-2&#34;&gt;Level 2&lt;/h2&gt;
 
-&lt;script src=&#34;//gist.github.com/kevinjqiu/3711719.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3711719.js?file=index.php&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;In level 2, we&amp;rsquo;re faced with a PHP app that allows you to upload a &amp;ldquo;profile picture&amp;rdquo;. The password to level 3 is contained in a &amp;ldquo;password.txt&amp;rdquo; file of the document root, as revealed in line 49. Of course, you won&amp;rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.&lt;/p&gt;
 
@@ -1680,7 +2136,7 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;uploaded it and hit it with curl. Guess what? The password is right there in the clear!&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:a321406c230dbace4963b77b7a2cde48&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;There&amp;rsquo;s a few problems with this app:&lt;/p&gt;
 
@@ -1699,11 +2155,11 @@ echo file_get_contents(&#39;../password.txt&#39;);
       <guid>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</guid>
       <description>
 
-&lt;h2 id=&#34;level-1:64d353d425787014ba969d46f395c7b6&#34;&gt;Level 1&lt;/h2&gt;
+&lt;h2 id=&#34;level-1&#34;&gt;Level 1&lt;/h2&gt;
 
 &lt;p&gt;Now we get to level 1. We are presented with a simple web form with the PHP code powering it.&lt;/p&gt;
 
-&lt;script src=&#34;//gist.github.com/kevinjqiu/3692642.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3692642.js?file=index.php&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;The PHP script checks if the input combination matches the combination in &amp;lsquo;secret-combination.txt&amp;rsquo; file, and present the user with the password to the next level if the combinations match.  Obviously, we&amp;rsquo;re not going to guess the combination.&lt;/p&gt;
 
@@ -1721,7 +2177,7 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;&amp;hellip;And indeed it works!&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:64d353d425787014ba969d46f395c7b6&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Never, ever use &lt;code&gt;extract()&lt;/code&gt; in serious applications. Historically, PHP is used to build simple websites so it included many functions that puts &amp;ldquo;convenience&amp;rdquo; over security. Global variables are a bad idea, and having the ability to pollute the global space from any input is way worse.&lt;/li&gt;
@@ -1743,12 +2199,12 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;In the next few posts, I&amp;rsquo;m going to discuss the problems in the challenge, how I solved them and what did I learn from from each challenge.&lt;/p&gt;
 
-&lt;h2 id=&#34;problem-0:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Problem 0&lt;/h2&gt;
+&lt;h2 id=&#34;problem-0&#34;&gt;Problem 0&lt;/h2&gt;
 
 &lt;p&gt;Here are the code for level 0:&lt;/p&gt;
 
-&lt;p&gt;&lt;script src=&#34;//gist.github.com/kevinjqiu/3688655.js&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/kevinjqiu/3688659.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;&lt;script src=&#34;//gist.github.com/kevinjqiu/3688655.js?file=level00.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3688659.js?file=level00.html&#34;&gt;&lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;So you have a node.js server script, with an HTML front-end. The front-end allows you to submit a web form which allows you to retrieve &lt;em&gt;your&lt;/em&gt; stored secret but the secret to level 1 is also stored in the same database.&lt;/p&gt;
 
@@ -1761,7 +2217,7 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;Voilà! That&amp;rsquo;s it! &lt;code&gt;%.%&lt;/code&gt; gives you all passwords with namespace that has a dot in the middle.&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://xkcd.com/327/&#34;&gt;SQL-injection&lt;/a&gt; is a known security issue for a long time yet you&amp;rsquo;d be surprised how many sites are still subject to such exploits. The problem with level 0 code is exactly that: unsanitized user input is sent directly to the database for execution. So everytime a string concatenation is seen in a SQL statement, you have to ask yourself: is the ting being concatenated trustworthy? Use prepared statement or your database&amp;rsquo;s escape function wherever possible.&lt;/p&gt;
 </description>
@@ -1794,7 +2250,7 @@ Wordpress uses a syntax highlighting macro, but the language it supports is very
 
 &lt;p&gt;After a day of setting up, here&amp;rsquo;s what I found:&lt;/p&gt;
 
-&lt;h2 id=&#34;installation:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Installation&lt;/h2&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
 
 &lt;p&gt;I&amp;rsquo;m primarily a Python developer, so setting up a Ruby project is a bit foreign to me, especially since Octopress only works with Ruby 1.9+, I need to setup &lt;a href=&#34;http://rvm.io&#34;&gt;RVM&lt;/a&gt;, and even though it&amp;rsquo;s well documented, it&amp;rsquo;s not without speed bumps on my Ubuntu system. In particular, you need to install &lt;code&gt;libssl-dev&lt;/code&gt; before you let RVM compile and install Ruby, otherwise you will get something like this:&lt;/p&gt;
 
@@ -1811,11 +2267,11 @@ Wordpress uses a syntax highlighting macro, but the language it supports is very
 &lt;pre&gt;&lt;code&gt;rvm reinstall 1.9
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;setting-up-tld:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Setting up TLD&lt;/h2&gt;
+&lt;h2 id=&#34;setting-up-tld&#34;&gt;Setting up TLD&lt;/h2&gt;
 
 &lt;p&gt;After the first deploy, the pages are already accessible via &lt;code&gt;&amp;lt;yourname&amp;gt;.github.com&lt;/code&gt;, but pointing your domain to the page is just as easy. I followed &lt;a href=&#34;https://help.github.com/articles/setting-up-a-custom-domain-with-pages&#34;&gt;this&lt;/a&gt; official article from Github.&lt;/p&gt;
 
-&lt;h2 id=&#34;static-sweetness:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Static sweetness&lt;/h2&gt;
+&lt;h2 id=&#34;static-sweetness&#34;&gt;Static sweetness&lt;/h2&gt;
 
 &lt;p&gt;There we go! Sweet static pages:&lt;/p&gt;
 
@@ -1836,7 +2292,7 @@ Wordpress uses a syntax highlighting macro, but the language it supports is very
       <guid>http://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</guid>
       <description>
 
-&lt;h2 id=&#34;the-itch-to-scratch:c0963e613fb36e35763da3ad0b838456&#34;&gt;The itch to scratch&lt;/h2&gt;
+&lt;h2 id=&#34;the-itch-to-scratch&#34;&gt;The itch to scratch&lt;/h2&gt;
 
 &lt;p&gt;Everyone in the software industry knows Kent Beck, the pioneers of extreme programming and test-driven development and the co-author of JUnit. One of his lesser known project was &lt;a href=&#34;http://junitmax.com&#34;&gt;JUnitMax&lt;/a&gt;, which aims to reduce the time developers have to wait while tests are running. One of the ideas behind that is that when code changes, only the test cases that exercise the code need to be run, instead of running the entire suite. The idea makes a lot of sense to me, but at the time, I (and the development shop I was in) wasn&amp;rsquo;t practising enough TDD, so unit test time wasn&amp;rsquo;t a big problem for me back then.&lt;/p&gt;
 
@@ -1846,15 +2302,15 @@ Wordpress uses a syntax highlighting macro, but the language it supports is very
 
 &lt;p&gt;So, I started looking into &lt;a href=&#34;http://nedbatchelder.com/code/coverage/&#34;&gt;coveragepy&lt;/a&gt;&amp;rsquo;s source code, and watching its author &lt;a href=&#34;http://nedbatchelder.com/blog/&#34;&gt;Ned Batchelder&lt;/a&gt;&amp;rsquo;s excellent PyCon2011 &lt;a href=&#34;http://blip.tv/pycon-us-videos-2009-2010-2011/pycon-2011-python-aware-python-4896752&#34;&gt;video&lt;/a&gt; on &lt;code&gt;sys.settrace&lt;/code&gt;. I wanted to build a proof-of-concept tool that integrates with the de-facto Python unit-test tool &lt;a href=&#34;https://github.com/nose-devs/nose&#34;&gt;nose&lt;/a&gt;, that, when run, gathers the information about which lines in the files in the source folder are covered by which test cases, and hence &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;nostrils&lt;/a&gt; is born.&lt;/p&gt;
 
-&lt;h2 id=&#34;here-comes-sys-settrace:c0963e613fb36e35763da3ad0b838456&#34;&gt;Here comes &lt;code&gt;sys.settrace()&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;here-comes-sys-settrace&#34;&gt;Here comes &lt;code&gt;sys.settrace()&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;Python&amp;rsquo;s motto is &amp;ldquo;batteries included&amp;rdquo;. This is manifested in many Python&amp;rsquo;s stanndard library modules, such as ast (source code parsing) and dis (bytecode disassembly). One of which is the ability to make the Python interpreter call an external function whenever a line of code is being executed. You can do a lot of fun stuff with it, for example, Coverage.py uses this to build code coverage data; pdb uses it to insert breakpoints into a running application and change the way a Python program is executed.&lt;/p&gt;
 
-&lt;h2 id=&#34;how-can-it-be-used:c0963e613fb36e35763da3ad0b838456&#34;&gt;How can it be used?&lt;/h2&gt;
+&lt;h2 id=&#34;how-can-it-be-used&#34;&gt;How can it be used?&lt;/h2&gt;
 
 &lt;p&gt;For &lt;em&gt;nostrils&lt;/em&gt;, we need to write a nose plugin that installs the trace function when a test is encountered. The trace function records the line numbers and the current test case name. After all tests are run, we have our map.&lt;/p&gt;
 
-&lt;h2 id=&#34;a-simple-use-case:c0963e613fb36e35763da3ad0b838456&#34;&gt;A simple use case&lt;/h2&gt;
+&lt;h2 id=&#34;a-simple-use-case&#34;&gt;A simple use case&lt;/h2&gt;
 
 &lt;p&gt;To start, we need a simple use case:&lt;/p&gt;
 
@@ -1941,7 +2397,7 @@ class Nostrils(Plugin):
 
 &lt;p&gt;The idea is that we install the trace function when test starts, and restore the trace function back to what it was. We also keeps track of what&amp;rsquo;s the current test in &lt;code&gt;self._current_test&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;trace-function:c0963e613fb36e35763da3ad0b838456&#34;&gt;Trace function&lt;/h2&gt;
+&lt;h2 id=&#34;trace-function&#34;&gt;Trace function&lt;/h2&gt;
 
 &lt;p&gt;Now let&amp;rsquo;s have a look at the trace function:&lt;/p&gt;
 
@@ -1968,7 +2424,7 @@ class Nostrils(Plugin):
 
 &lt;p&gt;Here, I&amp;rsquo;m only interested in the &lt;code&gt;line&lt;/code&gt; event, which is triggered when a new line of code is being executed. When this happens, we invoke &lt;code&gt;_trace_down&lt;/code&gt;, which walks the frame stack by recursing on &lt;code&gt;frame.f_back&lt;/code&gt;. When it&amp;rsquo;s &lt;code&gt;None&lt;/code&gt;, we&amp;rsquo;re at the bottom of the stack. Because we&amp;rsquo;re tracing the execution of tests, we can probably stop traversing when the code object of the frame is the entry point of the test case (&lt;code&gt;if frame.f_code == test.__call__.func_code&lt;/code&gt;). This way, we save ourselves some unnecessary traversals.&lt;/p&gt;
 
-&lt;h2 id=&#34;data-collection:c0963e613fb36e35763da3ad0b838456&#34;&gt;Data Collection&lt;/h2&gt;
+&lt;h2 id=&#34;data-collection&#34;&gt;Data Collection&lt;/h2&gt;
 
 &lt;p&gt;There&amp;rsquo;s are few things we need to collect: filename, line number of the code being executed and the test case name that covers the code.&lt;/p&gt;
 
@@ -1999,14 +2455,14 @@ class Nostrils(Plugin):
 
 &lt;p&gt;There we have it! We have a prototype of what could become a PyUnitMax ;)&lt;/p&gt;
 
-&lt;h2 id=&#34;potential-problems:c0963e613fb36e35763da3ad0b838456&#34;&gt;Potential Problems&lt;/h2&gt;
+&lt;h2 id=&#34;potential-problems&#34;&gt;Potential Problems&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Scale: Now I&amp;rsquo;m only running nostrils on trivial code base. Profiling and optimization is needed if nostrils were to be used in real-world cases.&lt;/li&gt;&lt;/li&gt;
 &lt;li&gt;Multi-threading: No consideration was given to multi-threading at this stage.&lt;/li&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;collaborators-welcome:c0963e613fb36e35763da3ad0b838456&#34;&gt;Collaborators welcome!&lt;/h2&gt;
+&lt;h2 id=&#34;collaborators-welcome&#34;&gt;Collaborators welcome!&lt;/h2&gt;
 
 &lt;p&gt;I have since refactored the code, revised the data structure and published it on &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;github&lt;/a&gt;. Please provide me with feedbacks and suggestions.&lt;/p&gt;
 </description>
@@ -2022,13 +2478,13 @@ class Nostrils(Plugin):
 
 &lt;p&gt;Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this &lt;a href=&#34;http://en.wikipedia.org/wiki/WebSocket&#34;&gt;websocket&lt;/a&gt; buzz for a while now and would like to build something interesting with it.&lt;/p&gt;
 
-&lt;h2 id=&#34;websocket:3652469de01842bf96882033c0b91b72&#34;&gt;WebSocket&lt;/h2&gt;
+&lt;h2 id=&#34;websocket&#34;&gt;WebSocket&lt;/h2&gt;
 
 &lt;p&gt;Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&amp;rsquo;s still the same model: the client asks the server whether there&amp;rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://www.freshbooks.com/&#34;&gt;Our company&lt;/a&gt; provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &amp;ldquo;events&amp;rdquo; which gets sent to &lt;a href=&#34;http://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.&lt;/p&gt;
 
-&lt;h2 id=&#34;proof-of-concept:3652469de01842bf96882033c0b91b72&#34;&gt;Proof of concept&lt;/h2&gt;
+&lt;h2 id=&#34;proof-of-concept&#34;&gt;Proof of concept&lt;/h2&gt;
 
 &lt;p&gt;For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.&lt;/p&gt;
 
@@ -2036,7 +2492,7 @@ class Nostrils(Plugin):
 
 &lt;p&gt;I&amp;rsquo;ve heard good things about &lt;a href=&#34;http://www.tornadoweb.org&#34;&gt;Tornado&lt;/a&gt;. Having read their docs on &lt;a href=&#34;http://www.tornadoweb.org/documentation/websocket.html&#34;&gt;websocket request handler&lt;/a&gt;, I felt it&amp;rsquo;s straightforward enough for me, so I chose Tornado as my backend.&lt;/p&gt;
 
-&lt;h2 id=&#34;pika:3652469de01842bf96882033c0b91b72&#34;&gt;Pika&lt;/h2&gt;
+&lt;h2 id=&#34;pika&#34;&gt;Pika&lt;/h2&gt;
 
 &lt;p&gt;One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as &lt;a href=&#34;http://pypi.python.org/pypi/sparkplug/&#34;&gt;sparkplug&lt;/a&gt; and &lt;a href=&#34;http://pypi.python.org/pypi/stormed-amqp/0.1&#34;&gt;stormed-amqp&lt;/a&gt;, neither seem to be a good hit here. Finally, I stumbled on &lt;a href=&#34;https://github.com/pika/pika&#34;&gt;Pika&lt;/a&gt;. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.&lt;/p&gt;
 
@@ -2176,172 +2632,11 @@ def main():
 
 &lt;p&gt;Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:3652469de01842bf96882033c0b91b72&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;This is my first stab at websocket and the tornado web framework. I&amp;rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.&lt;/p&gt;
 
 &lt;p&gt;I think websocket is a very interesting technology. It opens a wide range of possibilities for more interactive and engaging web applications. Our web application is of traditional architecture: server renders most of the page, and every request involves page loads. Having a websocket may not be very beneficial as the application doesn&amp;rsquo;t have that much of user interaction. My hackoff is more of a proof of concept. However, if the application is a one-page web app (no full page reloads), the websocket model works very well.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Writing a Simple Clojure Library</title>
-      <link>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</link>
-      <pubDate>Sat, 03 Mar 2012 20:25:00 +0000</pubDate>
-      
-      <guid>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</guid>
-      <description>
-
-&lt;p&gt;I&amp;rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&amp;rsquo;t a deterrent for me at all, in fact, I&amp;rsquo;m quite fond of it and consider it very &lt;a href=&#34;http://en.wikipedia.org/wiki/Homoiconicity&#34;&gt;elegant&lt;/a&gt;. However, it does take some time to get used to. I don&amp;rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.&lt;/p&gt;
-
-&lt;h2 id=&#34;terminal-colours:917765c0791e064a1896921b9ddadd44&#34;&gt;Terminal colours&lt;/h2&gt;
-
-&lt;p&gt;Ever wonder how some console applications can output coloured text? Most terminals and terminal emulators (think iTerm or konsole) support colour through a system of &lt;a href=&#34;http://en.wikipedia.org/wiki/ANSI_escape_code&#34;&gt;escape sequences&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;An Escape Sequence starts with the ASCII code for the escape character (0x1b or 33). There a list of control characters you can specify after the escape character that controls the colour and style of the text after it. For example, sending &amp;ldquo;[31mfoo&amp;rdquo; to a terminal means &amp;ldquo;output red coloured text from now on&amp;rdquo;. Everything the terminal output will be coloured red, until the terminal reads another escape sequence, including &amp;ldquo;[ESC]0m&amp;rdquo;, which tells the terminal to reset the styles to the default.&lt;/p&gt;
-
-&lt;p&gt;So I had this idea to implement this in Clojure as a library so that console application authors can use it to output stylized text from their application using idiomatic Clojure, and here comes &lt;a href=&#34;https://github.com/kevinjqiu/lumiere&#34;&gt;Lumiere&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;implementing-it-in-clojure:917765c0791e064a1896921b9ddadd44&#34;&gt;Implementing it in Clojure&lt;/h2&gt;
-
-&lt;h3 id=&#34;design-the-interface:917765c0791e064a1896921b9ddadd44&#34;&gt;Design the interface&lt;/h3&gt;
-
-&lt;p&gt;What&amp;rsquo;s our end goal here? We would like to output colour sequence wrapped text with Clojure function calls such as&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(red &amp;quot;foo&amp;quot;) ; output foo in red colour
-(bg-green &amp;quot;bar&amp;quot;) ;&amp;quot;bar&amp;quot; with green background colour
-(bold (magenta &amp;quot;nyan cat&amp;quot;)) ; bold and magenta
-(-&amp;gt; &amp;quot;nyan cat&amp;quot; red bg-white bold) ; use Clojure&#39;s &amp;quot;thread macro&amp;quot; to combine these functions, resulting in red foreground, white background and bold &amp;quot;nyan cat&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toolchain:917765c0791e064a1896921b9ddadd44&#34;&gt;Toolchain&lt;/h3&gt;
-
-&lt;p&gt;I wrote a &lt;a href=&#34;http://blog.idempotent.ca/2011/02/11/cake-the-yummy-clojure-build-system/&#34;&gt;blog post&lt;/a&gt; a year ago about how I liked Cake the Clojure build system alternative to the defacto Leiningen. The recent news on this is that Cake and Leiningen are merging. This time, I decided to use Leiningen from the start. Even though Leiningen hasn&amp;rsquo;t ported some of the Cake goodies, but I&amp;rsquo;m hoping they will get ported soon.&lt;/p&gt;
-
-&lt;h3 id=&#34;first-working-version:917765c0791e064a1896921b9ddadd44&#34;&gt;First working version:&lt;/h3&gt;
-
-&lt;p&gt;With &lt;code&gt;lein new lumiere&lt;/code&gt;, Leiningen generates the default project layout. By default, Leiningen generates &lt;code&gt;src/lumiere/core.clj&lt;/code&gt; and &lt;code&gt;test/lumiere/core.clj&lt;/code&gt;. Because Lumiere is such a small script, we don&amp;rsquo;t need the &lt;code&gt;&#39;lumiere.core&lt;/code&gt; namespace, rather I&amp;rsquo;d like the functions to be in the &lt;code&gt;&#39;lumiere&lt;/code&gt; namespace. The easiest way is to delete &lt;code&gt;src/lumiere/&lt;/code&gt; folder and create &lt;code&gt;lumiere.clj&lt;/code&gt; under src. Same goes for the test file.&lt;/p&gt;
-
-&lt;p&gt;Following the spirit of TDD, off I went to write my first test:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(ns lumiere.test
-  (:use [lumiere])
-  (:use [clojure.test]))
-
-(deftest test-only-foreground
-  (is (= &amp;quot;&amp;amp;#092;&amp;amp;#048;33[30msome black text&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; (black &amp;quot;some black test&amp;quot;))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This tests that the correct sequences of characters are generated by the call to &lt;code&gt;(black &amp;quot;...&amp;quot;)&lt;/code&gt;. 33 is the ASCII code for .&lt;/p&gt;
-
-&lt;p&gt;To make this test pass, I added this in &lt;code&gt;src/lumiere.clj&lt;/code&gt;,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(ns lumiere)
-(defn black [text]
-  (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; 30 text)) ; 30 is the code for black foreground.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This passes the tests, but obviously there&amp;rsquo;s room for abstraction:
-* the red foreground code is 31, green 32, etc&amp;hellip;
-* the black background code is 40, red 41, green 42, etc&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;So here we go:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- colour ; defn- makes this function private to the current namespace.
-  ([code is-bg?] (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[%dm&amp;quot; (+ (if is-bg? 40 30) code)))
-  ([code] (colour code false)))
-
-(defn black [text] (colour 0))
-(defn red [text] (colour 1))
-(defn bg-black [text] (colour 0 true))
-(defn bg-red [text] (colour 1 true))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Clojure supports &amp;ldquo;default&amp;rdquo; arguments through method overloading. Here we adjust the offset based on whether or not that colour is a foreground or background.&lt;/p&gt;
-
-&lt;h3 id=&#34;second-take-use-macro-to-define-declaratively-create-colour-functions:917765c0791e064a1896921b9ddadd44&#34;&gt;Second take: use macro to define declaratively create colour functions&lt;/h3&gt;
-
-&lt;p&gt;One advantage of lispy syntax is the convergence of programming with meta-programming. If you read the core Clojure library code, you&amp;rsquo;ll find that Clojure defines a few special forms and most control structures are written in macros. In my case, however, I&amp;rsquo;m using macros to define colour/style functions in a declarative way. Some may argue it doesn&amp;rsquo;t justify using macro for this purpose, but I just want to practice writing macros, and it does make the public interface of the library a bit prettier.&lt;/p&gt;
-
-&lt;p&gt;First off, again, we need to define what the end result should look like. I would still like the functions to remain the same, e.g., red, bg-red, black, bg-black, etc. However, defining these functions takes a lot of boilerplate code. I&amp;rsquo;d like to simply call &lt;code&gt;(defcolour BLACK 0)&lt;/code&gt; or the like to generate the &lt;code&gt;black&lt;/code&gt; and &lt;code&gt;bg-black&lt;/code&gt; functions for me.&lt;/p&gt;
-
-&lt;p&gt;Disclaimer: I&amp;rsquo;m a novice macro writer. Advanced readers, please hold your nose and tell me what I did wrong or any improvements could be made :)&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(def RESET &amp;quot;&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot;)
-(defmacro defcolour [colour-func-name bg-colour-func-name colour-code]
-  `(do
-    (defn ~colour-func-name [text#]
-      (format &amp;quot;%s%s%s&amp;quot; (colour ~colour-code) text# RESET))
-    (defn ~bg-colour-func-name [text#]
-      (format &amp;quot;%s%s%s&amp;quot; (colour ~bg-colour-code true) text# RESET))))
-
-(defcolour black bg-black 0)
-(defcolour red bg-red 1)
-(defcolour green bg-green 2)
-; etc...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A few special reader macros you need to know about when writing a macro:
-* tick (`) indicates the following code should be quoted and treated as a template.
-* tilda (~) indicates that the symbol should not be quoted (unquote), and should be replaced with the value in the current context.
-* hash (#) indicates that the macro system should generate a unique name for this symbol so it doesn&amp;rsquo;t conflict. Otherwise, it will be expanded to its fully qualified name.&lt;/p&gt;
-
-&lt;p&gt;Run tests and because we didn&amp;rsquo;t change our public interface, everything all tests should still pass.&lt;/p&gt;
-
-&lt;h3 id=&#34;take-3-combining-styles:917765c0791e064a1896921b9ddadd44&#34;&gt;Take 3: combining styles&lt;/h3&gt;
-
-&lt;p&gt;Alright, now that we have a fully functional style system, we can cascade the styles, e.g., &lt;code&gt;(red (bg-green &amp;quot;foo&amp;quot;))&lt;/code&gt;. It work as expected when trying it in a REPL, but the character sequence it generates is &amp;ldquo;33[31m33[42mfoo33[0m33[0m&amp;rdquo; and surely it isn&amp;rsquo;t optimal. If we want to add styles such as bold, it&amp;rsquo;s going to get even worse.&lt;/p&gt;
-
-&lt;p&gt;So, we need some abstraction here. When you call &lt;code&gt;(red &amp;quot;some text&amp;quot;)&lt;/code&gt; it shouldn&amp;rsquo;t generate the character sequence right away. Instead, the caller should decide when the sequence should be generated. We need some data structure to represent a &amp;ldquo;luminated&amp;rdquo; text. In Clojure we can define a &amp;ldquo;record&amp;rdquo;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defrecord Lumiere [text opts])
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;opts&lt;/code&gt; is a map with keys &lt;code&gt;:fg&lt;/code&gt;, &lt;code&gt;:bg&lt;/code&gt;, &lt;code&gt;:styles&lt;/code&gt;. We also want to override the &lt;code&gt;toString()&lt;/code&gt; method so when the user calls &lt;code&gt;(str lumiered-text)&lt;/code&gt;, he will get the character sequence ready to be printed to the console. The downside of this is that we modified the interface, so we need to go back and change the tests so they call &lt;code&gt;(str (red &amp;quot;foo&amp;quot;))&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;  (is (= &amp;quot;&amp;amp;#092;&amp;amp;#048;33[30msome black text&amp;amp;#092;&amp;amp;#048;33[0m&amp;quot; (str (black &amp;quot;some black test&amp;quot;)))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To override &lt;code&gt;toString()&lt;/code&gt;, we need to extend our Lumiere type to conform to the &lt;code&gt;IObject&lt;/code&gt; protocol:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- ansi-escape-seq [&amp;amp; codes]
-  (format &amp;quot;&amp;amp;#092;&amp;amp;#048;33[%sm&amp;quot; (join &amp;quot;;&amp;quot; (filter #(not= % nil) codes))))
-
-(defrecord Lumiere [text fg bg styles]
-  Object
-  (toString [this]
-    (let [prefix (ansi-escape-seq (:fg this) (:bg this) (:styles this))]
-      (format &amp;quot;%s%s%s&amp;quot; prefix (:text this) RESET))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Next we need to let the colour/style functions return Lumiere object, rather than plain character sequence. There are two situations we need to adapt:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;When we first start decorating a text, text input is going to be a plain string. In this case, we need to create a Lumiere object with the text and options.&lt;/li&gt;
-&lt;li&gt;When the return of a colour/style function is chained into another colour/style function, we need to modify the options of the Lumiere object.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn- adapt-lum [text option value]
-  (let [local-option-map (merge {:fg nil :bg nil :styles nil} {option value})]
-    (cond
-      (instance? String text) (Lumiere. text (:fg local-option-map) (:bg local-option-map) (:styles local-option-map))
-      (instance? Lumiere text) (assoc text option value)
-      :else (throw (java.lang.IllegalArgumentException.)))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and we need to modify the macros so &lt;code&gt;adapt-lum&lt;/code&gt; helper is used:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defmacro defcolour [colour-func-name bg-colour-func-name ^Integer colour-code]
-  `(do
-     (defn ~colour-func-name [text#]
-       (adapt-lum text# :fg ~colour-name))
-     (defn ~bg-colour-func-name [text#]
-       (adapt-lum text# :bg ~bg-colour-name))))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;publish-to-clojar-org:917765c0791e064a1896921b9ddadd44&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
-
-&lt;p&gt;Now that the library is in a relatively stable state. I&amp;rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do &lt;code&gt;lein pom &amp;amp;&amp;amp; lein deploy&lt;/code&gt;, voilà!&lt;/p&gt;
 </description>
     </item>
     
