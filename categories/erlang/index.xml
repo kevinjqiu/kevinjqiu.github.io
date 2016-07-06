@@ -19,7 +19,7 @@
 
 &lt;p&gt;The problem is taken from &lt;a href=&#34;http://projecteuler.net/&#34;&gt;Project-Euler&lt;/a&gt;, which asks what is the sum of all prime numbers under 2 million.&lt;/p&gt;
 
-&lt;h2 id=&#34;traditional-approach:40dd4dba5fbcb1b1586b575833b72d48&#34;&gt;Traditional Approach&lt;/h2&gt;
+&lt;h2 id=&#34;traditional-approach&#34;&gt;Traditional Approach&lt;/h2&gt;
 
 &lt;p&gt;Project-Euler has many problems like this which looks ridiculously easy in theory, but practically impossible when using the old-school brute force way to solve them.&lt;/p&gt;
 
@@ -58,7 +58,7 @@ sieve(List, Range) -&amp;gt;
 &lt;/figure&gt;
 
 
-&lt;h2 id=&#34;concurrency-oriented-programming:40dd4dba5fbcb1b1586b575833b72d48&#34;&gt;Concurrency Oriented Programming&lt;/h2&gt;
+&lt;h2 id=&#34;concurrency-oriented-programming&#34;&gt;Concurrency Oriented Programming&lt;/h2&gt;
 
 &lt;p&gt;In the concurrency oriented programming (COP, a term coined by Erlang’s inventor Joe Armstrong) model, you’re thinking in terms of separate entities and what responsibility is there for each of them. Think of them as individual human beings. They don’t have shared brains; one cannot influence the other by simply modify his or her brain tissues (well, under normal circumstance anyway). As human beings, our brains are disconnected from each other, &lt;strong&gt;but&lt;/strong&gt; we share our knowledge through communication. We can modify other people’s memories by sending messages and vice versa. This is essentially what COP is – the entities are processes, and each has individual memories that’s not modifiable by other processes. Processes communicate with each other through message sending/receiving. This model is particularly good for scaling. Because the entities share nothing, it’s easy to get more entities without worrying that they don’t get along.&lt;/p&gt;
 
@@ -164,7 +164,7 @@ sieve(List, Range) -&amp;gt;
 
 &lt;p&gt;Also, as you may have guessed, all cores on the CPU are fully utilized.&lt;/p&gt;
 
-&lt;p&gt;
+
 &lt;figure &gt;
     
         &lt;img src=&#34;http://blog.idempotent.ca/images/cpu2.png&#34; /&gt;
@@ -176,7 +176,7 @@ sieve(List, Range) -&amp;gt;
     &lt;/figcaption&gt;
     
 &lt;/figure&gt;
-&lt;/p&gt;
+
 
 &lt;p&gt;Programming in Erlang is fun!&lt;/p&gt;
 </description>
@@ -192,7 +192,7 @@ sieve(List, Range) -&amp;gt;
 
 &lt;p&gt;The problem is taken from &lt;a href=&#34;http://projecteuler.net/&#34;&gt;Project-Euler&lt;/a&gt;, which asks what is the sum of all prime numbers under 2 million.&lt;/p&gt;
 
-&lt;h2 id=&#34;traditional-approach:40dd4dba5fbcb1b1586b575833b72d48&#34;&gt;Traditional Approach&lt;/h2&gt;
+&lt;h2 id=&#34;traditional-approach&#34;&gt;Traditional Approach&lt;/h2&gt;
 
 &lt;p&gt;Project-Euler has many problems like this which looks ridiculously easy in theory, but practically impossible when using the old-school brute force way to solve them.&lt;/p&gt;
 
@@ -231,7 +231,7 @@ sieve(List, Range) -&amp;gt;
 &lt;/figure&gt;
 
 
-&lt;h2 id=&#34;concurrency-oriented-programming:40dd4dba5fbcb1b1586b575833b72d48&#34;&gt;Concurrency Oriented Programming&lt;/h2&gt;
+&lt;h2 id=&#34;concurrency-oriented-programming&#34;&gt;Concurrency Oriented Programming&lt;/h2&gt;
 
 &lt;p&gt;In the concurrency oriented programming (COP, a term coined by Erlang’s inventor Joe Armstrong) model, you’re thinking in terms of separate entities and what responsibility is there for each of them. Think of them as individual human beings. They don’t have shared brains; one cannot influence the other by simply modify his or her brain tissues (well, under normal circumstance anyway). As human beings, our brains are disconnected from each other, &lt;strong&gt;but&lt;/strong&gt; we share our knowledge through communication. We can modify other people’s memories by sending messages and vice versa. This is essentially what COP is – the entities are processes, and each has individual memories that’s not modifiable by other processes. Processes communicate with each other through message sending/receiving. This model is particularly good for scaling. Because the entities share nothing, it’s easy to get more entities without worrying that they don’t get along.&lt;/p&gt;
 
@@ -337,7 +337,7 @@ sieve(List, Range) -&amp;gt;
 
 &lt;p&gt;Also, as you may have guessed, all cores on the CPU are fully utilized.&lt;/p&gt;
 
-&lt;p&gt;
+
 &lt;figure &gt;
     
         &lt;img src=&#34;http://blog.idempotent.ca/images/cpu2.png&#34; /&gt;
@@ -349,7 +349,7 @@ sieve(List, Range) -&amp;gt;
     &lt;/figcaption&gt;
     
 &lt;/figure&gt;
-&lt;/p&gt;
+
 
 &lt;p&gt;Programming in Erlang is fun!&lt;/p&gt;
 </description>

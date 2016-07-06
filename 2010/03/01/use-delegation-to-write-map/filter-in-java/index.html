@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Use delegation to write map/filter in Java" />
 <meta property="og:description" content="" />
@@ -130,9 +130,9 @@
 <ul>
 <li>
 <ul>
-<li><a href="#the-problem:de74c716e6ede38442b3fad3c394ab9f">The problem</a></li>
-<li><a href="#use-delegation-for-generic-ity:de74c716e6ede38442b3fad3c394ab9f">Use delegation for generic-ity</a></li>
-<li><a href="#what-about-return-value-creation:de74c716e6ede38442b3fad3c394ab9f">What about return value creation?</a></li>
+<li><a href="#the-problem">The problem</a></li>
+<li><a href="#use-delegation-for-generic-ity">Use delegation for generic-ity</a></li>
+<li><a href="#what-about-return-value-creation">What about return value creation?</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -174,7 +174,7 @@
 
             
 
-<h2 id="the-problem:de74c716e6ede38442b3fad3c394ab9f">The problem</h2>
+<h2 id="the-problem">The problem</h2>
 
 <p>In Java, imagine you have a list of <code>User</code> objects, each encapsulates the user&rsquo;s <code>id</code>, <code>first name</code>, <code>last name</code> and <code>age</code>. Then you want to call a web service <code>UserService.deleteUsersByIds(List&lt;Integer&gt; userIds)</code> to delete the users from your data store. It doesn&rsquo;t sound too hard, does it? All you need to do is to transform you <code>List&lt;User&gt;</code> to <code>List&lt;Integer&gt;</code>. So you go ahead and write the following code:</p>
 
@@ -203,7 +203,7 @@ for (User user : users) {
 <li><code>filter(coll, f)</code> &ldquo;loops&rdquo; over the collection, calls <code>f(element)</code>, and only add element to the return list when <code>f(element)</code> returns <code>true</code></li>
 </ul>
 
-<h2 id="use-delegation-for-generic-ity:de74c716e6ede38442b3fad3c394ab9f">Use delegation for generic-ity</h2>
+<h2 id="use-delegation-for-generic-ity">Use delegation for generic-ity</h2>
 
 <p>Now we take our first step in designing our generic map function:</p>
 
@@ -260,7 +260,7 @@ List&lt;String&gt; ids = map(users, new MapDelegate&lt;User,String&gt;() {
 }
 </code></pre>
 
-<h2 id="what-about-return-value-creation:de74c716e6ede38442b3fad3c394ab9f">What about return value creation?</h2>
+<h2 id="what-about-return-value-creation">What about return value creation?</h2>
 
 <p>Use delegation, we can separate the parts of an algorithm in terms of their interfaces and leave the implementation to the caller. However, given the above filter and map methods, what if I don&rsquo;t want the return type to be <code>ArrayList</code>? What if I want a <code>LinkedList</code> or a <code>HashSet</code>? Doesn&rsquo;t the statement</p>
 
@@ -300,14 +300,14 @@ List&lt;String&gt; ids = map(users, new MapDelegate&lt;User,String&gt;() {
 					
 					<div class="paging-newer">
 						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
-						<a class="paging-link" href="/2010/03/03/building-a-gaegwt-application-using-the-best-practices-part-3/">Building a GAE&#43;GWT application using the best practices (Part 3)</a>
+						<a class="paging-link" href="/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-3/">Building a GAE&#43;GWT application using the best practices (Part 3)</a>
 		            </div>
 		            
 
 					
 					<div class="paging-older">
 						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
-			            <a class="paging-link" href="/2010/03/01/building-a-gaegwt-application-using-the-best-practices-part-2/">Building a GAE&#43;GWT application using the best practices (Part 2)</a>
+			            <a class="paging-link" href="/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/">Building a GAE&#43;GWT application using the best practices (Part 2)</a>
 		            </div>
 		            
 	            </div>

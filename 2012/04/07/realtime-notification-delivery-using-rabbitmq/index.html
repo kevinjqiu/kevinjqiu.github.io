@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Realtime notification delivery using rabbitmq" />
 <meta property="og:description" content="" />
@@ -130,10 +130,10 @@
 <ul>
 <li>
 <ul>
-<li><a href="#websocket:3652469de01842bf96882033c0b91b72">WebSocket</a></li>
-<li><a href="#proof-of-concept:3652469de01842bf96882033c0b91b72">Proof of concept</a></li>
-<li><a href="#pika:3652469de01842bf96882033c0b91b72">Pika</a></li>
-<li><a href="#conclusion:3652469de01842bf96882033c0b91b72">Conclusion</a></li>
+<li><a href="#websocket">WebSocket</a></li>
+<li><a href="#proof-of-concept">Proof of concept</a></li>
+<li><a href="#pika">Pika</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -177,13 +177,13 @@
 
 <p>Our company has &ldquo;hack-off&rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this <a href="http://en.wikipedia.org/wiki/WebSocket">websocket</a> buzz for a while now and would like to build something interesting with it.</p>
 
-<h2 id="websocket:3652469de01842bf96882033c0b91b72">WebSocket</h2>
+<h2 id="websocket">WebSocket</h2>
 
 <p>Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&rsquo;s still the same model: the client asks the server whether there&rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.</p>
 
 <p><a href="http://www.freshbooks.com/">Our company</a> provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &ldquo;events&rdquo; which gets sent to <a href="http://www.rabbitmq.com/">RabbitMQ</a>. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.</p>
 
-<h2 id="proof-of-concept:3652469de01842bf96882033c0b91b72">Proof of concept</h2>
+<h2 id="proof-of-concept">Proof of concept</h2>
 
 <p>For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.</p>
 
@@ -191,7 +191,7 @@
 
 <p>I&rsquo;ve heard good things about <a href="http://www.tornadoweb.org">Tornado</a>. Having read their docs on <a href="http://www.tornadoweb.org/documentation/websocket.html">websocket request handler</a>, I felt it&rsquo;s straightforward enough for me, so I chose Tornado as my backend.</p>
 
-<h2 id="pika:3652469de01842bf96882033c0b91b72">Pika</h2>
+<h2 id="pika">Pika</h2>
 
 <p>One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as <a href="http://pypi.python.org/pypi/sparkplug/">sparkplug</a> and <a href="http://pypi.python.org/pypi/stormed-amqp/0.1">stormed-amqp</a>, neither seem to be a good hit here. Finally, I stumbled on <a href="https://github.com/pika/pika">Pika</a>. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.</p>
 
@@ -331,7 +331,7 @@ def main():
 
 <p>Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.</p>
 
-<h2 id="conclusion:3652469de01842bf96882033c0b91b72">Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p>This is my first stab at websocket and the tornado web framework. I&rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.</p>
 

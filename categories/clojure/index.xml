@@ -19,7 +19,7 @@
 
 &lt;p&gt;I&amp;rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&amp;rsquo;t a deterrent for me at all, in fact, I&amp;rsquo;m quite fond of it and consider it very &lt;a href=&#34;http://en.wikipedia.org/wiki/Homoiconicity&#34;&gt;elegant&lt;/a&gt;. However, it does take some time to get used to. I don&amp;rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.&lt;/p&gt;
 
-&lt;h2 id=&#34;terminal-colours:917765c0791e064a1896921b9ddadd44&#34;&gt;Terminal colours&lt;/h2&gt;
+&lt;h2 id=&#34;terminal-colours&#34;&gt;Terminal colours&lt;/h2&gt;
 
 &lt;p&gt;Ever wonder how some console applications can output coloured text? Most terminals and terminal emulators (think iTerm or konsole) support colour through a system of &lt;a href=&#34;http://en.wikipedia.org/wiki/ANSI_escape_code&#34;&gt;escape sequences&lt;/a&gt;.&lt;/p&gt;
 
@@ -27,9 +27,9 @@
 
 &lt;p&gt;So I had this idea to implement this in Clojure as a library so that console application authors can use it to output stylized text from their application using idiomatic Clojure, and here comes &lt;a href=&#34;https://github.com/kevinjqiu/lumiere&#34;&gt;Lumiere&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;implementing-it-in-clojure:917765c0791e064a1896921b9ddadd44&#34;&gt;Implementing it in Clojure&lt;/h2&gt;
+&lt;h2 id=&#34;implementing-it-in-clojure&#34;&gt;Implementing it in Clojure&lt;/h2&gt;
 
-&lt;h3 id=&#34;design-the-interface:917765c0791e064a1896921b9ddadd44&#34;&gt;Design the interface&lt;/h3&gt;
+&lt;h3 id=&#34;design-the-interface&#34;&gt;Design the interface&lt;/h3&gt;
 
 &lt;p&gt;What&amp;rsquo;s our end goal here? We would like to output colour sequence wrapped text with Clojure function calls such as&lt;/p&gt;
 
@@ -39,11 +39,11 @@
 (-&amp;gt; &amp;quot;nyan cat&amp;quot; red bg-white bold) ; use Clojure&#39;s &amp;quot;thread macro&amp;quot; to combine these functions, resulting in red foreground, white background and bold &amp;quot;nyan cat&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toolchain:917765c0791e064a1896921b9ddadd44&#34;&gt;Toolchain&lt;/h3&gt;
+&lt;h3 id=&#34;toolchain&#34;&gt;Toolchain&lt;/h3&gt;
 
 &lt;p&gt;I wrote a &lt;a href=&#34;http://blog.idempotent.ca/2011/02/11/cake-the-yummy-clojure-build-system/&#34;&gt;blog post&lt;/a&gt; a year ago about how I liked Cake the Clojure build system alternative to the defacto Leiningen. The recent news on this is that Cake and Leiningen are merging. This time, I decided to use Leiningen from the start. Even though Leiningen hasn&amp;rsquo;t ported some of the Cake goodies, but I&amp;rsquo;m hoping they will get ported soon.&lt;/p&gt;
 
-&lt;h3 id=&#34;first-working-version:917765c0791e064a1896921b9ddadd44&#34;&gt;First working version:&lt;/h3&gt;
+&lt;h3 id=&#34;first-working-version&#34;&gt;First working version:&lt;/h3&gt;
 
 &lt;p&gt;With &lt;code&gt;lein new lumiere&lt;/code&gt;, Leiningen generates the default project layout. By default, Leiningen generates &lt;code&gt;src/lumiere/core.clj&lt;/code&gt; and &lt;code&gt;test/lumiere/core.clj&lt;/code&gt;. Because Lumiere is such a small script, we don&amp;rsquo;t need the &lt;code&gt;&#39;lumiere.core&lt;/code&gt; namespace, rather I&amp;rsquo;d like the functions to be in the &lt;code&gt;&#39;lumiere&lt;/code&gt; namespace. The easiest way is to delete &lt;code&gt;src/lumiere/&lt;/code&gt; folder and create &lt;code&gt;lumiere.clj&lt;/code&gt; under src. Same goes for the test file.&lt;/p&gt;
 
@@ -84,7 +84,7 @@
 
 &lt;p&gt;Clojure supports &amp;ldquo;default&amp;rdquo; arguments through method overloading. Here we adjust the offset based on whether or not that colour is a foreground or background.&lt;/p&gt;
 
-&lt;h3 id=&#34;second-take-use-macro-to-define-declaratively-create-colour-functions:917765c0791e064a1896921b9ddadd44&#34;&gt;Second take: use macro to define declaratively create colour functions&lt;/h3&gt;
+&lt;h3 id=&#34;second-take-use-macro-to-define-declaratively-create-colour-functions&#34;&gt;Second take: use macro to define declaratively create colour functions&lt;/h3&gt;
 
 &lt;p&gt;One advantage of lispy syntax is the convergence of programming with meta-programming. If you read the core Clojure library code, you&amp;rsquo;ll find that Clojure defines a few special forms and most control structures are written in macros. In my case, however, I&amp;rsquo;m using macros to define colour/style functions in a declarative way. Some may argue it doesn&amp;rsquo;t justify using macro for this purpose, but I just want to practice writing macros, and it does make the public interface of the library a bit prettier.&lt;/p&gt;
 
@@ -113,7 +113,7 @@
 
 &lt;p&gt;Run tests and because we didn&amp;rsquo;t change our public interface, everything all tests should still pass.&lt;/p&gt;
 
-&lt;h3 id=&#34;take-3-combining-styles:917765c0791e064a1896921b9ddadd44&#34;&gt;Take 3: combining styles&lt;/h3&gt;
+&lt;h3 id=&#34;take-3-combining-styles&#34;&gt;Take 3: combining styles&lt;/h3&gt;
 
 &lt;p&gt;Alright, now that we have a fully functional style system, we can cascade the styles, e.g., &lt;code&gt;(red (bg-green &amp;quot;foo&amp;quot;))&lt;/code&gt;. It work as expected when trying it in a REPL, but the character sequence it generates is &amp;ldquo;33[31m33[42mfoo33[0m33[0m&amp;rdquo; and surely it isn&amp;rsquo;t optimal. If we want to add styles such as bold, it&amp;rsquo;s going to get even worse.&lt;/p&gt;
 
@@ -164,7 +164,7 @@
        (adapt-lum text# :bg ~bg-colour-name))))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;publish-to-clojar-org:917765c0791e064a1896921b9ddadd44&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
+&lt;h2 id=&#34;publish-to-clojar-org&#34;&gt;Publish to Clojar.org&lt;/h2&gt;
 
 &lt;p&gt;Now that the library is in a relatively stable state. I&amp;rsquo;d like to publish this snapshot version to a repository. Clojars.org is the most popular clojure library repository. Register on clojars.org, add let them know your public key. Then do &lt;code&gt;lein pom &amp;amp;&amp;amp; lein deploy&lt;/code&gt;, voilà!&lt;/p&gt;
 </description>
@@ -206,23 +206,23 @@
 
 &lt;p&gt;About 10 minutes ago I heard about &lt;a href=&#34;https://github.com/ninjudd/cake&#34;&gt;cake&lt;/a&gt; clojure build system, and gave it a try. And 10 minutes later, it won me over! Wow, it addresses all the pain points of &lt;a href=&#34;https://github.com/technomancy/leiningen&#34;&gt;leiningen&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;blazingly-fast:d929fd0a90d9f52b34a81a1d3c5cf781&#34;&gt;BLAZINGLY FAST!!!&lt;/h2&gt;
+&lt;h2 id=&#34;blazingly-fast&#34;&gt;BLAZINGLY FAST!!!&lt;/h2&gt;
 
 &lt;p&gt;Sorry for using all CAPS but I&amp;rsquo;m very excited about this improvement over leiningen &amp;ndash; OK, it may not be the fault of leiningen that JVM cold startup time is non-trivial but hey, someone came up with an idea of having a long running JVM process in the background, so subsequent clojure tasks reuse the same JVM instance. Cake folks integrated that nicely. It takes about 10-15 seconds to boot up a JVM but subsequent cake tasks or execution of clojure code is virtually instant! Comparing to leiningen, which doesn&amp;rsquo;t take this approach and every single task (such as common ones like lein test) takes around 5 seconds. This adds up quickly and makes you less efficient. The speed improvement alone is enough for me to switch to cake.&lt;/p&gt;
 
-&lt;h2 id=&#34;advanced-repl-functionalities-tab-completion-history:d929fd0a90d9f52b34a81a1d3c5cf781&#34;&gt;Advanced REPL functionalities: tab completion, history&lt;/h2&gt;
+&lt;h2 id=&#34;advanced-repl-functionalities-tab-completion-history&#34;&gt;Advanced REPL functionalities: tab completion, history&lt;/h2&gt;
 
 &lt;p&gt;It just works. Very useful for having instant feedbacks while exploring the language and API. No more manually adding jLine to your classpath or hack around tab completion wrapper&amp;hellip;It just works! (I know I said it already)&lt;/p&gt;
 
-&lt;h2 id=&#34;run-clojure-files-directly:d929fd0a90d9f52b34a81a1d3c5cf781&#34;&gt;run clojure files directly&lt;/h2&gt;
+&lt;h2 id=&#34;run-clojure-files-directly&#34;&gt;run clojure files directly&lt;/h2&gt;
 
 &lt;p&gt;OK, leiningen can do this too, but through &lt;a href=&#34;https://github.com/sids/lein-run&#34;&gt;plugin&lt;/a&gt;. I feel this is a very handy functionality, which probably should be included in the core.&lt;/p&gt;
 
-&lt;h2 id=&#34;autotest:d929fd0a90d9f52b34a81a1d3c5cf781&#34;&gt;autotest&lt;/h2&gt;
+&lt;h2 id=&#34;autotest&#34;&gt;autotest&lt;/h2&gt;
 
 &lt;p&gt;Detects your code change and automatically run your test suites! Sweet.&lt;/p&gt;
 
-&lt;h2 id=&#34;compatible-with-leiningen-project-definition-files:d929fd0a90d9f52b34a81a1d3c5cf781&#34;&gt;compatible with leiningen project definition files&lt;/h2&gt;
+&lt;h2 id=&#34;compatible-with-leiningen-project-definition-files&#34;&gt;compatible with leiningen project definition files&lt;/h2&gt;
 
 &lt;p&gt;Cake understand &lt;code&gt;project.clj&lt;/code&gt;, so I don&amp;rsquo;t need to do anything for my existing leiningen projects. Change directory to the project and &lt;code&gt;cake&lt;/code&gt; away :D&lt;/p&gt;
 
@@ -240,7 +240,7 @@
 
 &lt;p&gt;In this blog post I’m going to record my recent experience in setting up a Clojure project using the &lt;a href=&#34;http://github.com/talios/clojure-maven-plugin&#34;&gt;clojure-maven-plugin&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;clojure-maven-plugin:6d2e4e6958dcddf645be2da48f6dfc8c&#34;&gt;Clojure-Maven-Plugin&lt;/h2&gt;
+&lt;h2 id=&#34;clojure-maven-plugin&#34;&gt;Clojure-Maven-Plugin&lt;/h2&gt;
 
 &lt;p&gt;First you need to compile the plugin from source:&lt;/p&gt;
 
@@ -399,7 +399,7 @@ mvn install
 
 &lt;p&gt;The best way to learn a language is to use it to solve some non-trivial practical problems. I stumbled &lt;a href=&#34;http://programmingpraxis.com/2009/10/13/bifid-cipher/&#34;&gt;this&lt;/a&gt; problem on &lt;a href=&#34;http://programmingpraxis.com/&#34;&gt;Programming Praxis&lt;/a&gt;. It’s about building a &lt;a href=&#34;http://en.wikipedia.org/wiki/Bifid_cipher&#34;&gt;Bifid&lt;/a&gt; cipher, which I thought could be a good practical problem for me to solve in Clojure.&lt;/p&gt;
 
-&lt;h2 id=&#34;polybius-square:a073ba723e7125cda2ae0c275308be1f&#34;&gt;Polybius Square&lt;/h2&gt;
+&lt;h2 id=&#34;polybius-square&#34;&gt;Polybius Square&lt;/h2&gt;
 
 &lt;p&gt;Bifid cipher is based on &lt;a href=&#34;http://en.wikipedia.org/wiki/Polybius_square&#34;&gt;Polybius Square&lt;/a&gt;, which looks like this:&lt;/p&gt;
 
@@ -443,7 +443,7 @@ mvn install
 
 &lt;p&gt;When you see the square as a flat list, it’s clear that the cycle should stop when it reaches &lt;code&gt;square-size^2&lt;/code&gt;, hence &lt;code&gt;(take (\* square-size square-size) (cycle (range 1 (+ 1 square-size))))&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-codec-maps:a073ba723e7125cda2ae0c275308be1f&#34;&gt;The codec maps&lt;/h2&gt;
+&lt;h2 id=&#34;the-codec-maps&#34;&gt;The codec maps&lt;/h2&gt;
 
 &lt;p&gt;After the Polybius square is built, we have the bases for our encryption. However, it’s not user-friendly: it’s a flat list of tuples. We want two maps for fast searching from letters to their encoding forms &lt;code&gt;(letter-2-code)&lt;/code&gt; and from transposed vectors to the letters &lt;code&gt;(transposed-2-letter)&lt;/code&gt;.&lt;/p&gt;
 
@@ -477,7 +477,7 @@ mvn install
     (helper square (empty hash-map))))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;encode:a073ba723e7125cda2ae0c275308be1f&#34;&gt;Encode&lt;/h2&gt;
+&lt;h2 id=&#34;encode&#34;&gt;Encode&lt;/h2&gt;
 
 &lt;p&gt;Now comes the &lt;code&gt;encode&lt;/code&gt; function. It’s important to note that the encoding will be different if a different polybius square is provided. Therefore, both &lt;code&gt;encode&lt;/code&gt; and &lt;code&gt;decode&lt;/code&gt; functions take the Polybius square as parameter.&lt;/p&gt;
 
@@ -533,7 +533,7 @@ gives:
     (apply str (map #(get c2l %1 %1) (map #(vector %1 %2) (first parts) (second parts))))))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;putting-it-together:a073ba723e7125cda2ae0c275308be1f&#34;&gt;Putting it together&lt;/h2&gt;
+&lt;h2 id=&#34;putting-it-together&#34;&gt;Putting it together&lt;/h2&gt;
 
 &lt;p&gt;Now with all the pieces are in place, we can put it together by writing a simple test:&lt;/p&gt;
 

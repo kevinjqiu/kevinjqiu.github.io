@@ -17,7 +17,7 @@
       <guid>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</guid>
       <description>
 
-&lt;h2 id=&#34;level-3:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Level 3&lt;/h2&gt;
+&lt;h2 id=&#34;level-3&#34;&gt;Level 3&lt;/h2&gt;
 
 &lt;p&gt;Finally we get to level 3. Here&amp;rsquo;s the setup:&lt;/p&gt;
 
@@ -47,7 +47,7 @@ cursor.execute(query)
 
 &lt;p&gt;Now that we found the vulnerability, we need to find a way exploit it.&lt;/p&gt;
 
-&lt;h3 id=&#34;take-1:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 1&lt;/h3&gt;
+&lt;h3 id=&#34;take-1&#34;&gt;Take 1&lt;/h3&gt;
 
 &lt;p&gt;Normally, with SQL injection, you craft an input to terminate the previous statement, and inject the statement you want it to execute. Reading the code, it&amp;rsquo;s getting the user&amp;rsquo;s password hash and salt for the given user, and check it against the input hash and salt. The hashing method is &lt;a href=&#34;http://en.wikipedia.org/wiki/SHA-2&#34;&gt;sha256&lt;/a&gt;. With Python, we can quickly pre-calculate a salted hash to inject. Here&amp;rsquo;s an example, with password &lt;code&gt;1&lt;/code&gt; and salt &lt;code&gt;a&lt;/code&gt;.&lt;/p&gt;
 
@@ -89,7 +89,7 @@ cursor.execute(query)
 
 &lt;p&gt;&lt;code&gt;cursor&lt;/code&gt; cannot run more than one statement at a time! Smart, eh?&lt;/p&gt;
 
-&lt;h3 id=&#34;take-2:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Take 2&lt;/h3&gt;
+&lt;h3 id=&#34;take-2&#34;&gt;Take 2&lt;/h3&gt;
 
 &lt;p&gt;So the trick here is to use exactly 1 statement to inject our crafted data. We still want this to be returning the same fields. What if I &lt;code&gt;UNION&lt;/code&gt; two queries, with the second query selecting the injected data?&lt;/p&gt;
 
@@ -105,7 +105,7 @@ bob&#39; UNION select id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f224569
 &lt;pre&gt;&lt;code&gt;Welcome back! Your secret is: &amp;quot;...&amp;quot; (Log out)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;conclusion:3e00afd3d5061017bd3d5ab97d832dc5&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;This is a canonical SQL injection. Again, NEVER trust user input. Always sanitize user input.&lt;/p&gt;
 </description>
@@ -119,9 +119,9 @@ bob&#39; UNION select id, &#39;a73fcf339640929207281fb8e038884806e2eb0840f224569
       <guid>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</guid>
       <description>
 
-&lt;h2 id=&#34;level-2:a321406c230dbace4963b77b7a2cde48&#34;&gt;Level 2&lt;/h2&gt;
+&lt;h2 id=&#34;level-2&#34;&gt;Level 2&lt;/h2&gt;
 
-&lt;script src=&#34;//gist.github.com/kevinjqiu/3711719.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3711719.js?file=index.php&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;In level 2, we&amp;rsquo;re faced with a PHP app that allows you to upload a &amp;ldquo;profile picture&amp;rdquo;. The password to level 3 is contained in a &amp;ldquo;password.txt&amp;rdquo; file of the document root, as revealed in line 49. Of course, you won&amp;rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.&lt;/p&gt;
 
@@ -136,7 +136,7 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;uploaded it and hit it with curl. Guess what? The password is right there in the clear!&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:a321406c230dbace4963b77b7a2cde48&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;There&amp;rsquo;s a few problems with this app:&lt;/p&gt;
 
@@ -155,11 +155,11 @@ echo file_get_contents(&#39;../password.txt&#39;);
       <guid>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</guid>
       <description>
 
-&lt;h2 id=&#34;level-1:64d353d425787014ba969d46f395c7b6&#34;&gt;Level 1&lt;/h2&gt;
+&lt;h2 id=&#34;level-1&#34;&gt;Level 1&lt;/h2&gt;
 
 &lt;p&gt;Now we get to level 1. We are presented with a simple web form with the PHP code powering it.&lt;/p&gt;
 
-&lt;script src=&#34;//gist.github.com/kevinjqiu/3692642.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3692642.js?file=index.php&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;The PHP script checks if the input combination matches the combination in &amp;lsquo;secret-combination.txt&amp;rsquo; file, and present the user with the password to the next level if the combinations match.  Obviously, we&amp;rsquo;re not going to guess the combination.&lt;/p&gt;
 
@@ -177,7 +177,7 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;&amp;hellip;And indeed it works!&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:64d353d425787014ba969d46f395c7b6&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Never, ever use &lt;code&gt;extract()&lt;/code&gt; in serious applications. Historically, PHP is used to build simple websites so it included many functions that puts &amp;ldquo;convenience&amp;rdquo; over security. Global variables are a bad idea, and having the ability to pollute the global space from any input is way worse.&lt;/li&gt;
@@ -199,12 +199,12 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;In the next few posts, I&amp;rsquo;m going to discuss the problems in the challenge, how I solved them and what did I learn from from each challenge.&lt;/p&gt;
 
-&lt;h2 id=&#34;problem-0:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Problem 0&lt;/h2&gt;
+&lt;h2 id=&#34;problem-0&#34;&gt;Problem 0&lt;/h2&gt;
 
 &lt;p&gt;Here are the code for level 0:&lt;/p&gt;
 
-&lt;p&gt;&lt;script src=&#34;//gist.github.com/kevinjqiu/3688655.js&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/kevinjqiu/3688659.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;&lt;script src=&#34;//gist.github.com/kevinjqiu/3688655.js?file=level00.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/kevinjqiu/3688659.js?file=level00.html&#34;&gt;&lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;So you have a node.js server script, with an HTML front-end. The front-end allows you to submit a web form which allows you to retrieve &lt;em&gt;your&lt;/em&gt; stored secret but the secret to level 1 is also stored in the same database.&lt;/p&gt;
 
@@ -217,7 +217,7 @@ echo file_get_contents(&#39;../password.txt&#39;);
 
 &lt;p&gt;Voilà! That&amp;rsquo;s it! &lt;code&gt;%.%&lt;/code&gt; gives you all passwords with namespace that has a dot in the middle.&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:f6a4ed5bc3b03ef5d9fcd4ce25d25fb6&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://xkcd.com/327/&#34;&gt;SQL-injection&lt;/a&gt; is a known security issue for a long time yet you&amp;rsquo;d be surprised how many sites are still subject to such exploits. The problem with level 0 code is exactly that: unsanitized user input is sent directly to the database for execution. So everytime a string concatenation is seen in a SQL statement, you have to ask yourself: is the ting being concatenated trustworthy? Use prepared statement or your database&amp;rsquo;s escape function wherever possible.&lt;/p&gt;
 </description>

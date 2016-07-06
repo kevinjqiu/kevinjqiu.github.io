@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Stripe Capture The Flag 2.0 - Problem 2" />
 <meta property="og:description" content="" />
@@ -130,8 +130,8 @@
 <ul>
 <li>
 <ul>
-<li><a href="#level-2:a321406c230dbace4963b77b7a2cde48">Level 2</a></li>
-<li><a href="#conclusion:a321406c230dbace4963b77b7a2cde48">Conclusion</a></li>
+<li><a href="#level-2">Level 2</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -169,9 +169,9 @@
 
             
 
-<h2 id="level-2:a321406c230dbace4963b77b7a2cde48">Level 2</h2>
+<h2 id="level-2">Level 2</h2>
 
-<script src="//gist.github.com/kevinjqiu/3711719.js"></script>
+<script src="//gist.github.com/kevinjqiu/3711719.js?file=index.php"></script>
 
 <p>In level 2, we&rsquo;re faced with a PHP app that allows you to upload a &ldquo;profile picture&rdquo;. The password to level 3 is contained in a &ldquo;password.txt&rdquo; file of the document root, as revealed in line 49. Of course, you won&rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.</p>
 
@@ -186,7 +186,7 @@ echo file_get_contents('../password.txt');
 
 <p>uploaded it and hit it with curl. Guess what? The password is right there in the clear!</p>
 
-<h2 id="conclusion:a321406c230dbace4963b77b7a2cde48">Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p>There&rsquo;s a few problems with this app:</p>
 

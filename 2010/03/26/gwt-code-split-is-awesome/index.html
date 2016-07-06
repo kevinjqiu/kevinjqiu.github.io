@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="GWT code split is awesome" />
 <meta property="og:description" content="" />
@@ -130,11 +130,11 @@
 <ul>
 <li>
 <ul>
-<li><a href="#gin-patch:c6bb9e60983ec4c664c5d3a48a6569de">Gin patch</a></li>
-<li><a href="#results:c6bb9e60983ec4c664c5d3a48a6569de">Results</a></li>
-<li><a href="#changes:c6bb9e60983ec4c664c5d3a48a6569de">Changes</a></li>
-<li><a href="#improvements:c6bb9e60983ec4c664c5d3a48a6569de">Improvements</a></li>
-<li><a href="#follow-up:c6bb9e60983ec4c664c5d3a48a6569de">Follow-up</a></li>
+<li><a href="#gin-patch">Gin patch</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#changes">Changes</a></li>
+<li><a href="#improvements">Improvements</a></li>
+<li><a href="#follow-up">Follow-up</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -180,27 +180,27 @@
 
 <p>However, since our application is using GWT best practices (dependency injection, MVP pattern), it&rsquo;s not as straightforward as GWT doc describes. A bit of digging on the internet leads me to <a href="http://code.google.com/p/google-gin/issues/detail?id=61">this page</a></p>
 
-<h2 id="gin-patch:c6bb9e60983ec4c664c5d3a48a6569de">Gin patch</h2>
+<h2 id="gin-patch">Gin patch</h2>
 
 <p>Someone contributed a patch to gin, which made split points transparent to the user of gin. The presenters that aren&rsquo;t needed initially can be wrapped in an AsyncProvider&lt;T&gt; instance - which by the blessing of deferred binding, translates into a GWT.runAsync call in the generated code. The patch hasn&rsquo;t been accepted into gin&rsquo;s trunk yet, but it&rsquo;s fairly easy to apply the patch and rebuild. A huge thanks to <a href="http://code.google.com/u/fazal.asim/">fazal.asim</a> who hacked and contributed this patch.</p>
 
-<h2 id="results:c6bb9e60983ec4c664c5d3a48a6569de">Results</h2>
+<h2 id="results">Results</h2>
 
 <p>The result of code splitting is encouraging - with very little structural change, we&rsquo;re able to reduce the initial download size to 29% of the total size:</p>
 
 <p><a href="http://reminiscential.files.wordpress.com/2010/03/untitled.png"><img class="aligncenter size-medium wp-image-194" title="code split result" src="http://reminiscential.files.wordpress.com/2010/03/untitled.png?w=300" alt="" width="300" height="93" /></a></p>
 
-<h2 id="changes:c6bb9e60983ec4c664c5d3a48a6569de">Changes</h2>
+<h2 id="changes">Changes</h2>
 
 <p>I mentioned we needed very little structural change, but we did have to change something around. This is because with code splitting, the presenters that are split out from the initial download are not instantiated until they&rsquo;re used/downloaded. This means you cannot put logic in their constructors, and responding to place change has to be initiated by the container presenters.</p>
 
-<h2 id="improvements:c6bb9e60983ec4c664c5d3a48a6569de">Improvements</h2>
+<h2 id="improvements">Improvements</h2>
 
 <p>Code splitting is awesome. However, if I&rsquo;m allowed to voice a complaint, the report compiling time is just excruciating! For our application, it usually takes about 10 minutes to compile SOYC report - maybe a few minutes too long given the specs of my machine isn&rsquo;t too bad (Quad Core, 3G memory). Also, the compiled SOYC report takes up 600M of hard disk space! Ouch! Maybe instead of emitting HTML pages, they can make SOYC report a JS application, with data being encoded in JSON format?</p>
 
 <p>Anyway, this doesn&rsquo;t take anything away from the awesome job GWT team has done for developers.</p>
 
-<h2 id="follow-up:c6bb9e60983ec4c664c5d3a48a6569de">Follow-up</h2>
+<h2 id="follow-up">Follow-up</h2>
 
 <p>Thanks to AsyncProxy, which provides a blocking (synchronous) interface while utilizing GWT.runAsync. This way, I&rsquo;m able to build a view proxy that implements the same interface while keeping the real view components out of the initial call graph. The result of this, is a further reduction of the initial download size.</p>
 
@@ -224,7 +224,7 @@
 					
 					<div class="paging-older">
 						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
-			            <a class="paging-link" href="/2010/03/09/building-a-gaegwt-application-using-the-best-practices-part-5/">Building a GAE&#43;GWT application using the best practices (Part 5)</a>
+			            <a class="paging-link" href="/2010/03/09/building-a-gae&#43;gwt-application-using-the-best-practices-part-5/">Building a GAE&#43;GWT application using the best practices (Part 5)</a>
 		            </div>
 		            
 	            </div>

@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Stripe Capture The Flag 2.0 - Problem 3" />
 <meta property="og:description" content="" />
@@ -130,12 +130,12 @@
 <ul>
 <li>
 <ul>
-<li><a href="#level-3:3e00afd3d5061017bd3d5ab97d832dc5">Level 3</a>
+<li><a href="#level-3">Level 3</a>
 <ul>
-<li><a href="#take-1:3e00afd3d5061017bd3d5ab97d832dc5">Take 1</a></li>
-<li><a href="#take-2:3e00afd3d5061017bd3d5ab97d832dc5">Take 2</a></li>
+<li><a href="#take-1">Take 1</a></li>
+<li><a href="#take-2">Take 2</a></li>
 </ul></li>
-<li><a href="#conclusion:3e00afd3d5061017bd3d5ab97d832dc5">Conclusion</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -173,7 +173,7 @@
 
             
 
-<h2 id="level-3:3e00afd3d5061017bd3d5ab97d832dc5">Level 3</h2>
+<h2 id="level-3">Level 3</h2>
 
 <p>Finally we get to level 3. Here&rsquo;s the setup:</p>
 
@@ -203,7 +203,7 @@ cursor.execute(query)
 
 <p>Now that we found the vulnerability, we need to find a way exploit it.</p>
 
-<h3 id="take-1:3e00afd3d5061017bd3d5ab97d832dc5">Take 1</h3>
+<h3 id="take-1">Take 1</h3>
 
 <p>Normally, with SQL injection, you craft an input to terminate the previous statement, and inject the statement you want it to execute. Reading the code, it&rsquo;s getting the user&rsquo;s password hash and salt for the given user, and check it against the input hash and salt. The hashing method is <a href="http://en.wikipedia.org/wiki/SHA-2">sha256</a>. With Python, we can quickly pre-calculate a salted hash to inject. Here&rsquo;s an example, with password <code>1</code> and salt <code>a</code>.</p>
 
@@ -245,7 +245,7 @@ cursor.execute(query)
 
 <p><code>cursor</code> cannot run more than one statement at a time! Smart, eh?</p>
 
-<h3 id="take-2:3e00afd3d5061017bd3d5ab97d832dc5">Take 2</h3>
+<h3 id="take-2">Take 2</h3>
 
 <p>So the trick here is to use exactly 1 statement to inject our crafted data. We still want this to be returning the same fields. What if I <code>UNION</code> two queries, with the second query selecting the injected data?</p>
 
@@ -261,7 +261,7 @@ bob' UNION select id, 'a73fcf339640929207281fb8e038884806e2eb0840f2245694dbba1d5
 <pre><code>Welcome back! Your secret is: &quot;...&quot; (Log out)
 </code></pre>
 
-<h2 id="conclusion:3e00afd3d5061017bd3d5ab97d832dc5">Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p>This is a canonical SQL injection. Again, NEVER trust user input. Always sanitize user input.</p>
 

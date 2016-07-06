@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Building a GAE&#43;GWT application using the best practices (Part 2) // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.16" />
+
+  <meta property="og:title" content="Building a GAE&#43;GWT application using the best practices (Part 2)" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://blog.idempotent.ca/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#building-a-gae-gwt-application-using-the-best-practices-series">Building a GAE+GWT application using the best practices series</a></li>
+<li><a href="#project-setup">Project setup</a></li>
+<li><a href="#wiring-the-server">&ldquo;Wiring&rdquo; the server</a>
+<ul>
+<li><a href="#modify-web-xml">Modify web.xml</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/">Building a GAE&#43;GWT application using the best practices (Part 2)</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>1</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Mar</span> <span class="post-date-year">2010</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-java" href="http://blog.idempotent.ca/categories/java">java</a>
+				
+					<a class="post-category post-category-gwt" href="http://blog.idempotent.ca/categories/gwt">gwt</a>
+				
+					<a class="post-category post-category-gae" href="http://blog.idempotent.ca/categories/gae">gae</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<h2 id="building-a-gae-gwt-application-using-the-best-practices-series">Building a GAE+GWT application using the best practices series</h2>
+
+<ol>
+<li><a href="/2010/02/26/building-a-gae-plus-gwt-application-using-the-best-practices-part-1/">Part 1</a></li>
+<li>Part 2</li>
+<li><a href="/2010/03/03/building-a-gae-plus-gwt-application-using-the-best-practices-part-3/">Part 3</a></li>
+<li><a href="/2010/03/03/building-a-gae-plus-gwt-application-using-the-best-practices-part-4/">Part 4</a></li>
+<li><a href="/2010/03/09/building-a-gae-plus-gwt-application-using-the-best-practices-part-5/">Part 5</a></li>
+</ol>
+
+<p>In Part 2, we&rsquo;re going to go over project setup for GAE and GWT applications, and wire the server (servlet) using <a href="http://code.google.com/p/google-guice/">Guice</a> and <a href="http://code.google.com/p/gwt-dispatch/">GWT-Dispatch</a>.</p>
+
+<h2 id="project-setup">Project setup</h2>
+
+<p>I&rsquo;m using Eclipse as my development environment. Install <a href="http://code.google.com/eclipse/">Google Eclipse plugin</a>, and install the provided GWT (2.0.2) and GAE (1.3.1) with the plugin. Create a new project in Eclipse using the &ldquo;New web application project&rdquo; wizard, and create a sample project.</p>
+
+<p>Now, because during deployment, GAE applications are executed within its own servlet container, all dependencies have to be placed inside the directory /war/WEB-INF/lib. Go ahead, download <a href="http://code.google.com/p/google-guice/downloads/list">Guice</a>, <a href="http://code.google.com/p/gwt-dispatch/downloads/list">GWT-dispatch</a>, <a href="http://code.google.com/p/gwt-log/downloads/list">GWT-log</a>, <a href="http://commons.apache.org/downloads/download_logging.cgi">commons-logging</a> and <a href="http://logging.apache.org/log4j/1.2/download.html">log4j</a>. Put the jar files inside /war/WEB-INF/lib directory. Then in Eclipse, select the jars you just placed, right click and select &ldquo;Add to build path&rdquo;. Your lib directory should look something like this:</p>
+
+<p><a href="http://reminiscential.files.wordpress.com/2010/03/screenshot.png"><img class="aligncenter size-medium wp-image-158" title="Screenshot" src="http://reminiscential.files.wordpress.com/2010/03/screenshot.png?w=168" alt="" width="168" height="300" /></a></p>
+
+<h2 id="wiring-the-server">&ldquo;Wiring&rdquo; the server</h2>
+
+<p>Now that the project is setup, we need to wire the server to utilize the dependency injection container Guice. The details can be found <a href="http://code.google.com/p/google-guice/wiki/GoogleAppEngine">here</a> but in short, we need to do the following:</p>
+
+<h3 id="modify-web-xml">Modify web.xml</h3>
+
+<p>Find web.xml in /war/WEB-INF. In traditional GWT-RPC development, every service needs to be written as a servlet and declared in web.xml. For Guice + GWT-dispatch, we only need a filter and a listener (as the entry point).</p>
+
+<pre><code class="language-xml">&lt;webapp&gt;
+        [...]
+    &lt;filter&gt;
+        &lt;filter-name&gt;guiceFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;com.google.inject.servlet.GuiceFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;guiceFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+
+    &lt;listener&gt;
+        &lt;listener-class&gt;ratechecker.server.guice.GuiceServletConfig&lt;/listener-class&gt;
+    &lt;/listener&gt;
+        [...]
+&lt;/webapp&gt;
+</code></pre>
+
+<p>Here, our listener is ratechecker.server.guice.GuiceServletConfig. It reads like the following</p>
+
+<pre><code class="language-java">public class GuiceServletConfig extends GuiceServletContextListener {
+
+    private ServletContext _ctx;
+
+    @Override
+    public void contextDestroyed(final ServletContextEvent servletContextEvent) {
+        _ctx = null;
+        super.contextDestroyed(servletContextEvent);
+    }
+
+    @Override
+    public void contextInitialized(final ServletContextEvent servletContextEvent) {
+        _ctx = servletContextEvent.getServletContext();
+        super.contextInitialized(servletContextEvent);
+    }
+
+    @Override
+    protected Injector getInjector() {
+        return Guice.createInjector(new GuiceServerModule(), new DispatchServletModule());
+    }
+
+}
+</code></pre>
+
+<p>This code is borrowed from <a href="http://james.apache.org/hupa/project-info.html">Hupa</a>. The responsibility of this servlet context listener is to construct an injector (achieved by the last method). Here, our injector contains two modules, <code>ratechecker.server.guice.GuiceServerModule</code> and <code>ratechecker.server.guice.DispatchServletModule</code>.</p>
+
+<p>```java DispatchServletModule.java
+public class DispatchServletModule extends ServletModule {
+    @Override
+    protected void configureServlets() {
+        super.configureServlets();
+        serve(&ldquo;/ratechecker/dispatch&rdquo;).with(RateCheckerDispatchServlet.class);
+    }
+}</p>
+
+<pre><code>
+This module has a mapping of URIs and its serving classes. It serves &quot;/ratechecker/dispatch&quot; with `RateCheckerDispatchServlet`, which is the entry point for GWT-dispatch.
+
+```java GuiceServerModule.java
+public class GuiceServerModule extends ActionHandlerModule {
+
+    public GuiceServerModule() {
+    }
+
+    @Override
+    protected void configureHandlers() {
+            // declare bindings
+    }
+
+}
+</code></pre>
+
+<p>This is where you declare your bindings for the application. We&rsquo;ll come back to this file frequently as the application develops.</p>
+
+<p>```java RateCheckerDispatchServlet.java
+@Singleton
+public class RateCheckerDispatchServlet extends DispatchServiceServlet {</p>
+
+<pre><code>private static final long serialVersionUID = 4895255235709260169L;
+
+private final Log _logger;
+
+@Inject
+public RateCheckerDispatchServlet(final Dispatch dispatch, final Log logger) {
+    super(dispatch);
+    _logger = logger;
+}
+
+@Override
+public Result execute(final Action&lt;?&gt; action) throws ActionException {
+    try {
+        _logger.info(&quot;executing: &quot; + action.getClass().getName());
+        final Result res = super.execute(action);
+        _logger.info(&quot;finished: &quot; + action.getClass().getName());
+        return res;
+    } catch (final ActionException ae) {
+        _logger.error(ae.getMessage());
+        ae.printStackTrace();
+        throw ae;
+    } catch (final Exception e) {
+        _logger.error(&quot;Unexpected exception: &quot; + e.getMessage());
+        e.printStackTrace();
+    }
+    return null;
+}
+</code></pre>
+
+<p>}</p>
+
+<pre><code>
+
+This servlet extends from GWT-dispatch's DispatchServiceServlet. It's main responsibility is to provide unified logging.
+
+Notice you cannot run the application, because Guice is complaining that there's no binding for `org.apache.commons.logging.Log`, which we declared as a dependency for RateCheckerDispatchServlet. We go ahead write our `LogProvider` (to provide lazy initialization for the Log object to its users)
+
+```java LogProvider.java
+public class LogProvider implements Provider&lt;Log&gt; {
+
+    @Override
+    public Log get() {
+        return new Log4JLogger(&quot;RateCheckerLogger&quot;);
+    }
+
+}
+</code></pre>
+
+<p>Now the binding should be added to <code>GuiceServerModule</code>:
+<code>java GuiceServerModule.java
+[...]
+    @Override
+    protected void configureHandlers() {
+            bind(Log.class).toProvider(LogProvider.class).in(Singleton.class);
+    }
+[...]
+</code></p>
+
+<p>Now everytime Guice sees <code>Log.class</code> declared as a dependency in the constructor, it uses <code>LogProvider.get()</code> method to retrieve an instance of the log if there&rsquo;s none, and uses the existing log instance if it&rsquo;s been initialized (because of the singleton scope).</p>
+
+<p>In the end, your server package should look like this:
+<a href="http://reminiscential.files.wordpress.com/2010/03/screenshot-1.png"><img src="http://reminiscential.files.wordpress.com/2010/03/screenshot-1.png?w=300" alt="" title="Screenshot-1" width="300" height="154" class="aligncenter size-medium wp-image-159" /></a></p>
+
+<p>We haven&rsquo;t covered PersistenceManagerProvider but it&rsquo;s the same idea as LogProvider. It provides an instance of PersistenceManager, which is used by the data store related action handlers to deal with data persistence.</p>
+
+<p>That&rsquo;s it for server wiring. In the next blog post, I&rsquo;ll go through designing and writing GWT-RPC services using Guice and GWT-dispatch.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2010/03/01/use-delegation-to-write-map/filter-in-java/">Use delegation to write map/filter in Java</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2010/02/26/building-a-gae&#43;gwt-application-using-the-best-practices-part-1/">Building a GAE&#43;GWT application using the best practices (Part 1)</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'idempotentca';
+    var disqus_identifier = 'http:\/\/blog.idempotent.ca\/2010\/03\/01\/building-a-gae\x2bgwt-application-using-the-best-practices-part-2\/';
+    var disqus_title = 'Building a GAE\x2bGWT application using the best practices (Part 2)';
+    var disqus_url = 'http:\/\/blog.idempotent.ca\/2010\/03\/01\/building-a-gae\x2bgwt-application-using-the-best-practices-part-2\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2016. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

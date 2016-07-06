@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Use Python bytecode to solve puzzler" />
 <meta property="og:description" content="" />
@@ -130,9 +130,9 @@
 <ul>
 <li>
 <ul>
-<li><a href="#learning-python-internals:6bf435374bd39002427720546dfc1a00">Learning Python Internals</a></li>
-<li><a href="#the-puzzler:6bf435374bd39002427720546dfc1a00">The puzzler</a></li>
-<li><a href="#conclusion:6bf435374bd39002427720546dfc1a00">Conclusion</a></li>
+<li><a href="#learning-python-internals">Learning Python Internals</a></li>
+<li><a href="#the-puzzler">The puzzler</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -170,7 +170,7 @@
 
             
 
-<h2 id="learning-python-internals:6bf435374bd39002427720546dfc1a00">Learning Python Internals</h2>
+<h2 id="learning-python-internals">Learning Python Internals</h2>
 
 <p>Recently I stumbled upon <a href="https://www.youtube.com/playlist?list=PLwyG5wA5gIzgTFj5KgJJ15lxq5Cv6lo_0">this wonderful set of videos on Python interpreter internals</a>. (Thanks to <a href="http://pgbovine.net/">Philip Guo</a> for creating them and thanks to Michael Kennedy (@mkennedy) and his <a href="http://talkpython.fm/">Talk Python to me</a> show that brought this on my radar)</p>
 
@@ -180,7 +180,7 @@
 
 <p>Then I thought to myself, why not use this new found power to solve some Python mysterious that have been puzzling me?</p>
 
-<h2 id="the-puzzler:6bf435374bd39002427720546dfc1a00">The puzzler</h2>
+<h2 id="the-puzzler">The puzzler</h2>
 
 <p>A few days ago, one of my former co-workers posted this puzzler:</p>
 
@@ -377,7 +377,7 @@ b &lt;- 5
 1. <code>a, b = {}, 5</code>
 2. <code>a[5] = ({}, 5)</code>, with <code>a</code> refering to the dictionary</p>
 
-<h2 id="conclusion:6bf435374bd39002427720546dfc1a00">Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p>Diving into the Python implementation is the next level ninjary that may come in handy in some cases. Granted, no one is going to write production code like the one in the puzzler, but stepping through and visualizing the virtual machine is a pretty useful and fun experience that makes me appreciate more the language I use everyday.</p>
 

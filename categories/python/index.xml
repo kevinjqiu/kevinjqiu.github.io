@@ -17,7 +17,7 @@
       <guid>http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</guid>
       <description>
 
-&lt;h2 id=&#34;learning-python-internals:6bf435374bd39002427720546dfc1a00&#34;&gt;Learning Python Internals&lt;/h2&gt;
+&lt;h2 id=&#34;learning-python-internals&#34;&gt;Learning Python Internals&lt;/h2&gt;
 
 &lt;p&gt;Recently I stumbled upon &lt;a href=&#34;https://www.youtube.com/playlist?list=PLwyG5wA5gIzgTFj5KgJJ15lxq5Cv6lo_0&#34;&gt;this wonderful set of videos on Python interpreter internals&lt;/a&gt;. (Thanks to &lt;a href=&#34;http://pgbovine.net/&#34;&gt;Philip Guo&lt;/a&gt; for creating them and thanks to Michael Kennedy (@mkennedy) and his &lt;a href=&#34;http://talkpython.fm/&#34;&gt;Talk Python to me&lt;/a&gt; show that brought this on my radar)&lt;/p&gt;
 
@@ -27,7 +27,7 @@
 
 &lt;p&gt;Then I thought to myself, why not use this new found power to solve some Python mysterious that have been puzzling me?&lt;/p&gt;
 
-&lt;h2 id=&#34;the-puzzler:6bf435374bd39002427720546dfc1a00&#34;&gt;The puzzler&lt;/h2&gt;
+&lt;h2 id=&#34;the-puzzler&#34;&gt;The puzzler&lt;/h2&gt;
 
 &lt;p&gt;A few days ago, one of my former co-workers posted this puzzler:&lt;/p&gt;
 
@@ -224,7 +224,7 @@ b &amp;lt;- 5
 1. &lt;code&gt;a, b = {}, 5&lt;/code&gt;
 2. &lt;code&gt;a[5] = ({}, 5)&lt;/code&gt;, with &lt;code&gt;a&lt;/code&gt; refering to the dictionary&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:6bf435374bd39002427720546dfc1a00&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;Diving into the Python implementation is the next level ninjary that may come in handy in some cases. Granted, no one is going to write production code like the one in the puzzler, but stepping through and visualizing the virtual machine is a pretty useful and fun experience that makes me appreciate more the language I use everyday.&lt;/p&gt;
 
@@ -240,7 +240,7 @@ b &amp;lt;- 5
       <guid>http://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</guid>
       <description>
 
-&lt;h2 id=&#34;learning-python-internals:6bf435374bd39002427720546dfc1a00&#34;&gt;Learning Python Internals&lt;/h2&gt;
+&lt;h2 id=&#34;learning-python-internals&#34;&gt;Learning Python Internals&lt;/h2&gt;
 
 &lt;p&gt;Recently I stumbled upon &lt;a href=&#34;https://www.youtube.com/playlist?list=PLwyG5wA5gIzgTFj5KgJJ15lxq5Cv6lo_0&#34;&gt;this wonderful set of videos on Python interpreter internals&lt;/a&gt;. (Thanks to &lt;a href=&#34;http://pgbovine.net/&#34;&gt;Philip Guo&lt;/a&gt; for creating them and thanks to Michael Kennedy (@mkennedy) and his &lt;a href=&#34;http://talkpython.fm/&#34;&gt;Talk Python to me&lt;/a&gt; show that brought this on my radar)&lt;/p&gt;
 
@@ -250,7 +250,7 @@ b &amp;lt;- 5
 
 &lt;p&gt;Then I thought to myself, why not use this new found power to solve some Python mysterious that have been puzzling me?&lt;/p&gt;
 
-&lt;h2 id=&#34;the-puzzler:6bf435374bd39002427720546dfc1a00&#34;&gt;The puzzler&lt;/h2&gt;
+&lt;h2 id=&#34;the-puzzler&#34;&gt;The puzzler&lt;/h2&gt;
 
 &lt;p&gt;A few days ago, one of my former co-workers posted this puzzler:&lt;/p&gt;
 
@@ -447,7 +447,7 @@ b &amp;lt;- 5
 1. &lt;code&gt;a, b = {}, 5&lt;/code&gt;
 2. &lt;code&gt;a[5] = ({}, 5)&lt;/code&gt;, with &lt;code&gt;a&lt;/code&gt; refering to the dictionary&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:6bf435374bd39002427720546dfc1a00&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;Diving into the Python implementation is the next level ninjary that may come in handy in some cases. Granted, no one is going to write production code like the one in the puzzler, but stepping through and visualizing the virtual machine is a pretty useful and fun experience that makes me appreciate more the language I use everyday.&lt;/p&gt;
 
@@ -463,7 +463,7 @@ b &amp;lt;- 5
       <guid>http://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</guid>
       <description>
 
-&lt;h2 id=&#34;the-itch-to-scratch:c0963e613fb36e35763da3ad0b838456&#34;&gt;The itch to scratch&lt;/h2&gt;
+&lt;h2 id=&#34;the-itch-to-scratch&#34;&gt;The itch to scratch&lt;/h2&gt;
 
 &lt;p&gt;Everyone in the software industry knows Kent Beck, the pioneers of extreme programming and test-driven development and the co-author of JUnit. One of his lesser known project was &lt;a href=&#34;http://junitmax.com&#34;&gt;JUnitMax&lt;/a&gt;, which aims to reduce the time developers have to wait while tests are running. One of the ideas behind that is that when code changes, only the test cases that exercise the code need to be run, instead of running the entire suite. The idea makes a lot of sense to me, but at the time, I (and the development shop I was in) wasn&amp;rsquo;t practising enough TDD, so unit test time wasn&amp;rsquo;t a big problem for me back then.&lt;/p&gt;
 
@@ -473,15 +473,15 @@ b &amp;lt;- 5
 
 &lt;p&gt;So, I started looking into &lt;a href=&#34;http://nedbatchelder.com/code/coverage/&#34;&gt;coveragepy&lt;/a&gt;&amp;rsquo;s source code, and watching its author &lt;a href=&#34;http://nedbatchelder.com/blog/&#34;&gt;Ned Batchelder&lt;/a&gt;&amp;rsquo;s excellent PyCon2011 &lt;a href=&#34;http://blip.tv/pycon-us-videos-2009-2010-2011/pycon-2011-python-aware-python-4896752&#34;&gt;video&lt;/a&gt; on &lt;code&gt;sys.settrace&lt;/code&gt;. I wanted to build a proof-of-concept tool that integrates with the de-facto Python unit-test tool &lt;a href=&#34;https://github.com/nose-devs/nose&#34;&gt;nose&lt;/a&gt;, that, when run, gathers the information about which lines in the files in the source folder are covered by which test cases, and hence &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;nostrils&lt;/a&gt; is born.&lt;/p&gt;
 
-&lt;h2 id=&#34;here-comes-sys-settrace:c0963e613fb36e35763da3ad0b838456&#34;&gt;Here comes &lt;code&gt;sys.settrace()&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;here-comes-sys-settrace&#34;&gt;Here comes &lt;code&gt;sys.settrace()&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;Python&amp;rsquo;s motto is &amp;ldquo;batteries included&amp;rdquo;. This is manifested in many Python&amp;rsquo;s stanndard library modules, such as ast (source code parsing) and dis (bytecode disassembly). One of which is the ability to make the Python interpreter call an external function whenever a line of code is being executed. You can do a lot of fun stuff with it, for example, Coverage.py uses this to build code coverage data; pdb uses it to insert breakpoints into a running application and change the way a Python program is executed.&lt;/p&gt;
 
-&lt;h2 id=&#34;how-can-it-be-used:c0963e613fb36e35763da3ad0b838456&#34;&gt;How can it be used?&lt;/h2&gt;
+&lt;h2 id=&#34;how-can-it-be-used&#34;&gt;How can it be used?&lt;/h2&gt;
 
 &lt;p&gt;For &lt;em&gt;nostrils&lt;/em&gt;, we need to write a nose plugin that installs the trace function when a test is encountered. The trace function records the line numbers and the current test case name. After all tests are run, we have our map.&lt;/p&gt;
 
-&lt;h2 id=&#34;a-simple-use-case:c0963e613fb36e35763da3ad0b838456&#34;&gt;A simple use case&lt;/h2&gt;
+&lt;h2 id=&#34;a-simple-use-case&#34;&gt;A simple use case&lt;/h2&gt;
 
 &lt;p&gt;To start, we need a simple use case:&lt;/p&gt;
 
@@ -568,7 +568,7 @@ class Nostrils(Plugin):
 
 &lt;p&gt;The idea is that we install the trace function when test starts, and restore the trace function back to what it was. We also keeps track of what&amp;rsquo;s the current test in &lt;code&gt;self._current_test&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;trace-function:c0963e613fb36e35763da3ad0b838456&#34;&gt;Trace function&lt;/h2&gt;
+&lt;h2 id=&#34;trace-function&#34;&gt;Trace function&lt;/h2&gt;
 
 &lt;p&gt;Now let&amp;rsquo;s have a look at the trace function:&lt;/p&gt;
 
@@ -595,7 +595,7 @@ class Nostrils(Plugin):
 
 &lt;p&gt;Here, I&amp;rsquo;m only interested in the &lt;code&gt;line&lt;/code&gt; event, which is triggered when a new line of code is being executed. When this happens, we invoke &lt;code&gt;_trace_down&lt;/code&gt;, which walks the frame stack by recursing on &lt;code&gt;frame.f_back&lt;/code&gt;. When it&amp;rsquo;s &lt;code&gt;None&lt;/code&gt;, we&amp;rsquo;re at the bottom of the stack. Because we&amp;rsquo;re tracing the execution of tests, we can probably stop traversing when the code object of the frame is the entry point of the test case (&lt;code&gt;if frame.f_code == test.__call__.func_code&lt;/code&gt;). This way, we save ourselves some unnecessary traversals.&lt;/p&gt;
 
-&lt;h2 id=&#34;data-collection:c0963e613fb36e35763da3ad0b838456&#34;&gt;Data Collection&lt;/h2&gt;
+&lt;h2 id=&#34;data-collection&#34;&gt;Data Collection&lt;/h2&gt;
 
 &lt;p&gt;There&amp;rsquo;s are few things we need to collect: filename, line number of the code being executed and the test case name that covers the code.&lt;/p&gt;
 
@@ -626,14 +626,14 @@ class Nostrils(Plugin):
 
 &lt;p&gt;There we have it! We have a prototype of what could become a PyUnitMax ;)&lt;/p&gt;
 
-&lt;h2 id=&#34;potential-problems:c0963e613fb36e35763da3ad0b838456&#34;&gt;Potential Problems&lt;/h2&gt;
+&lt;h2 id=&#34;potential-problems&#34;&gt;Potential Problems&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Scale: Now I&amp;rsquo;m only running nostrils on trivial code base. Profiling and optimization is needed if nostrils were to be used in real-world cases.&lt;/li&gt;&lt;/li&gt;
 &lt;li&gt;Multi-threading: No consideration was given to multi-threading at this stage.&lt;/li&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;collaborators-welcome:c0963e613fb36e35763da3ad0b838456&#34;&gt;Collaborators welcome!&lt;/h2&gt;
+&lt;h2 id=&#34;collaborators-welcome&#34;&gt;Collaborators welcome!&lt;/h2&gt;
 
 &lt;p&gt;I have since refactored the code, revised the data structure and published it on &lt;a href=&#34;https://github.com/kevinjqiu/nostrils&#34;&gt;github&lt;/a&gt;. Please provide me with feedbacks and suggestions.&lt;/p&gt;
 </description>
@@ -649,13 +649,13 @@ class Nostrils(Plugin):
 
 &lt;p&gt;Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this &lt;a href=&#34;http://en.wikipedia.org/wiki/WebSocket&#34;&gt;websocket&lt;/a&gt; buzz for a while now and would like to build something interesting with it.&lt;/p&gt;
 
-&lt;h2 id=&#34;websocket:3652469de01842bf96882033c0b91b72&#34;&gt;WebSocket&lt;/h2&gt;
+&lt;h2 id=&#34;websocket&#34;&gt;WebSocket&lt;/h2&gt;
 
 &lt;p&gt;Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser). This breaks away from the traditional web application request/response model. Traditionally, the client makes the request and waits for the server to give an answer. AJAX is revolutionary, but essentially, it&amp;rsquo;s still the same model: the client asks the server whether there&amp;rsquo;s anything interesting, but not the other way around. With websocket, the server suddenly becomes more involved and able to deliver more engaged user experience.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://www.freshbooks.com/&#34;&gt;Our company&lt;/a&gt; provides web application for online invoicing. The web application allows users to create clients, create invoices, send them to clients, and so on. Each one of these are &amp;ldquo;events&amp;rdquo; which gets sent to &lt;a href=&#34;http://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. We then have a plethora of RabbitMQ consumers that read messages off the queue and do interesting stuff with them.&lt;/p&gt;
 
-&lt;h2 id=&#34;proof-of-concept:3652469de01842bf96882033c0b91b72&#34;&gt;Proof of concept&lt;/h2&gt;
+&lt;h2 id=&#34;proof-of-concept&#34;&gt;Proof of concept&lt;/h2&gt;
 
 &lt;p&gt;For this hack-off, my goal is to write a RabbitMQ consumer that reads the messages off the message queue, and deliver (notify) them to the front-end using websocket.&lt;/p&gt;
 
@@ -663,7 +663,7 @@ class Nostrils(Plugin):
 
 &lt;p&gt;I&amp;rsquo;ve heard good things about &lt;a href=&#34;http://www.tornadoweb.org&#34;&gt;Tornado&lt;/a&gt;. Having read their docs on &lt;a href=&#34;http://www.tornadoweb.org/documentation/websocket.html&#34;&gt;websocket request handler&lt;/a&gt;, I felt it&amp;rsquo;s straightforward enough for me, so I chose Tornado as my backend.&lt;/p&gt;
 
-&lt;h2 id=&#34;pika:3652469de01842bf96882033c0b91b72&#34;&gt;Pika&lt;/h2&gt;
+&lt;h2 id=&#34;pika&#34;&gt;Pika&lt;/h2&gt;
 
 &lt;p&gt;One problem arises, though: The tornado server will run as a regular server, waiting for incoming websocket connections. The RabbitMQ consumer also needs to be in the same process event loop, waiting for incoming messages from the message queue. I looked into a few solutions such as &lt;a href=&#34;http://pypi.python.org/pypi/sparkplug/&#34;&gt;sparkplug&lt;/a&gt; and &lt;a href=&#34;http://pypi.python.org/pypi/stormed-amqp/0.1&#34;&gt;stormed-amqp&lt;/a&gt;, neither seem to be a good hit here. Finally, I stumbled on &lt;a href=&#34;https://github.com/pika/pika&#34;&gt;Pika&lt;/a&gt;. It comes with a Tornado event loop adapter, which allows rabbitmq consumer and websocket handlers to run inside the same event loop. Perfect.&lt;/p&gt;
 
@@ -803,7 +803,7 @@ def main():
 
 &lt;p&gt;Yes, we simply echo the message back. For the hackoff, I did parse the data, render a slightly more detailed notification message, and display the notification using jquery-toaster.&lt;/p&gt;
 
-&lt;h2 id=&#34;conclusion:3652469de01842bf96882033c0b91b72&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;This is my first stab at websocket and the tornado web framework. I&amp;rsquo;m not an expert on either subject, so chances are there are better ways to achieve the same result.&lt;/p&gt;
 

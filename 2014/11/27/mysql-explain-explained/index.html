@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="MySQL EXPLAIN explained" />
 <meta property="og:description" content="" />
@@ -130,18 +130,18 @@
 <ul>
 <li>
 <ul>
-<li><a href="#how-does-mysql-execute-queries:7ce5ad0d111b0d271669e2656bf8fe82">How does MySQL execute queries?</a></li>
-<li><a href="#execution-plan:7ce5ad0d111b0d271669e2656bf8fe82">Execution plan</a></li>
-<li><a href="#explain-output-columns:7ce5ad0d111b0d271669e2656bf8fe82">Explain output columns</a>
+<li><a href="#how-does-mysql-execute-queries">How does MySQL execute queries?</a></li>
+<li><a href="#execution-plan">Execution plan</a></li>
+<li><a href="#explain-output-columns">Explain output columns</a>
 <ul>
-<li><a href="#id:7ce5ad0d111b0d271669e2656bf8fe82">id</a></li>
-<li><a href="#select-type:7ce5ad0d111b0d271669e2656bf8fe82">select_type</a></li>
-<li><a href="#table:7ce5ad0d111b0d271669e2656bf8fe82">table</a></li>
-<li><a href="#type:7ce5ad0d111b0d271669e2656bf8fe82">type</a></li>
-<li><a href="#index-related-columns-possible-kes-key-key-len:7ce5ad0d111b0d271669e2656bf8fe82">Index-related columns (possible_kes, key, key_len)</a></li>
-<li><a href="#ref:7ce5ad0d111b0d271669e2656bf8fe82">ref</a></li>
-<li><a href="#rows:7ce5ad0d111b0d271669e2656bf8fe82">rows</a></li>
-<li><a href="#extra:7ce5ad0d111b0d271669e2656bf8fe82">extra</a></li>
+<li><a href="#id">id</a></li>
+<li><a href="#select-type">select_type</a></li>
+<li><a href="#table">table</a></li>
+<li><a href="#type">type</a></li>
+<li><a href="#index-related-columns-possible-kes-key-key-len">Index-related columns (possible_kes, key, key_len)</a></li>
+<li><a href="#ref">ref</a></li>
+<li><a href="#rows">rows</a></li>
+<li><a href="#extra">extra</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -182,7 +182,7 @@
 
 <p>Below is my notes from watching the <a href="https://www.youtube.com/watch?v=ZoLoIFW1H6g">MySQL&rsquo;s EXPLAIN demystified</a> webinar.  All credits go to Baron Schwartz for this excellent intro to MySQL&rsquo;s query explain.</p>
 
-<h2 id="how-does-mysql-execute-queries:7ce5ad0d111b0d271669e2656bf8fe82">How does MySQL execute queries?</h2>
+<h2 id="how-does-mysql-execute-queries">How does MySQL execute queries?</h2>
 
 <ul>
 <li>SQL =&gt; Parse Tree =&gt; Execution plan</li>
@@ -190,13 +190,13 @@
 <li>The executor makes storage engine calls</li>
 </ul>
 
-<h2 id="execution-plan:7ce5ad0d111b0d271669e2656bf8fe82">Execution plan</h2>
+<h2 id="execution-plan">Execution plan</h2>
 
 <p>&ldquo;Deep left tree&rdquo; &ndash; always</p>
 
-<h2 id="explain-output-columns:7ce5ad0d111b0d271669e2656bf8fe82">Explain output columns</h2>
+<h2 id="explain-output-columns">Explain output columns</h2>
 
-<h3 id="id:7ce5ad0d111b0d271669e2656bf8fe82">id</h3>
+<h3 id="id">id</h3>
 
 <ul>
 <li>which <code>SELECT</code> the row belongs to</li>
@@ -210,7 +210,7 @@
 </ul></li>
 </ul>
 
-<h3 id="select-type:7ce5ad0d111b0d271669e2656bf8fe82">select_type</h3>
+<h3 id="select-type">select_type</h3>
 
 <ul>
 <li>simple: there&rsquo;s only one <code>SELECT</code> in the whole query, <code>select_type</code> is <code>PRIMARY</code></li>
@@ -223,7 +223,7 @@
 </ul></li>
 </ul>
 
-<h3 id="table:7ce5ad0d111b0d271669e2656bf8fe82">table</h3>
+<h3 id="table">table</h3>
 
 <ul>
 <li>table name or alias</li>
@@ -231,7 +231,7 @@
 <li><code>&lt;unionM,N&gt;</code>, <code>M</code>, <code>N</code> correspond to <code>id</code></li>
 </ul>
 
-<h3 id="type:7ce5ad0d111b0d271669e2656bf8fe82">type</h3>
+<h3 id="type">type</h3>
 
 <ul>
 <li>describes how MySQL will access the rows</li>
@@ -249,7 +249,7 @@
 </ul></li>
 </ul>
 
-<h3 id="index-related-columns-possible-kes-key-key-len:7ce5ad0d111b0d271669e2656bf8fe82">Index-related columns (possible_kes, key, key_len)</h3>
+<h3 id="index-related-columns-possible-kes-key-key-len">Index-related columns (possible_kes, key, key_len)</h3>
 
 <ul>
 <li>possible_keys: which indexes were considered?</li>
@@ -257,7 +257,7 @@
 <li>key_len: how many bytes of the index will be used? if key_len less than the index (e.g., compound index), that means MySQL didn&rsquo;t use the whole index</li>
 </ul>
 
-<h3 id="ref:7ce5ad0d111b0d271669e2656bf8fe82">ref</h3>
+<h3 id="ref">ref</h3>
 
 <ul>
 <li>The source of values used for lookups</li>
@@ -265,13 +265,13 @@
 <li><code>NULL</code> means not looking for a particular value for that table</li>
 </ul>
 
-<h3 id="rows:7ce5ad0d111b0d271669e2656bf8fe82">rows</h3>
+<h3 id="rows">rows</h3>
 
 <ul>
 <li>Estimated rows to examine in the table/index</li>
 </ul>
 
-<h3 id="extra:7ce5ad0d111b0d271669e2656bf8fe82">extra</h3>
+<h3 id="extra">extra</h3>
 
 <ul>
 <li>Using index

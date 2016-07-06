@@ -36,7 +36,7 @@ Wordpress uses a syntax highlighting macro, but the language it supports is very
 
 &lt;p&gt;After a day of setting up, here&amp;rsquo;s what I found:&lt;/p&gt;
 
-&lt;h2 id=&#34;installation:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Installation&lt;/h2&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
 
 &lt;p&gt;I&amp;rsquo;m primarily a Python developer, so setting up a Ruby project is a bit foreign to me, especially since Octopress only works with Ruby 1.9+, I need to setup &lt;a href=&#34;http://rvm.io&#34;&gt;RVM&lt;/a&gt;, and even though it&amp;rsquo;s well documented, it&amp;rsquo;s not without speed bumps on my Ubuntu system. In particular, you need to install &lt;code&gt;libssl-dev&lt;/code&gt; before you let RVM compile and install Ruby, otherwise you will get something like this:&lt;/p&gt;
 
@@ -53,11 +53,11 @@ Wordpress uses a syntax highlighting macro, but the language it supports is very
 &lt;pre&gt;&lt;code&gt;rvm reinstall 1.9
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;setting-up-tld:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Setting up TLD&lt;/h2&gt;
+&lt;h2 id=&#34;setting-up-tld&#34;&gt;Setting up TLD&lt;/h2&gt;
 
 &lt;p&gt;After the first deploy, the pages are already accessible via &lt;code&gt;&amp;lt;yourname&amp;gt;.github.com&lt;/code&gt;, but pointing your domain to the page is just as easy. I followed &lt;a href=&#34;https://help.github.com/articles/setting-up-a-custom-domain-with-pages&#34;&gt;this&lt;/a&gt; official article from Github.&lt;/p&gt;
 
-&lt;h2 id=&#34;static-sweetness:7ef1df8348ecf02e3861aadb67f8b19d&#34;&gt;Static sweetness&lt;/h2&gt;
+&lt;h2 id=&#34;static-sweetness&#34;&gt;Static sweetness&lt;/h2&gt;
 
 &lt;p&gt;There we go! Sweet static pages:&lt;/p&gt;
 

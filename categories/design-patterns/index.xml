@@ -17,7 +17,7 @@
       <guid>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</guid>
       <description>
 
-&lt;h2 id=&#34;the-problem:de74c716e6ede38442b3fad3c394ab9f&#34;&gt;The problem&lt;/h2&gt;
+&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
 
 &lt;p&gt;In Java, imagine you have a list of &lt;code&gt;User&lt;/code&gt; objects, each encapsulates the user&amp;rsquo;s &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;first name&lt;/code&gt;, &lt;code&gt;last name&lt;/code&gt; and &lt;code&gt;age&lt;/code&gt;. Then you want to call a web service &lt;code&gt;UserService.deleteUsersByIds(List&amp;lt;Integer&amp;gt; userIds)&lt;/code&gt; to delete the users from your data store. It doesn&amp;rsquo;t sound too hard, does it? All you need to do is to transform you &lt;code&gt;List&amp;lt;User&amp;gt;&lt;/code&gt; to &lt;code&gt;List&amp;lt;Integer&amp;gt;&lt;/code&gt;. So you go ahead and write the following code:&lt;/p&gt;
 
@@ -46,7 +46,7 @@ for (User user : users) {
 &lt;li&gt;&lt;code&gt;filter(coll, f)&lt;/code&gt; &amp;ldquo;loops&amp;rdquo; over the collection, calls &lt;code&gt;f(element)&lt;/code&gt;, and only add element to the return list when &lt;code&gt;f(element)&lt;/code&gt; returns &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;use-delegation-for-generic-ity:de74c716e6ede38442b3fad3c394ab9f&#34;&gt;Use delegation for generic-ity&lt;/h2&gt;
+&lt;h2 id=&#34;use-delegation-for-generic-ity&#34;&gt;Use delegation for generic-ity&lt;/h2&gt;
 
 &lt;p&gt;Now we take our first step in designing our generic map function:&lt;/p&gt;
 
@@ -103,7 +103,7 @@ List&amp;lt;String&amp;gt; ids = map(users, new MapDelegate&amp;lt;User,String&a
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;what-about-return-value-creation:de74c716e6ede38442b3fad3c394ab9f&#34;&gt;What about return value creation?&lt;/h2&gt;
+&lt;h2 id=&#34;what-about-return-value-creation&#34;&gt;What about return value creation?&lt;/h2&gt;
 
 &lt;p&gt;Use delegation, we can separate the parts of an algorithm in terms of their interfaces and leave the implementation to the caller. However, given the above filter and map methods, what if I don&amp;rsquo;t want the return type to be &lt;code&gt;ArrayList&lt;/code&gt;? What if I want a &lt;code&gt;LinkedList&lt;/code&gt; or a &lt;code&gt;HashSet&lt;/code&gt;? Doesn&amp;rsquo;t the statement&lt;/p&gt;
 

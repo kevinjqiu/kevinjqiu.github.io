@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.15" />
+<meta name="generator" content="Hugo 0.16" />
 
   <meta property="og:title" content="Use Python&#39;s sys.settrace() for fun and for profit" />
 <meta property="og:description" content="" />
@@ -130,14 +130,14 @@
 <ul>
 <li>
 <ul>
-<li><a href="#the-itch-to-scratch:c0963e613fb36e35763da3ad0b838456">The itch to scratch</a></li>
-<li><a href="#here-comes-sys-settrace:c0963e613fb36e35763da3ad0b838456">Here comes <code>sys.settrace()</code></a></li>
-<li><a href="#how-can-it-be-used:c0963e613fb36e35763da3ad0b838456">How can it be used?</a></li>
-<li><a href="#a-simple-use-case:c0963e613fb36e35763da3ad0b838456">A simple use case</a></li>
-<li><a href="#trace-function:c0963e613fb36e35763da3ad0b838456">Trace function</a></li>
-<li><a href="#data-collection:c0963e613fb36e35763da3ad0b838456">Data Collection</a></li>
-<li><a href="#potential-problems:c0963e613fb36e35763da3ad0b838456">Potential Problems</a></li>
-<li><a href="#collaborators-welcome:c0963e613fb36e35763da3ad0b838456">Collaborators welcome!</a></li>
+<li><a href="#the-itch-to-scratch">The itch to scratch</a></li>
+<li><a href="#here-comes-sys-settrace">Here comes <code>sys.settrace()</code></a></li>
+<li><a href="#how-can-it-be-used">How can it be used?</a></li>
+<li><a href="#a-simple-use-case">A simple use case</a></li>
+<li><a href="#trace-function">Trace function</a></li>
+<li><a href="#data-collection">Data Collection</a></li>
+<li><a href="#potential-problems">Potential Problems</a></li>
+<li><a href="#collaborators-welcome">Collaborators welcome!</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -175,7 +175,7 @@
 
             
 
-<h2 id="the-itch-to-scratch:c0963e613fb36e35763da3ad0b838456">The itch to scratch</h2>
+<h2 id="the-itch-to-scratch">The itch to scratch</h2>
 
 <p>Everyone in the software industry knows Kent Beck, the pioneers of extreme programming and test-driven development and the co-author of JUnit. One of his lesser known project was <a href="http://junitmax.com">JUnitMax</a>, which aims to reduce the time developers have to wait while tests are running. One of the ideas behind that is that when code changes, only the test cases that exercise the code need to be run, instead of running the entire suite. The idea makes a lot of sense to me, but at the time, I (and the development shop I was in) wasn&rsquo;t practising enough TDD, so unit test time wasn&rsquo;t a big problem for me back then.</p>
 
@@ -185,15 +185,15 @@
 
 <p>So, I started looking into <a href="http://nedbatchelder.com/code/coverage/">coveragepy</a>&rsquo;s source code, and watching its author <a href="http://nedbatchelder.com/blog/">Ned Batchelder</a>&rsquo;s excellent PyCon2011 <a href="http://blip.tv/pycon-us-videos-2009-2010-2011/pycon-2011-python-aware-python-4896752">video</a> on <code>sys.settrace</code>. I wanted to build a proof-of-concept tool that integrates with the de-facto Python unit-test tool <a href="https://github.com/nose-devs/nose">nose</a>, that, when run, gathers the information about which lines in the files in the source folder are covered by which test cases, and hence <a href="https://github.com/kevinjqiu/nostrils">nostrils</a> is born.</p>
 
-<h2 id="here-comes-sys-settrace:c0963e613fb36e35763da3ad0b838456">Here comes <code>sys.settrace()</code></h2>
+<h2 id="here-comes-sys-settrace">Here comes <code>sys.settrace()</code></h2>
 
 <p>Python&rsquo;s motto is &ldquo;batteries included&rdquo;. This is manifested in many Python&rsquo;s stanndard library modules, such as ast (source code parsing) and dis (bytecode disassembly). One of which is the ability to make the Python interpreter call an external function whenever a line of code is being executed. You can do a lot of fun stuff with it, for example, Coverage.py uses this to build code coverage data; pdb uses it to insert breakpoints into a running application and change the way a Python program is executed.</p>
 
-<h2 id="how-can-it-be-used:c0963e613fb36e35763da3ad0b838456">How can it be used?</h2>
+<h2 id="how-can-it-be-used">How can it be used?</h2>
 
 <p>For <em>nostrils</em>, we need to write a nose plugin that installs the trace function when a test is encountered. The trace function records the line numbers and the current test case name. After all tests are run, we have our map.</p>
 
-<h2 id="a-simple-use-case:c0963e613fb36e35763da3ad0b838456">A simple use case</h2>
+<h2 id="a-simple-use-case">A simple use case</h2>
 
 <p>To start, we need a simple use case:</p>
 
@@ -280,7 +280,7 @@ class Nostrils(Plugin):
 
 <p>The idea is that we install the trace function when test starts, and restore the trace function back to what it was. We also keeps track of what&rsquo;s the current test in <code>self._current_test</code>.</p>
 
-<h2 id="trace-function:c0963e613fb36e35763da3ad0b838456">Trace function</h2>
+<h2 id="trace-function">Trace function</h2>
 
 <p>Now let&rsquo;s have a look at the trace function:</p>
 
@@ -307,7 +307,7 @@ class Nostrils(Plugin):
 
 <p>Here, I&rsquo;m only interested in the <code>line</code> event, which is triggered when a new line of code is being executed. When this happens, we invoke <code>_trace_down</code>, which walks the frame stack by recursing on <code>frame.f_back</code>. When it&rsquo;s <code>None</code>, we&rsquo;re at the bottom of the stack. Because we&rsquo;re tracing the execution of tests, we can probably stop traversing when the code object of the frame is the entry point of the test case (<code>if frame.f_code == test.__call__.func_code</code>). This way, we save ourselves some unnecessary traversals.</p>
 
-<h2 id="data-collection:c0963e613fb36e35763da3ad0b838456">Data Collection</h2>
+<h2 id="data-collection">Data Collection</h2>
 
 <p>There&rsquo;s are few things we need to collect: filename, line number of the code being executed and the test case name that covers the code.</p>
 
@@ -338,14 +338,14 @@ class Nostrils(Plugin):
 
 <p>There we have it! We have a prototype of what could become a PyUnitMax ;)</p>
 
-<h2 id="potential-problems:c0963e613fb36e35763da3ad0b838456">Potential Problems</h2>
+<h2 id="potential-problems">Potential Problems</h2>
 
 <ul>
 <li>Scale: Now I&rsquo;m only running nostrils on trivial code base. Profiling and optimization is needed if nostrils were to be used in real-world cases.</li></li>
 <li>Multi-threading: No consideration was given to multi-threading at this stage.</li></li>
 </ul>
 
-<h2 id="collaborators-welcome:c0963e613fb36e35763da3ad0b838456">Collaborators welcome!</h2>
+<h2 id="collaborators-welcome">Collaborators welcome!</h2>
 
 <p>I have since refactored the code, revised the data structure and published it on <a href="https://github.com/kevinjqiu/nostrils">github</a>. Please provide me with feedbacks and suggestions.</p>
 

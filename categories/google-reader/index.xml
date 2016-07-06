@@ -19,19 +19,19 @@
 
 &lt;p&gt;OK, ok, I understand. The title is a bit misleading. &lt;a href=&#34;http://reader.google.com&#34;&gt;Google Reader&lt;/a&gt; isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.&lt;/p&gt;
 
-&lt;h2 id=&#34;what-are-we-going-to-achieve:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;What are we going to achieve?&lt;/h2&gt;
+&lt;h2 id=&#34;what-are-we-going-to-achieve&#34;&gt;What are we going to achieve?&lt;/h2&gt;
 
 &lt;p&gt;Anyone uses Google Reader to read &lt;a href=&#34;http://www.dzone.com&#34;&gt;DZone&lt;/a&gt; feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following. I don&amp;rsquo;t know about you but for me, sometimes I just want to read the original story without going to the DZone page. It&amp;rsquo;d be nice if they have a &amp;ldquo;click through&amp;rdquo; action (like the following) on the action bar that brings you to the original story.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png?w=300&#34; alt=&#34;End goal&#34; title=&#34;Screenshot-Google Reader (539) - Chromium&#34; width=&#34;300&#34; height=&#34;100&#34; class=&#34;aligncenter size-medium wp-image-262&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;basic-strategy:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Basic strategy&lt;/h2&gt;
+&lt;h2 id=&#34;basic-strategy&#34;&gt;Basic strategy&lt;/h2&gt;
 
 &lt;p&gt;So, how are we going to implement this feature? Chrome Extension code can be injected into the running page, and have full access to its DOM. Therefore, we can write code such that if the currently opened entry is a DZone entry, we insert &amp;lsquo;Click Through&amp;rsquo; action into the entry action bar (action bar is the bar underneath the main entry, where &amp;lsquo;Add Star&amp;rsquo;, &amp;lsquo;Like&amp;rsquo;, &amp;lsquo;Share&amp;rsquo; actions are). The &amp;lsquo;Click Through&amp;rsquo; action, when clicked, will read the feed URL, fetch it in the background, parse it and get the URL of the original story, and open the original URL in a separate tab.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-261&#34; title=&#34;strategy&#34; src=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png?w=300&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;231&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;create-a-manifest:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Create a manifest&lt;/h3&gt;
+&lt;h3 id=&#34;create-a-manifest&#34;&gt;Create a manifest&lt;/h3&gt;
 
 &lt;p&gt;A Chrome extension must have a manifest.json file containing the metadata of the extension.&lt;/p&gt;
 
@@ -68,7 +68,7 @@
 
 &lt;p&gt;We also specify the &amp;ldquo;matches&amp;rdquo; property, so our content script is only activated when the URL matches.&lt;/p&gt;
 
-&lt;h3 id=&#34;the-content-script:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;The content script&lt;/h3&gt;
+&lt;h3 id=&#34;the-content-script&#34;&gt;The content script&lt;/h3&gt;
 
 &lt;p&gt;We start with:&lt;/p&gt;
 
@@ -134,7 +134,7 @@
 
 &lt;p&gt;I won&amp;rsquo;t delve too much into this code. It makes assumptions about the structure of the DOM that Google Reader renders into. This does make the extension brittle but that&amp;rsquo;s the reality we have to deal with for client-side scripting. Luckily, Google Reader markup doesn&amp;rsquo;t change very often. For people new to object-oriented Javascript, this is one way to create a &amp;ldquo;class&amp;rdquo; (prototype) and put &amp;ldquo;instance&amp;rdquo; methods on a &amp;ldquo;class&amp;rdquo;.&lt;/p&gt;
 
-&lt;h3 id=&#34;background-html:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;Background.html&lt;/h3&gt;
+&lt;h3 id=&#34;background-html&#34;&gt;Background.html&lt;/h3&gt;
 
 &lt;p&gt;Unlike content scripts, which is injected and runs in the target page, the background page runs in its own process (the extension&amp;rsquo;s process) and keeps running while the extension is active. It&amp;rsquo;s comparable to the &amp;ldquo;server&amp;rdquo; side of the extension. For our extension&amp;rsquo;s purpose, we&amp;rsquo;re using the background script to make requests to 3rd party web sites (DZone).&lt;/p&gt;
 
@@ -166,7 +166,7 @@
 &lt;li&gt;chrome.tabs isn&amp;rsquo;t accessible in the content script. That&amp;rsquo;s why open_tab is an event the client (the content script) can raise and delegate chrome specific API calls to the background script.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;after-thoughts:91a7f408cafa0bd117d7b35559a353f7&#34;&gt;After Thoughts&lt;/h2&gt;
+&lt;h2 id=&#34;after-thoughts&#34;&gt;After Thoughts&lt;/h2&gt;
 
 &lt;p&gt;That&amp;rsquo;s it! That&amp;rsquo;s my first Chrome extension. It&amp;rsquo;s not earth shattering or anything but I learned quite a lot. I like Chrome extension development &amp;ndash; it&amp;rsquo;s straightforward and simple. The architecture is quite simple yet powerful. The code is on &lt;a href=&#34;https://github.com/kevinjqiu/greader&#34;&gt;Github&lt;/a&gt; and I plan to expand it to a framework for customizing Google Reader experience. Here are a few things we can do with the extension:&lt;/p&gt;
 
