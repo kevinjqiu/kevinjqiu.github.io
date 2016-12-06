@@ -191,7 +191,7 @@
 
 <h1 id="couchdb-views">CouchDB views</h1>
 
-<p>CouchDB is a document-oriented database that&rsquo;s super easy to get started. You serialize your data to JSON format, and throw it on the wire to CouchDB via an HTTP interface. To get the data out (querying) though, you will need to write &ldquo;design docs&rdquo; that contain map/reduce functions (usually in JavaScript). Internally, CouchDB uses the map/reduce functions to build up a B+Tree index, so querying against that view is a simple tree lookup.</p>
+<p>CouchDB is a document-oriented database that&rsquo;s super easy to get started. You serialize your data into JSON, and throw it on the wire to CouchDB via an HTTP interface. To get the data out (querying) though, you will need to write &ldquo;design docs&rdquo; that contain map/reduce functions. Internally, CouchDB uses the map/reduce functions to build up a B+Tree index, so querying against that view is a simple tree lookup.</p>
 
 <p>Out-of-the-box, CouchDB supports views written in JavaScript, however, support for other languages are available thanks to the CouchDB <a href="http://docs.couchdb.org/en/1.6.1/query-server/protocol.html">query server protocol</a>. CouchDB process itself does not do any querying. It simply loops through all the changes that have not been indexed since the last time, and send the changes to the external query server.</p>
 
@@ -201,7 +201,7 @@
 
 <p>The following snippet is where it happens (<code>couch_mrview/src/couch_mrview_updater.erl</code>):</p>
 
-<pre><code class="language-erlang">map_docs(Parent, State0) -&gt;                                                                                                                                                                   
+<pre><code>map_docs(Parent, State0) -&gt;                                                                                                                                                                   
     case couch_work_queue:dequeue(State0#mrst.doc_queue) of
         ...
         {ok, Dequeued} -&gt;
@@ -221,7 +221,7 @@
 
 <p>and <code>couch_query_servers:map_doc_raw</code> is encodes the document into JSON and sends it over to the external query server process:</p>
 
-<pre><code class="language-erlang">map_doc_raw(Proc, Doc) -&gt;                                                                                                                                                                     
+<pre><code>map_doc_raw(Proc, Doc) -&gt;                                                                                                                                                                     
     Json = couch_doc:to_json_obj(Doc, []),
     {ok, proc_prompt_raw(Proc, [&lt;&lt;&quot;map_doc&quot;&gt;&gt;, Json])}.
 
