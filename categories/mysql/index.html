@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.16" />
+<meta name="generator" content="Hugo 0.17" />
 
   <meta property="og:title" content="Mysql" />
 <meta property="og:description" content="" />
@@ -149,7 +149,9 @@
       				
             </p>
             <article class="post-summary">
-            	Below is my notes from watching the MySQL&rsquo;s EXPLAIN demystified webinar. All credits go to Baron Schwartz for this excellent intro to MySQL&rsquo;s query explain. How does MySQL execute queries? SQL =&gt; Parse Tree =&gt; Execution plan The execution plan is a data structure, not byte-code The executor makes storage engine calls Execution plan &ldquo;Deep left tree&rdquo; &ndash; always Explain output columns id which SELECT the row belongs to Labelled sequentially complex select: subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id select_type simple: there&rsquo;s only one SELECT in the whole query, select_type is PRIMARY complex: subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id table table name or alias &lt;DerivedN&gt;, N correspond to id &lt;unionM,N&gt;, M, N correspond to id type describes how MySQL will access the rows Possible values: ALL: table scan index: full index scan range: range of an index ref: value as a reference to look into an index if rows in the index match the value eq_ref: like ref but unique (unique index or PK) const system: does not require accessing a table, e.g., MAX(col) NULL: no table involved, e.g., SELECT 1 Index-related columns (possible_kes, key, key_len) possible_keys: which indexes were considered?
+            	Below is my notes from watching the MySQL&rsquo;s EXPLAIN demystified webinar. All credits go to Baron Schwartz for this excellent intro to MySQL&rsquo;s query explain.
+How does MySQL execute queries?  SQL =&gt; Parse Tree =&gt; Execution plan The execution plan is a data structure, not byte-code The executor makes storage engine calls  Execution plan &ldquo;Deep left tree&rdquo; &ndash; always
+Explain output columns id  which SELECT the row belongs to Labelled sequentially complex select:  subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id   select_type  simple: there&rsquo;s only one SELECT in the whole query, select_type is PRIMARY complex:  subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id   table  table name or alias &lt;DerivedN&gt;, N correspond to id &lt;unionM,N&gt;, M, N correspond to id  type  describes how MySQL will access the rows Possible values:  ALL: table scan index: full index scan range: range of an index ref: value as a reference to look into an index if rows in the index match the value eq_ref: like ref but unique (unique index or PK) const system: does not require accessing a table, e.
             </article>
 			<div class="read-more-link">
 				<a href="/2014/11/27/mysql-explain-explained/"><span class="read-more-slashes">//</span>Read More...</a>

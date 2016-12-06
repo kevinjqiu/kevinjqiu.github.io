@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.16" />
+<meta name="generator" content="Hugo 0.17" />
 
   <meta property="og:title" content="Clojure" />
 <meta property="og:description" content="" />
@@ -223,7 +223,8 @@
       				
             </p>
             <article class="post-summary">
-            	About 10 minutes ago I heard about cake clojure build system, and gave it a try. And 10 minutes later, it won me over! Wow, it addresses all the pain points of leiningen. BLAZINGLY FAST!!! Sorry for using all CAPS but I&rsquo;m very excited about this improvement over leiningen &ndash; OK, it may not be the fault of leiningen that JVM cold startup time is non-trivial but hey, someone came up with an idea of having a long running JVM process in the background, so subsequent clojure tasks reuse the same JVM instance.
+            	About 10 minutes ago I heard about cake clojure build system, and gave it a try. And 10 minutes later, it won me over! Wow, it addresses all the pain points of leiningen.
+BLAZINGLY FAST!!! Sorry for using all CAPS but I&rsquo;m very excited about this improvement over leiningen &ndash; OK, it may not be the fault of leiningen that JVM cold startup time is non-trivial but hey, someone came up with an idea of having a long running JVM process in the background, so subsequent clojure tasks reuse the same JVM instance.
             </article>
 			<div class="read-more-link">
 				<a href="/2011/02/11/cake---the-yummy-clojure-build-system/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -259,7 +260,10 @@
       				
             </p>
             <article class="post-summary">
-            	In this blog post I’m going to record my recent experience in setting up a Clojure project using the clojure-maven-plugin. Clojure-Maven-Plugin First you need to compile the plugin from source: git clone git://github.com/talios/clojure-maven-plugin.git cd clojure-maven-plugin mvn install Of course, you will need to have Maven2 installed already. After that, the compiled plugin jar will be in your maven local repository. Create a pom.xml file to use the plugin. I’m using the pom.xml from my project Programming Collective Intelligence as an example: &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt; &lt;groupId&gt;pci&lt;/groupId&gt; &lt;artifactId&gt;pci&lt;/artifactId&gt; &lt;name&gt;Programming Collective Intelligence&lt;/name&gt; &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt; &lt;build&gt; &lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;com.theoryinpractise&lt;/groupId&gt; &lt;artifactId&gt;clojure-maven-plugin&lt;/artifactId&gt; &lt;version&gt;1.2-SNAPSHOT&lt;/version&gt; &lt;/plugin&gt; &lt;/plugins&gt; &lt;/build&gt; &lt;/project&gt; Also, setting up clojure-lang and clojure-contrib (optional, but nice to have) as dependencies as follows: &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.clojure&lt;/groupId&gt; &lt;artifactId&gt;clojure-lang&lt;/artifactId&gt; &lt;version&gt;1.1.0-alpha-SNAPSHOT&lt;/version&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;org.clojure&lt;/groupId&gt; &lt;artifactId&gt;clojure-contrib&lt;/artifactId&gt; &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; Clojure builds haven’t reached Maven central repository yet, so you need to build Clojure from source, and install it into your local repository by using mvn install:install-file -Dfile=clojure-lang.jar -DgroupId=org.clojure -DartifactId=clojure-lang -Dversion=1.1.0-alpha-SNAPSHOT -Dpackaging=jar Do the same for clojure-contrib.
+            	In this blog post I’m going to record my recent experience in setting up a Clojure project using the clojure-maven-plugin.
+Clojure-Maven-Plugin First you need to compile the plugin from source:
+git clone git://github.com/talios/clojure-maven-plugin.git cd clojure-maven-plugin mvn install  Of course, you will need to have Maven2 installed already.
+After that, the compiled plugin jar will be in your maven local repository. Create a pom.xml file to use the plugin. I’m using the pom.
             </article>
 			<div class="read-more-link">
 				<a href="/2009/11/11/setting-up-a-clojure-project-with-maven/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -295,7 +299,8 @@
       				
             </p>
             <article class="post-summary">
-            	They say the best way to learn a new programming language is by programming in it. Therefore I’m starting this project converting algorithms in the book Programming Collective Intelligence into Clojure, while learning the best practices and language idioms during the process. I’ve created a GitHub project for this. I’m not sure how far I’m able to go but let’s see.
+            	They say the best way to learn a new programming language is by programming in it. Therefore I’m starting this project converting algorithms in the book Programming Collective Intelligence into Clojure, while learning the best practices and language idioms during the process.
+I’ve created a GitHub project for this. I’m not sure how far I’m able to go but let’s see.
             </article>
 			<div class="read-more-link">
 				<a href="/2009/11/10/programming-collective-intelligence-in-clojure/"><span class="read-more-slashes">//</span>Read More...</a>
