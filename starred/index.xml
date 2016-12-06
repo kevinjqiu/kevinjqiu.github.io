@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Starreds on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/starred/</link>
-    <description>Recent content in Starreds on Qiu&#39;s Quibble</description>
+    <title>Starred-rsses on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/starred/index.xml</link>
+    <description>Recent content in Starred-rsses on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 03 Sep 2015 22:16:36 -0400</lastBuildDate>

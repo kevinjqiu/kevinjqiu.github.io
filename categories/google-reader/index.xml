@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Google Reader on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/google-reader/</link>
-    <description>Recent content in Google Reader on Qiu&#39;s Quibble</description>
+    <title>Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/google-reader/index.xml</link>
+    <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Oct 2011 20:14:00 +0000</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/categories/google-reader/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

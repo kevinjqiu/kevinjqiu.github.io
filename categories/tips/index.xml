@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tips on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/tips/</link>
-    <description>Recent content in Tips on Qiu&#39;s Quibble</description>
+    <title>Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/tips/index.xml</link>
+    <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 09 Jun 2010 19:45:00 +0000</lastBuildDate>
     <atom:link href="http://blog.idempotent.ca/categories/tips/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

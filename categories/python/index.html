@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.16" />
+<meta name="generator" content="Hugo 0.17" />
 
   <meta property="og:title" content="Python" />
 <meta property="og:description" content="" />
@@ -149,7 +149,8 @@
       				
             </p>
             <article class="post-summary">
-            	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar) I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
+            	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
+I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
             </article>
 			<div class="read-more-link">
 				<a href="/2015/09/03/use-python-bytecode-to-solve-puzzler/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -185,7 +186,8 @@
       				
             </p>
             <article class="post-summary">
-            	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar) I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
+            	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
+I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
             </article>
 			<div class="read-more-link">
 				<a href="/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -261,7 +263,8 @@
       				
             </p>
             <article class="post-summary">
-            	Our company has &ldquo;hack-off&rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this websocket buzz for a while now and would like to build something interesting with it. WebSocket Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&rsquo;s more interesting is that the server is able to push messages to the client (browser).
+            	Our company has &ldquo;hack-off&rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this websocket buzz for a while now and would like to build something interesting with it.
+WebSocket Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&rsquo;s more interesting is that the server is able to push messages to the client (browser).
             </article>
 			<div class="read-more-link">
 				<a href="/2012/04/07/realtime-notification-delivery-using-rabbitmq/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -337,7 +340,9 @@
       				
             </p>
             <article class="post-summary">
-            	EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See pdb++ or ipdb Pretty simple actually…Just put the following code in ~/.pdbrc and then you can use the Tab key during a PDB session to see the available attributes of the current context. import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete
+            	EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See pdb++ or ipdb
+Pretty simple actually…Just put the following code in ~/.pdbrc and then you can use the Tab key during a PDB session to see the available attributes of the current context.
+import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete  
             </article>
 			<div class="read-more-link">
 				<a href="/2009/06/12/enable-auto-complete-in-a-pdb-session/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -373,7 +378,8 @@
       				
             </p>
             <article class="post-summary">
-            	EDIT: 2011-04-21 While browsing my old blog posts, I found the code here can be greatly improved. Here it is: def words(): with open('/usr/share/dict/words', 'r') as f: return (x.strip().upper() for x in f.readlines()) MAPPING = {'A':'A', 'B':'B', 'C':'C', 'D':'D', 'E':'E', 'F':'F', 'O':'0', 'S':'5', 'I':'1'} def main(): is_hexword = lambda word: all(ch in MAPPING for ch in word) for word in filter(is_hexword, words()): print word, &quot;\t&quot;, ''.join(MAPPING.get(ch, ch) for ch in word) if __name__ == '__main__': main() So, it’s a relatively slow day at work, and I’ve been “stumbling upon” on Wikipedia when I found this: http://en.wikipedia.org/wiki/Hexspeak It’s pretty interesting, because I remember OS161 from my operating system course where they use 0xDEADBEEF as a value for uninitialized pointers.
+            	EDIT: 2011-04-21 While browsing my old blog posts, I found the code here can be greatly improved. Here it is:
+def words(): with open('/usr/share/dict/words', 'r') as f: return (x.strip().upper() for x in f.readlines()) MAPPING = {'A':'A', 'B':'B', 'C':'C', 'D':'D', 'E':'E', 'F':'F', 'O':'0', 'S':'5', 'I':'1'} def main(): is_hexword = lambda word: all(ch in MAPPING for ch in word) for word in filter(is_hexword, words()): print word, &quot;\t&quot;, ''.join(MAPPING.get(ch, ch) for ch in word) if __name__ == '__main__': main()  So, it’s a relatively slow day at work, and I’ve been “stumbling upon” on Wikipedia when I found this:
             </article>
 			<div class="read-more-link">
 				<a href="/2008/09/03/hexspeak-and-generator/"><span class="read-more-slashes">//</span>Read More...</a>
