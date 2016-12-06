@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/post/</link>
-    <description>Recent content in Posts on Qiu&#39;s Quibble</description>
+    <title>Post-rsses on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/post/index.xml</link>
+    <description>Recent content in Post-rsses on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 21 Sep 2016 22:35:56 -0400</lastBuildDate>

@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.16" />
+<meta name="generator" content="Hugo 0.17" />
 
   <meta property="og:title" content="Docker" />
 <meta property="og:description" content="" />
@@ -151,7 +151,8 @@
       				
             </p>
             <article class="post-summary">
-            	DockerCon 2016 is here and this is the very first day with workshops on various topics. I chose to attend the Docker Security workshop as I&rsquo;m interested in seeing how Docker tackles some security challenges. This blog post is my notes taken from the workshop. In order to talk about security, we first have to know how docker works on a higher level to know what to secure. The workshop addresses that question early on.
+            	DockerCon 2016 is here and this is the very first day with workshops on various topics. I chose to attend the Docker Security workshop as I&rsquo;m interested in seeing how Docker tackles some security challenges. This blog post is my notes taken from the workshop.
+In order to talk about security, we first have to know how docker works on a higher level to know what to secure. The workshop addresses that question early on.
             </article>
 			<div class="read-more-link">
 				<a href="/2016/06/19/docker-security/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -189,7 +190,8 @@
       				
             </p>
             <article class="post-summary">
-            	While working with docker related stuff and when I use volume mount to a subdir of my home dir, I always come across the issue of the container littering folders with root:root permission in my home folder and then I have to sudo rm ... it, for example: docker run -d $(pwd)/data:/var/lib/mysql/data mysql It always annoys me but today, it came to me like an epiphany that this is actually a pretty severe security vulnerability.
+            	While working with docker related stuff and when I use volume mount to a subdir of my home dir, I always come across the issue of the container littering folders with root:root permission in my home folder and then I have to sudo rm ... it, for example:
+docker run -d $(pwd)/data:/var/lib/mysql/data mysql  It always annoys me but today, it came to me like an epiphany that this is actually a pretty severe security vulnerability.
             </article>
 			<div class="read-more-link">
 				<a href="/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/"><span class="read-more-slashes">//</span>Read More...</a>
