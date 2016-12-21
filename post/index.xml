@@ -452,10 +452,6 @@ c/s = 19821.25
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h2 id=&#34;benchmark-with-bigger-documents&#34;&gt;Benchmark with bigger documents&lt;/h2&gt;
-
-&lt;p&gt;The above set of tests are done on documents with smallish size. Let&amp;rsquo;s add some junk data to the documents. I modified the document generation procedure to add in some arbitrary string properties so now the average document size is about 300k.&lt;/p&gt;
-
 
 &lt;figure &gt;
     
@@ -469,6 +465,10 @@ c/s = 19821.25
     
 &lt;/figure&gt;
 
+
+&lt;h2 id=&#34;benchmark-with-bigger-documents&#34;&gt;Benchmark with bigger documents&lt;/h2&gt;
+
+&lt;p&gt;The above set of tests are done on documents with smallish size. Let&amp;rsquo;s add some junk data to the documents. I modified the document generation procedure to add in some arbitrary string properties so now the average document size is about 300k.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def generate_doc(i):
     doc = {
@@ -542,7 +542,7 @@ c/s = 19821.25
     
     
     &lt;figcaption&gt;
-        &lt;h4&gt;Benchmark&lt;/h4&gt;
+        &lt;h4&gt;Benchmark @ 300k&lt;/h4&gt;
         
     &lt;/figcaption&gt;
     
