@@ -583,51 +583,16 @@ c/s = 19821.25
 
 <p>Let&rsquo;s look at where we stand in terms of indexer option and performance:</p>
 
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Average c/s</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>couchjs/external reducer</td>
-<td>5799.93</td>
-</tr>
-
-<tr>
-<td>couchjs/builtin reducer</td>
-<td>10769.73</td>
-</tr>
-
-<tr>
-<td>couchpy/external reducer</td>
-<td>8120.69</td>
-</tr>
-
-<tr>
-<td>couchpy/builtin reducer</td>
-<td>10470.51</td>
-</tr>
-
-<tr>
-<td>couchpy/simplejson/builtin reducer</td>
-<td>10201.86</td>
-</tr>
-
-<tr>
-<td>couchpy/pypy/builtin reducer</td>
-<td>11463.88</td>
-</tr>
-
-<tr>
-<td>erlang native view</td>
-<td>19821.25</td>
-</tr>
-</tbody>
-</table>
+<pre><code>| Option                             | Average c/s |
+|------------------------------------|-------------|
+| couchjs/external reducer           | 5799.93     |
+| couchjs/builtin reducer            | 10769.73    |
+| couchpy/external reducer           | 8120.69     |
+| couchpy/builtin reducer            | 10470.51    |
+| couchpy/simplejson/builtin reducer | 10201.86    |
+| couchpy/pypy/builtin reducer       | 11463.88    |
+| erlang native view                 | 19821.25    |
+</code></pre>
 
 
 <figure >
@@ -666,51 +631,16 @@ c/s = 19821.25
 
 <p>with this new database, rerun the above benchmark. We have:</p>
 
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Average c/s</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>couchjs/external reducer</td>
-<td>648.50</td>
-</tr>
-
-<tr>
-<td>couchjs/builtin reducer</td>
-<td>727.18</td>
-</tr>
-
-<tr>
-<td>couchpy/external reducer</td>
-<td>1564.38</td>
-</tr>
-
-<tr>
-<td>couchpy/builtin reducer</td>
-<td>1590.20</td>
-</tr>
-
-<tr>
-<td>couchpy/simplejson/builtin reducer</td>
-<td>2352.69</td>
-</tr>
-
-<tr>
-<td>couchpy/pypy/builtin reducer</td>
-<td>1265.20</td>
-</tr>
-
-<tr>
-<td>erlang native view</td>
-<td>9363.44</td>
-</tr>
-</tbody>
-</table>
+<pre><code>| Option                             | Average c/s |
+|------------------------------------|-------------|
+| couchjs/external reducer           | 648.50      |
+| couchjs/builtin reducer            | 727.18      |
+| couchpy/external reducer           | 1564.38     |
+| couchpy/builtin reducer            | 1590.20     |
+| couchpy/simplejson/builtin reducer | 2352.69     |
+| couchpy/pypy/builtin reducer       | 1265.20     |
+| erlang native view                 | 9363.44     |
+</code></pre>
 
 
 <figure >
@@ -730,67 +660,27 @@ c/s = 19821.25
 
 <p>Let&rsquo;s combine the two tables together:</p>
 
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>cps@1k</th>
-<th>cps@300k</th>
-</tr>
-</thead>
+<pre><code>| Option                             | cps@1k      |   cps@300k  |
+|------------------------------------|-------------|-------------|
+| couchjs/external reducer           | 5799.93     | 648.50      |
+| couchjs/builtin reducer            | 10769.73    | 727.18      |
+| couchpy/external reducer           | 8120.69     | 1564.38     |
+| couchpy/builtin reducer            | 10470.51    | 1590.20     |
+| couchpy/simplejson/builtin reducer | 10201.86    | 2352.69     |
+| couchpy/pypy/builtin reducer       | 11463.88    | 1265.20     |
+| erlang native view                 | 19821.25    | 9363.44     |
+</code></pre>
 
-<tbody>
-<tr>
-<td>couchjs/external reducer</td>
-<td>5799.93</td>
-<td>648.50</td>
-</tr>
+<p>Here are some conclusion we can draw from this experiment:</p>
 
-<tr>
-<td>couchjs/builtin reducer</td>
-<td>10769.73</td>
-<td>727.18</td>
-</tr>
-
-<tr>
-<td>couchpy/external reducer</td>
-<td>8120.69</td>
-<td>1564.38</td>
-</tr>
-
-<tr>
-<td>couchpy/builtin reducer</td>
-<td>10470.51</td>
-<td>1590.20</td>
-</tr>
-
-<tr>
-<td>couchpy/simplejson/builtin reducer</td>
-<td>10201.86</td>
-<td>2352.69</td>
-</tr>
-
-<tr>
-<td>couchpy/pypy/builtin reducer</td>
-<td>11463.88</td>
-<td>1265.20</td>
-</tr>
-
-<tr>
-<td>erlang native view</td>
-<td>19821.25</td>
-<td>9363.44</td>
-</tr>
-</tbody>
-</table>
-
-<p>Here are some conclusion we can draw from this experiment:
-- Native Erlang views are the fastest by a large margin.
-- Native Erlang views&rsquo; advantage is even more obvious when documents are larger
-- Avoid external reducer as much as you can. (i.e., Use the builtin reducer whenever you can)
-- PyPy does not offer performance improvements for Python views (in some cases, it&rsquo;s worse) probably due to the way query protocol works
-- The default Javascript view performance isn&rsquo;t great
-- Use simplejson for Python view when documents are larger</p>
+<ul>
+<li>Native Erlang views are the fastest by a large margin.</li>
+<li>Native Erlang views&rsquo; advantage is even more obvious when documents are larger</li>
+<li>Avoid external reducer as much as you can. (i.e., Use the builtin reducer whenever you can)</li>
+<li>PyPy does not offer performance improvements for Python views (in some cases, it&rsquo;s worse) probably due to the way query protocol works</li>
+<li>The default Javascript view performance isn&rsquo;t great</li>
+<li>Use simplejson for Python view when documents are larger</li>
+</ul>
 
 	
 			
