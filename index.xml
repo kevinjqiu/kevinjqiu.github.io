@@ -19,11 +19,13 @@
 
 &lt;p&gt;In the &lt;a href=&#34;2016-11-16-couchdb-index-view-benchmark&#34;&gt;last post&lt;/a&gt;, we discussed how CouchDB&amp;rsquo;s external query server works by examining the raw protocol. In this post, we&amp;rsquo;re going to take a look at the performance of different query servers.&lt;/p&gt;
 
-&lt;p&gt;The code used in this benchmarking are all &lt;a href=&#34;https://gist.github.com/kevinjqiu/dd461b36a6f1d6d755d7a317d8f98b75&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The code used in this benchmarking is &lt;a href=&#34;https://gist.github.com/kevinjqiu/dd461b36a6f1d6d755d7a317d8f98b75&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I listed below the method of the benchmark in detail. If you want you can &lt;a href=&#34;#result-comparison&#34;&gt;jump to conclusion&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h1 id=&#34;the-setup&#34;&gt;The Setup&lt;/h1&gt;
 
-&lt;p&gt;The benchmarks are done on my laptop (Intel 6th-gen i7 processor, 8G RAM, SSD) with CouchDB 1.6 in a docker container. But since we&amp;rsquo;re benchmarking python views as well, let&amp;rsquo;s make a new docker image and add python query server to it. Here&amp;rsquo;s the dockerfile:&lt;/p&gt;
+&lt;p&gt;The benchmarks are done on my laptop (Intel 6th-gen i7 processor, 8G RAM, SSD) with CouchDB 1.6 in a docker container. Since we&amp;rsquo;re benchmarking python views as well, we&amp;rsquo;re going to customize the docker image add python query server to it. Here&amp;rsquo;s the dockerfile:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;FROM couchdb
 RUN apt-get update -yqq &amp;amp;&amp;amp; apt-get install -y python python-pip
@@ -55,7 +57,7 @@ RUN pip install couchdb
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Suppose we store username with their score in the document, whatever that is. It&amp;rsquo;s a contrived example so bear with me :)&lt;/p&gt;
+&lt;p&gt;We are storing the name of the user along with their score in the document, whatever that is. It&amp;rsquo;s a contrived example so bear with me :)&lt;/p&gt;
 
 &lt;p&gt;To populate a dataset for our benchmarking, let&amp;rsquo;s use a script:&lt;/p&gt;
 
@@ -145,7 +147,7 @@ disk_size: 111153301
 
 &lt;p&gt;The map function written in Javascript:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;function(doc) {
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;function(doc) {
     if (doc.metadata &amp;amp;&amp;amp; doc.metadata.createdAt) {
         var parts = doc.metadata.createdAt.split(&amp;quot;-&amp;quot;),
             year = parts[0],
@@ -157,7 +159,7 @@ disk_size: 111153301
 
 &lt;p&gt;and the reduce function:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;function(keys, values, rereduce) {
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;function(keys, values, rereduce) {
     return sum(values);
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -168,14 +170,14 @@ disk_size: 111153301
 
 &lt;h3 id=&#34;monitor-changes-per-second-metric&#34;&gt;Monitor changes-per-second metric&lt;/h3&gt;
 
-&lt;p&gt;CouchDB exposes its indexing status through the &lt;code&gt;/_active_tasks&lt;/code&gt; endpoint. It contains the number of changes to be indexed in total and the number of changes already indexed. From that, we can calculate the changes per second as our benchmark.&lt;/p&gt;
+&lt;p&gt;CouchDB exposes its indexing status through the &lt;code&gt;/_active_tasks&lt;/code&gt; endpoint. It contains the number of changes to be indexed in total and the number of changes already indexed. From that, we can calculate the changes per second as our benchmark. As stated before, you can find the code &lt;a href=&#34;https://gist.github.com/kevinjqiu/dd461b36a6f1d6d755d7a317d8f98b75&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;python cps.py _design/scoresByMonthJS
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This starts a monitoring script on the specified design doc, and prints out changes per second number every 1 second.&lt;/p&gt;
 
-&lt;p&gt;With this script running, in another terminal, let&amp;rsquo;s trigger a view:&lt;/p&gt;
+&lt;p&gt;With this script running, in another terminal, let&amp;rsquo;s trigger the view:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;curl &amp;quot;http://localhost:9999/test/_design/scoresByMonthJS/_view/scoresByMonth?limit=11&amp;amp;group=true&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
@@ -228,9 +230,9 @@ c/s = 5632.24
 ]}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;So the average for a Javascript view is around 3796 changes per second.&lt;/p&gt;
+&lt;p&gt;So the average for a Javascript view is around 5.8k changes per second.&lt;/p&gt;
 
-&lt;h3 id=&#34;native-reducer&#34;&gt;Native Reducer&lt;/h3&gt;
+&lt;h3 id=&#34;builtin-reducer&#34;&gt;Builtin Reducer&lt;/h3&gt;
 
 &lt;p&gt;Many of you with CouchDB knowledge will quick to point out that I used a Javascript function as reducer to calculate the sum of the values. This is not very efficient, since (1) data will have to be serialized and sent to the external query server to calculate the result and (2) Javascript isn&amp;rsquo;t the fastest at mathematics (the default couchjs is using the Spider Monkey engine). We can cut short this loop by using the builtin &lt;code&gt;_sum&lt;/code&gt; reducer, which is written in Erlang and run on the same runtime as CouchDB itself, therefore, cut the roundtrip to the query server plus the serialization/deserialization cost.&lt;/p&gt;
 
