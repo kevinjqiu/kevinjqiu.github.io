@@ -124,7 +124,47 @@
             <header class="post-header">
             
             <h1 class="post-title">
-              <a href="/2016/11/16/couchdb-query-protocol-and-index-benchmarking-part-1/">CouchDB Query Protocol and Index Benchmarking (Part 1)</a>
+              <a href="/2016/12/19/couchdb-indexing-benchmark/">CouchDB Indexing Benchmark</a>
+            </h1>
+            </header>
+            <p class="post-meta">
+            	
+		          <span class="post-date">
+		            <span class="post-date-day"><sup>19</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Dec</span> <span class="post-date-year">2016</span>
+		          </span>
+      				
+      				
+      					
+      				
+              
+                <span class="post-reading-time"><i class="fa fa-clock-o"></i> <em>10 min. read</em></span>
+              
+      				
+      					<div class="post-categories">
+				        
+      					
+					        <a class="post-category post-category-couchdb" href="http://blog.idempotent.ca/categories/couchdb">couchdb</a>
+      					
+					        <a class="post-category post-category-performance" href="http://blog.idempotent.ca/categories/performance">performance</a>
+      					
+      					</div>
+      				
+            </p>
+            <article class="post-summary">
+            	In the last post, we discussed how CouchDB&rsquo;s external query server works by examining the raw protocol. In this post, we&rsquo;re going to take a look at the performance of different query servers.
+The code used in this benchmarking are all here
+The Setup The benchmarks are done on my laptop (Intel 6th-gen i7 processor, 8G RAM, SSD) with CouchDB 1.6 in a docker container. But since we&rsquo;re benchmarking python views as well, let&rsquo;s make a new docker image and add python query server to it.
+            </article>
+			<div class="read-more-link">
+				<a href="/2016/12/19/couchdb-indexing-benchmark/"><span class="read-more-slashes">//</span>Read More...</a>
+			</div>
+          </section>
+        
+          <section  class="post">
+            <header class="post-header">
+            
+            <h1 class="post-title">
+              <a href="/2016/11/16/couchdb-query-protocol/">CouchDB Query Protocol</a>
             </h1>
             </header>
             <p class="post-meta">
@@ -153,7 +193,7 @@
 In this article we&rsquo;ll be going over the concept of CouchDB views and find out just how CouchDB indexes documents with the help of external query servers.
             </article>
 			<div class="read-more-link">
-				<a href="/2016/11/16/couchdb-query-protocol-and-index-benchmarking-part-1/"><span class="read-more-slashes">//</span>Read More...</a>
+				<a href="/2016/11/16/couchdb-query-protocol/"><span class="read-more-slashes">//</span>Read More...</a>
 			</div>
           </section>
         
