@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.17" />
+<meta name="generator" content="Hugo 0.20.7" />
 
   <meta property="og:title" content="Ctf" />
 <meta property="og:description" content="" />
@@ -39,7 +39,7 @@
 
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
   <link href="http://blog.idempotent.ca/categories/ctf/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
@@ -51,6 +51,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+
+  
 
   
 
@@ -148,13 +150,15 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Level 3 Finally we get to level 3. Here&rsquo;s the setup:
 After the fiasco back in Level 0, management has decided to fortify the Secret Safe into an unbreakable solution (kind of like Unbreakable Linux). The resulting product is Secret Vault, which is so secure that it requires human intervention to add new secrets. A beta version has launched with some interesting secrets (including the password to access Level 4)  Here&rsquo;s the code for the server (Python finally!
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/09/19/stripe-capture-the-flag-2.0---problem-3/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -185,13 +189,15 @@ After the fiasco back in Level 0, management has decided to fortify the Secret S
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Level 2  In level 2, we&rsquo;re faced with a PHP app that allows you to upload a &ldquo;profile picture&rdquo;. The password to level 3 is contained in a &ldquo;password.txt&rdquo; file of the document root, as revealed in line 49. Of course, you won&rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.
 Reading through the code, it&rsquo;s a clear that whatever file uploaded to the server will be under uploads/, and the file is publicly accessible through &lt;base&gt;/uploads/&lt;your_file_name&gt;, as seen on line 37.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/09/12/stripe-capture-the-flag-2.0---problem-2/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -222,14 +228,16 @@ Reading through the code, it&rsquo;s a clear that whatever file uploaded to the 
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Level 1 Now we get to level 1. We are presented with a simple web form with the PHP code powering it.
  The PHP script checks if the input combination matches the combination in &lsquo;secret-combination.txt&rsquo; file, and present the user with the password to the next level if the combinations match. Obviously, we&rsquo;re not going to guess the combination.
 There are a few &lsquo;handy&rsquo; methods in PHP that are extremely dangerous.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/09/10/stripe-capture-the-flag-2.0---problem-1/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -260,16 +268,18 @@ There are a few &lsquo;handy&rsquo; methods in PHP that are extremely dangerous.
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Stripe just finished running a second &ldquo;capture the flag&rdquo; challenge. They ran a similar challenge this February and was more focused on system level. This time, it&rsquo;s full-on web security.
 In the next few posts, I&rsquo;m going to discuss the problems in the challenge, how I solved them and what did I learn from from each challenge.
 Problem 0 Here are the code for level 0:
  
 So you have a node.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/09/09/stripe-capture-the-flag-2.0---problem-0/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
       </div>
@@ -282,7 +292,7 @@ So you have a node.
 		</ul>
 	</div>
 
-	<p>&copy; 2016. All rights reserved.</p>
+	<p>&copy; 2017. All rights reserved.</p>
 </div>
     </div>
   </div>

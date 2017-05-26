@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.17" />
+<meta name="generator" content="Hugo 0.20.7" />
 
   <meta property="og:title" content="Scala" />
 <meta property="og:description" content="" />
@@ -39,7 +39,7 @@
 
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
   <link href="http://blog.idempotent.ca/categories/scala/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
@@ -51,6 +51,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+
+  
 
   
 
@@ -150,13 +152,15 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Update: I got sbt working by building directly from the master branch from their github repo. The current version is 0.7.5. The tagged 0.9.4 version is actually an older version. Anyway, tried it and kinda loved it.
 This is just another late night rambling&hellip;I was trying to get a proper scala build system setup. I was using Maven scala plugin for a while, but longing for something simpler and more scalanic (is there such a word?
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -187,14 +191,16 @@ This is just another late night rambling&hellip;I was trying to get a proper sca
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	I&rsquo;ve been exploring Scala on and off for some time now. Here&rsquo;s my highly subjective and very limited impression of Scala.
 What I like about Scala:
 0) It&rsquo;s statically-typed language. That&rsquo;s right! I don&rsquo;t care what you ninjas say. As much as I love dynamic languages, I just prefer statically typed language for big projects. The benefit of having type information is enormous for a project with a large code base.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2010/10/07/my-impression-on-scala-so-far/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -225,13 +231,15 @@ What I like about Scala:
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Lately, I&rsquo;ve been writing a parser using the Scala parser-combinator framework to parse some saves from a game. As a responsible programmer (:P), I write unit tests for each rule. However, I found myself having to write the following code over and over again:
 @Test def testRule1() { parserRule.apply(new CharSequence(&quot;someInput&quot;)) match { case Success(result, _) =&gt; { assertEquals(&quot;expected&quot;, result) /* other asserts if the result is a collection of something else */ } case NoSuccess(msg, _) =&gt; fail(msg) } }  It&rsquo;s worth noting that you cannot pass in a string value to a Parser.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -262,13 +270,15 @@ What I like about Scala:
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	The problem was posted on Programming Praxis. The algorithm itself is pretty straightforward, anyone can do it with a few if/else/fors, but to coerce myself to think functionally, I decide to practice writing it in Scala.
 A number is a happy number if the sum of square of its digits eventually arrive at 1. For example, 7=&gt;72=49=&gt;42+92=97=&gt;92+72=&gt;130=12+32+02=10=&gt;12+02=1, so 7 is a happy number. 17 is not a happy number because by applying the above process, it goes into a loop.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2010/07/23/finding-happy-numbers-using-scala/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
       </div>
@@ -281,7 +291,7 @@ A number is a happy number if the sum of square of its digits eventually arrive 
 		</ul>
 	</div>
 
-	<p>&copy; 2016. All rights reserved.</p>
+	<p>&copy; 2017. All rights reserved.</p>
 </div>
     </div>
   </div>

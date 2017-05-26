@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/</link>
+    <description>Recent content in Categories on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="http://blog.idempotent.ca/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Chrome Extension</title>
+      <link>http://blog.idempotent.ca/categories/chrome-extension/</link>
+      <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/chrome-extension/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Clojure</title>
+      <link>http://blog.idempotent.ca/categories/clojure/</link>
+      <pubDate>Sat, 03 Mar 2012 20:25:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/clojure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Concurrency</title>
+      <link>http://blog.idempotent.ca/categories/concurrency/</link>
+      <pubDate>Wed, 20 Nov 2013 11:53:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Couchdb</title>
+      <link>http://blog.idempotent.ca/categories/couchdb/</link>
+      <pubDate>Mon, 19 Dec 2016 23:34:56 -0500</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/couchdb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ctf</title>
+      <link>http://blog.idempotent.ca/categories/ctf/</link>
+      <pubDate>Wed, 19 Sep 2012 00:01:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Dead Letter Exchange</title>
+      <link>http://blog.idempotent.ca/categories/dead-letter-exchange/</link>
+      <pubDate>Thu, 30 Apr 2015 00:37:42 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/dead-letter-exchange/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Debugging</title>
+      <link>http://blog.idempotent.ca/categories/debugging/</link>
+      <pubDate>Fri, 12 Jun 2009 09:25:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/debugging/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Design Patterns</title>
+      <link>http://blog.idempotent.ca/categories/design-patterns/</link>
+      <pubDate>Mon, 01 Mar 2010 19:32:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/design-patterns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>http://blog.idempotent.ca/categories/docker/</link>
+      <pubDate>Sun, 19 Jun 2016 21:49:51 -0700</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Erlang</title>
+      <link>http://blog.idempotent.ca/categories/erlang/</link>
+      <pubDate>Mon, 01 Jun 2009 09:37:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/erlang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Functional Programming</title>
+      <link>http://blog.idempotent.ca/categories/functional-programming/</link>
+      <pubDate>Fri, 22 Oct 2010 20:06:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/functional-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Gae</title>
+      <link>http://blog.idempotent.ca/categories/gae/</link>
+      <pubDate>Tue, 09 Mar 2010 13:24:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/gae/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>http://blog.idempotent.ca/categories/golang/</link>
+      <pubDate>Wed, 20 Nov 2013 11:53:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Google Reader</title>
+      <link>http://blog.idempotent.ca/categories/google-reader/</link>
+      <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/google-reader/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Gwt</title>
+      <link>http://blog.idempotent.ca/categories/gwt/</link>
+      <pubDate>Fri, 26 Mar 2010 13:38:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/gwt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Java</title>
+      <link>http://blog.idempotent.ca/categories/java/</link>
+      <pubDate>Fri, 26 Mar 2010 13:38:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Javascript</title>
+      <link>http://blog.idempotent.ca/categories/javascript/</link>
+      <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/javascript/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>http://blog.idempotent.ca/categories/kubernetes/</link>
+      <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Misc</title>
+      <link>http://blog.idempotent.ca/categories/misc/</link>
+      <pubDate>Wed, 19 May 2010 19:42:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/misc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mysql</title>
+      <link>http://blog.idempotent.ca/categories/mysql/</link>
+      <pubDate>Thu, 27 Nov 2014 00:56:59 -0500</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Other</title>
+      <link>http://blog.idempotent.ca/categories/other/</link>
+      <pubDate>Mon, 16 Apr 2007 00:00:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/other/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Parallel Programming</title>
+      <link>http://blog.idempotent.ca/categories/parallel-programming/</link>
+      <pubDate>Mon, 01 Jun 2009 09:37:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/parallel-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Performance</title>
+      <link>http://blog.idempotent.ca/categories/performance/</link>
+      <pubDate>Mon, 19 Dec 2016 23:34:56 -0500</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/performance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Personal</title>
+      <link>http://blog.idempotent.ca/categories/personal/</link>
+      <pubDate>Sun, 02 Jan 2011 19:47:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/personal/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Podcast</title>
+      <link>http://blog.idempotent.ca/categories/podcast/</link>
+      <pubDate>Thu, 28 Apr 2016 22:12:59 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/podcast/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>http://blog.idempotent.ca/categories/python/</link>
+      <pubDate>Thu, 03 Sep 2015 22:16:36 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rabbitmq</title>
+      <link>http://blog.idempotent.ca/categories/rabbitmq/</link>
+      <pubDate>Thu, 30 Apr 2015 00:37:42 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/rabbitmq/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sbt</title>
+      <link>http://blog.idempotent.ca/categories/sbt/</link>
+      <pubDate>Thu, 17 Mar 2011 20:04:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/sbt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Scala</title>
+      <link>http://blog.idempotent.ca/categories/scala/</link>
+      <pubDate>Thu, 17 Mar 2011 20:04:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/scala/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Security</title>
+      <link>http://blog.idempotent.ca/categories/security/</link>
+      <pubDate>Sun, 19 Jun 2016 21:49:51 -0700</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sudoku</title>
+      <link>http://blog.idempotent.ca/categories/sudoku/</link>
+      <pubDate>Wed, 02 Mar 2011 20:00:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/sudoku/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Technology</title>
+      <link>http://blog.idempotent.ca/categories/technology/</link>
+      <pubDate>Mon, 18 Jun 2012 16:54:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/technology/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tips</title>
+      <link>http://blog.idempotent.ca/categories/tips/</link>
+      <pubDate>Wed, 09 Jun 2010 19:45:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/tips/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vim</title>
+      <link>http://blog.idempotent.ca/categories/vim/</link>
+      <pubDate>Wed, 20 Apr 2011 20:09:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/vim/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vimscript</title>
+      <link>http://blog.idempotent.ca/categories/vimscript/</link>
+      <pubDate>Wed, 20 Apr 2011 20:09:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/vimscript/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Websocket</title>
+      <link>http://blog.idempotent.ca/categories/websocket/</link>
+      <pubDate>Sat, 07 Apr 2012 16:50:00 +0000</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/websocket/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

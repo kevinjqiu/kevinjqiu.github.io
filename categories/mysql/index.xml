@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/mysql/index.xml</link>
-    <description>Recent content on Qiu&#39;s Quibble</description>
+    <title>Mysql on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/mysql/</link>
+    <description>Recent content in Mysql on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="http://blog.idempotent.ca/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 27 Nov 2014 00:56:59 -0500</lastBuildDate>
+    
+	<atom:link href="http://blog.idempotent.ca/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>MySQL EXPLAIN explained</title>
@@ -14,126 +17,9 @@
       <pubDate>Thu, 27 Nov 2014 00:56:59 -0500</pubDate>
       
       <guid>http://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</guid>
-      <description>
-
-&lt;p&gt;Below is my notes from watching the &lt;a href=&#34;https://www.youtube.com/watch?v=ZoLoIFW1H6g&#34;&gt;MySQL&amp;rsquo;s EXPLAIN demystified&lt;/a&gt; webinar.  All credits go to Baron Schwartz for this excellent intro to MySQL&amp;rsquo;s query explain.&lt;/p&gt;
-
-&lt;h2 id=&#34;how-does-mysql-execute-queries&#34;&gt;How does MySQL execute queries?&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;SQL =&amp;gt; Parse Tree =&amp;gt; Execution plan&lt;/li&gt;
-&lt;li&gt;The execution plan is a data structure, not byte-code&lt;/li&gt;
-&lt;li&gt;The executor makes storage engine calls&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;execution-plan&#34;&gt;Execution plan&lt;/h2&gt;
-
-&lt;p&gt;&amp;ldquo;Deep left tree&amp;rdquo; &amp;ndash; always&lt;/p&gt;
-
-&lt;h2 id=&#34;explain-output-columns&#34;&gt;Explain output columns&lt;/h2&gt;
-
-&lt;h3 id=&#34;id&#34;&gt;id&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;which &lt;code&gt;SELECT&lt;/code&gt; the row belongs to&lt;/li&gt;
-&lt;li&gt;Labelled sequentially&lt;/li&gt;
-&lt;li&gt;complex select:
-
-&lt;ul&gt;
-&lt;li&gt;subquery: numbered according to the position in SQL text&lt;/li&gt;
-&lt;li&gt;derived: executed as a temporary table&lt;/li&gt;
-&lt;li&gt;union: fill a temp table, then read out with a &lt;code&gt;NULL&lt;/code&gt; id&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;select-type&#34;&gt;select_type&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;simple: there&amp;rsquo;s only one &lt;code&gt;SELECT&lt;/code&gt; in the whole query, &lt;code&gt;select_type&lt;/code&gt; is &lt;code&gt;PRIMARY&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;complex:
-
-&lt;ul&gt;
-&lt;li&gt;subquery: numbered according to the position in SQL text&lt;/li&gt;
-&lt;li&gt;derived: executed as a temporary table&lt;/li&gt;
-&lt;li&gt;union: fill a temp table, then read out with a &lt;code&gt;NULL&lt;/code&gt; id&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;table&#34;&gt;table&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;table name or alias&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;DerivedN&amp;gt;&lt;/code&gt;, &lt;code&gt;N&lt;/code&gt; correspond to &lt;code&gt;id&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;unionM,N&amp;gt;&lt;/code&gt;, &lt;code&gt;M&lt;/code&gt;, &lt;code&gt;N&lt;/code&gt; correspond to &lt;code&gt;id&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;type&#34;&gt;type&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;describes how MySQL will access the rows&lt;/li&gt;
-&lt;li&gt;Possible values:
-
-&lt;ul&gt;
-&lt;li&gt;ALL: table scan&lt;/li&gt;
-&lt;li&gt;index: full index scan&lt;/li&gt;
-&lt;li&gt;range: range of an index&lt;/li&gt;
-&lt;li&gt;ref: value as a reference to look into an index if rows in the index match the value&lt;/li&gt;
-&lt;li&gt;eq_ref: like &lt;code&gt;ref&lt;/code&gt; but unique (unique index or PK)&lt;/li&gt;
-&lt;li&gt;const&lt;/li&gt;
-&lt;li&gt;system: does not require accessing a table, e.g., &lt;code&gt;MAX(col)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;NULL: no table involved, e.g., &lt;code&gt;SELECT 1&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;index-related-columns-possible-kes-key-key-len&#34;&gt;Index-related columns (possible_kes, key, key_len)&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;possible_keys: which indexes were considered?&lt;/li&gt;
-&lt;li&gt;key: which indexes did the optimizer choose?&lt;/li&gt;
-&lt;li&gt;key_len: how many bytes of the index will be used? if key_len less than the index (e.g., compound index), that means MySQL didn&amp;rsquo;t use the whole index&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;ref&#34;&gt;ref&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The source of values used for lookups&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;const&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;NULL&lt;/code&gt; means not looking for a particular value for that table&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;rows&#34;&gt;rows&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Estimated rows to examine in the table/index&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;extra&#34;&gt;extra&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Using index
-
-&lt;ul&gt;
-&lt;li&gt;If the query only involve columns that are in the index, MySQL can query directly against the index, without looking at the table at all&lt;/li&gt;
-&lt;li&gt;Hitting a index (&lt;code&gt;type&lt;/code&gt;) does not necessarily mean &lt;code&gt;Using index&lt;/code&gt;.  If not &lt;code&gt;Using index&lt;/code&gt;, MySQL got the indexed value but still has to go back and look it up in the table for other columns, which may result in lots of random IO (slow)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Using where
-
-&lt;ul&gt;
-&lt;li&gt;Post-filter using the where clause&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Using temporary
-
-&lt;ul&gt;
-&lt;li&gt;The query is going to create an implicit temporary table&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Using filesort
-
-&lt;ul&gt;
-&lt;li&gt;Sorting in memory, if it doesn&amp;rsquo;t fit, then write to file&lt;/li&gt;
-&lt;li&gt;Algorithm is quick sort&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Below is my notes from watching the MySQL&amp;rsquo;s EXPLAIN demystified webinar. All credits go to Baron Schwartz for this excellent intro to MySQL&amp;rsquo;s query explain.
+How does MySQL execute queries?  SQL =&amp;gt; Parse Tree =&amp;gt; Execution plan The execution plan is a data structure, not byte-code The executor makes storage engine calls  Execution plan &amp;ldquo;Deep left tree&amp;rdquo; &amp;ndash; always
+Explain output columns id  which SELECT the row belongs to Labelled sequentially complex select:  subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id   select_type  simple: there&amp;rsquo;s only one SELECT in the whole query, select_type is PRIMARY complex:  subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id   table  table name or alias &amp;lt;DerivedN&amp;gt;, N correspond to id &amp;lt;unionM,N&amp;gt;, M, N correspond to id  type  describes how MySQL will access the rows Possible values:  ALL: table scan index: full index scan range: range of an index ref: value as a reference to look into an index if rows in the index match the value eq_ref: like ref but unique (unique index or PK) const system: does not require accessing a table, e.</description>
     </item>
     
   </channel>

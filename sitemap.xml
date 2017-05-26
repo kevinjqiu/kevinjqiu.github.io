@@ -2,8 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://blog.idempotent.ca/</loc>
-    <lastmod>2016-12-19T23:34:56-05:00</lastmod>
+    <loc>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</loc>
+    <lastmod>2017-05-25T20:47:11-04:00</lastmod>
   </url>
   
   <url>
@@ -177,17 +177,17 @@
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/09/building-a-gae&#43;gwt-application-using-the-best-practices-part-5/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/09/building-a-gae-gwt-application-using-the-best-practices-part-5/</loc>
     <lastmod>2010-03-09T13:24:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-4/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-4/</loc>
     <lastmod>2010-03-03T13:15:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gae&#43;gwt-application-using-the-best-practices-part-3/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-3/</loc>
     <lastmod>2010-03-03T01:02:00+00:00</lastmod>
   </url>
   
@@ -197,12 +197,12 @@
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/03/01/building-a-gae&#43;gwt-application-using-the-best-practices-part-2/</loc>
+    <loc>http://blog.idempotent.ca/2010/03/01/building-a-gae-gwt-application-using-the-best-practices-part-2/</loc>
     <lastmod>2010-03-01T00:44:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.idempotent.ca/2010/02/26/building-a-gae&#43;gwt-application-using-the-best-practices-part-1/</loc>
+    <loc>http://blog.idempotent.ca/2010/02/26/building-a-gae-gwt-application-using-the-best-practices-part-1/</loc>
     <lastmod>2010-02-26T00:39:00+00:00</lastmod>
   </url>
   
@@ -279,6 +279,256 @@
   <url>
     <loc>http://blog.idempotent.ca/about/me/</loc>
     <lastmod>2000-01-01T00:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/about/</loc>
+    <lastmod>2000-01-01T00:00:00-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/chrome-extension/</loc>
+    <lastmod>2011-10-04T20:14:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/clojure/</loc>
+    <lastmod>2012-03-03T20:25:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/concurrency/</loc>
+    <lastmod>2013-11-20T11:53:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/couchdb/</loc>
+    <lastmod>2016-12-19T23:34:56-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/ctf/</loc>
+    <lastmod>2012-09-19T00:01:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/dead-letter-exchange/</loc>
+    <lastmod>2015-04-30T00:37:42-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/debugging/</loc>
+    <lastmod>2009-06-12T09:25:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/design-patterns/</loc>
+    <lastmod>2010-03-01T19:32:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/docker/</loc>
+    <lastmod>2016-06-19T21:49:51-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/erlang/</loc>
+    <lastmod>2009-06-01T09:37:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/functional-programming/</loc>
+    <lastmod>2010-10-22T20:06:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/gae/</loc>
+    <lastmod>2010-03-09T13:24:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/golang/</loc>
+    <lastmod>2013-11-20T11:53:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/google-reader/</loc>
+    <lastmod>2011-10-04T20:14:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/gwt/</loc>
+    <lastmod>2010-03-26T13:38:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/java/</loc>
+    <lastmod>2010-03-26T13:38:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/javascript/</loc>
+    <lastmod>2011-10-04T20:14:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/kubernetes/</loc>
+    <lastmod>2017-05-25T20:47:11-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/misc/</loc>
+    <lastmod>2010-05-19T19:42:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/mysql/</loc>
+    <lastmod>2014-11-27T00:56:59-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/other/</loc>
+    <lastmod>2007-04-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/parallel-programming/</loc>
+    <lastmod>2009-06-01T09:37:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/performance/</loc>
+    <lastmod>2016-12-19T23:34:56-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/personal/</loc>
+    <lastmod>2011-01-02T19:47:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/podcast/</loc>
+    <lastmod>2016-04-28T22:12:59-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/post/</loc>
+    <lastmod>2017-05-25T20:47:11-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/python/</loc>
+    <lastmod>2015-09-03T22:16:36-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/</loc>
+    <lastmod>2017-05-25T20:47:11-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/rabbitmq/</loc>
+    <lastmod>2015-04-30T00:37:42-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/sbt/</loc>
+    <lastmod>2011-03-17T20:04:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/scala/</loc>
+    <lastmod>2011-03-17T20:04:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/security/</loc>
+    <lastmod>2016-06-19T21:49:51-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/starred/</loc>
+    <lastmod>2015-09-03T22:16:36-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/sudoku/</loc>
+    <lastmod>2011-03-02T20:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/technology/</loc>
+    <lastmod>2012-06-18T16:54:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/tips/</loc>
+    <lastmod>2010-06-09T19:45:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/vim/</loc>
+    <lastmod>2011-04-20T20:09:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/vimscript/</loc>
+    <lastmod>2011-04-20T20:09:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/websocket/</loc>
+    <lastmod>2012-04-07T16:50:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
 </urlset>

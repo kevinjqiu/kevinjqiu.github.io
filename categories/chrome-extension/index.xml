@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/chrome-extension/index.xml</link>
-    <description>Recent content on Qiu&#39;s Quibble</description>
+    <title>Chrome Extension on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/chrome-extension/</link>
+    <description>Recent content in Chrome Extension on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="http://blog.idempotent.ca/categories/chrome-extension/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Oct 2011 20:14:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.idempotent.ca/categories/chrome-extension/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Building a Google Reader plugin using Chrome extension</title>
@@ -14,168 +17,8 @@
       <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
       
       <guid>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</guid>
-      <description>
-
-&lt;p&gt;OK, ok, I understand. The title is a bit misleading. &lt;a href=&#34;http://reader.google.com&#34;&gt;Google Reader&lt;/a&gt; isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-we-going-to-achieve&#34;&gt;What are we going to achieve?&lt;/h2&gt;
-
-&lt;p&gt;Anyone uses Google Reader to read &lt;a href=&#34;http://www.dzone.com&#34;&gt;DZone&lt;/a&gt; feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following. I don&amp;rsquo;t know about you but for me, sometimes I just want to read the original story without going to the DZone page. It&amp;rsquo;d be nice if they have a &amp;ldquo;click through&amp;rdquo; action (like the following) on the action bar that brings you to the original story.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png&#34;&gt;&lt;img src=&#34;http://reminiscential.files.wordpress.com/2011/10/screenshot-google-reader-539-chromium.png?w=300&#34; alt=&#34;End goal&#34; title=&#34;Screenshot-Google Reader (539) - Chromium&#34; width=&#34;300&#34; height=&#34;100&#34; class=&#34;aligncenter size-medium wp-image-262&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;basic-strategy&#34;&gt;Basic strategy&lt;/h2&gt;
-
-&lt;p&gt;So, how are we going to implement this feature? Chrome Extension code can be injected into the running page, and have full access to its DOM. Therefore, we can write code such that if the currently opened entry is a DZone entry, we insert &amp;lsquo;Click Through&amp;rsquo; action into the entry action bar (action bar is the bar underneath the main entry, where &amp;lsquo;Add Star&amp;rsquo;, &amp;lsquo;Like&amp;rsquo;, &amp;lsquo;Share&amp;rsquo; actions are). The &amp;lsquo;Click Through&amp;rsquo; action, when clicked, will read the feed URL, fetch it in the background, parse it and get the URL of the original story, and open the original URL in a separate tab.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png&#34;&gt;&lt;img class=&#34;aligncenter size-medium wp-image-261&#34; title=&#34;strategy&#34; src=&#34;http://reminiscential.files.wordpress.com/2011/10/untitled-1.png?w=300&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;231&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;create-a-manifest&#34;&gt;Create a manifest&lt;/h3&gt;
-
-&lt;p&gt;A Chrome extension must have a manifest.json file containing the metadata of the extension.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{
-    &amp;quot;name&amp;quot;:&amp;quot;GReader&amp;quot;,
-    &amp;quot;version&amp;quot;:&amp;quot;1.0&amp;quot;,
-    &amp;quot;description&amp;quot;:&amp;quot;Enhanced Google Reader experience&amp;quot;,
-    &amp;quot;permissions&amp;quot;: [
-        &amp;quot;http://*.dzone.com/&amp;quot;
-    ],
-    &amp;quot;background_page&amp;quot;:&amp;quot;background.html&amp;quot;,
-    &amp;quot;content_scripts&amp;quot;:[{
-        &amp;quot;matches&amp;quot;:[
-            &amp;quot;*://www.google.com/reader/view/*&amp;quot;
-        ],
-        &amp;quot;js&amp;quot;:[
-            &amp;quot;lib/jquery-1.6.4.min.js&amp;quot;,
-            &amp;quot;src/greader.js&amp;quot;
-        ],
-        &amp;quot;run_at&amp;quot;:&amp;quot;document_idle&amp;quot;
-    }]
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here we&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;specify that the extension needs to access any URL on dzone.com including its subdomains.&lt;/li&gt;
-&lt;li&gt;specify the background page&lt;/li&gt;
-&lt;li&gt;specify the content script&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &amp;ldquo;run_at&amp;rdquo; property will dictate when the content script is going to be run. Because Google Reader is a full AJAX application, we want our script to be run when the document is fully rendered.&lt;/p&gt;
-
-&lt;p&gt;We also specify the &amp;ldquo;matches&amp;rdquo; property, so our content script is only activated when the URL matches.&lt;/p&gt;
-
-&lt;h3 id=&#34;the-content-script&#34;&gt;The content script&lt;/h3&gt;
-
-&lt;p&gt;We start with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;(function($) {
-
-})(jQuery);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This creates a function scope, which separates our &lt;code&gt;$&lt;/code&gt; variable apart from the current page&amp;rsquo;s &lt;code&gt;$&lt;/code&gt; variable. Google Reader (I assume, is using Google&amp;rsquo;s own closure library), already defines $ and it&amp;rsquo;s not the jQuery object. This idiom gives &lt;code&gt;$&lt;/code&gt; as jQuery.&lt;/p&gt;
-
-&lt;p&gt;We want to insert the &amp;ldquo;Click through&amp;rdquo; action in the entry action bar. To achieve this, we will need to listen on &lt;code&gt;DOMNodeInserted&lt;/code&gt; event, and when such event happens and the node inserted is of the right CSS class name (&amp;ldquo;entry-action&amp;rdquo; here), we proceed to manipulate the DOM to add our customized actions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    $(&amp;quot;#entries&amp;quot;).live(&#39;DOMNodeInserted&#39;, function(e) {
-        if (!e.target.className.match(/entry\-actions/))
-            return;
-
-        var entryAction = new EntryAction($(e.target));
-        if (entryAction.entry.url.match(/^http\:\/\/feeds\.dzone\.com/)) {
-            entryAction.addAction({
-                &#39;name&#39;:&#39;Click Through&#39;,
-                &#39;fn&#39;:function(entry) {
-                    chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;fetch_entry&amp;quot;, &amp;quot;url&amp;quot;:entry.url}, function(response) {
-                        var matched = /&amp;lt;div class=&amp;quot;ldTitle&amp;quot;&amp;gt;(.*?)&amp;lt;\/div&amp;gt;/.exec(response.data);
-                        var href = ($(matched[1]).attr(&amp;quot;href&amp;quot;));
-                        if (href !== null) {
-                            chrome.extension.sendRequest({&amp;quot;type&amp;quot;:&amp;quot;open_tab&amp;quot;, &amp;quot;url&amp;quot;:href}, function(response) {
-                                // TODO: do something afterwards?
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here I built a little bit of abstraction around the raw entry action bar. It&amp;rsquo;s encapsulated in EntryAction class, which I&amp;rsquo;ll show in a moment. Basically, if the current displaying entry&amp;rsquo;s feed URL starts with feed.dzone.com, I&amp;rsquo;ll build the &amp;ldquo;click through&amp;rdquo; action, and set the click handler. It sends the feed URL to the background script. The background script will do the cross-site request to fetch the feed content and send it back. Then the content script will regex match the content to get the original story&amp;rsquo;s URL, and ask chrome to open the URL in a new tab.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s the code for &lt;code&gt;EntryAction&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    var EntryAction = function(element) {
-        this.element = element;
-        var entryElmt = this.element.parent(&amp;quot;.entry&amp;quot;);
-        var url = $(entryElmt).find(&amp;quot;.entry-title-link&amp;quot;).attr(&#39;href&#39;);
-        this.entry = {
-            &amp;quot;url&amp;quot; : url
-        };
-    };
-
-    EntryAction.prototype.addAction = function(action) {
-        var that = this;
-        var onclick = function(e) {
-            var actionFunc = action[&#39;fn&#39;];
-            actionFunc(that.entry);
-        }
-
-        this.element.append($(&amp;quot;&amp;lt;span&amp;gt;&amp;quot;)
-            .addClass(&amp;quot;link unselectable&amp;quot;)
-            .text(action[&#39;name&#39;])
-            .click(onclick));
-    };
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I won&amp;rsquo;t delve too much into this code. It makes assumptions about the structure of the DOM that Google Reader renders into. This does make the extension brittle but that&amp;rsquo;s the reality we have to deal with for client-side scripting. Luckily, Google Reader markup doesn&amp;rsquo;t change very often. For people new to object-oriented Javascript, this is one way to create a &amp;ldquo;class&amp;rdquo; (prototype) and put &amp;ldquo;instance&amp;rdquo; methods on a &amp;ldquo;class&amp;rdquo;.&lt;/p&gt;
-
-&lt;h3 id=&#34;background-html&#34;&gt;Background.html&lt;/h3&gt;
-
-&lt;p&gt;Unlike content scripts, which is injected and runs in the target page, the background page runs in its own process (the extension&amp;rsquo;s process) and keeps running while the extension is active. It&amp;rsquo;s comparable to the &amp;ldquo;server&amp;rdquo; side of the extension. For our extension&amp;rsquo;s purpose, we&amp;rsquo;re using the background script to make requests to 3rd party web sites (DZone).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;html&amp;gt;
-&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;lib/jquery-1.6.4.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;script&amp;gt;
-    (function($) {
-        chrome.extension.onRequest.addListener(
-            function(request, sender, sendResponse) {
-                if (request.type === &#39;fetch_entry&#39;) {
-                    $.get(request.url, function(data) {
-                        sendResponse({&amp;quot;data&amp;quot;:data});
-                    });
-                } else if (request.type === &#39;open_tab&#39;) {
-                    chrome.tabs.create({&#39;url&#39;:request.url});
-                    sendResponse({&amp;quot;status&amp;quot;:&amp;quot;ok&amp;quot;});
-                }
-            }
-        );
-    })(jQuery);
-&amp;lt;/script&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We register handlers for events that our &amp;ldquo;client&amp;rdquo; (the content script) is able to raise. Here we deal with 2 kinds of events: fetch_entry and open_tab.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Although Chrome 13 allows cross-site requests from content scripts, I&amp;rsquo;m actually quite fond of this pattern of delegating requests to the background page.&lt;/li&gt;
-&lt;li&gt;chrome.tabs isn&amp;rsquo;t accessible in the content script. That&amp;rsquo;s why open_tab is an event the client (the content script) can raise and delegate chrome specific API calls to the background script.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;after-thoughts&#34;&gt;After Thoughts&lt;/h2&gt;
-
-&lt;p&gt;That&amp;rsquo;s it! That&amp;rsquo;s my first Chrome extension. It&amp;rsquo;s not earth shattering or anything but I learned quite a lot. I like Chrome extension development &amp;ndash; it&amp;rsquo;s straightforward and simple. The architecture is quite simple yet powerful. The code is on &lt;a href=&#34;https://github.com/kevinjqiu/greader&#34;&gt;Github&lt;/a&gt; and I plan to expand it to a framework for customizing Google Reader experience. Here are a few things we can do with the extension:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Link &amp;ldquo;Share&amp;rdquo; action to twitter/Google+&lt;/li&gt;
-&lt;li&gt;Click on &amp;ldquo;Like&amp;rdquo; action to automatically vote up on DZone (or any other news aggregator)&lt;/li&gt;
-&lt;li&gt;Share with comment on Google Reader puts the comment on the entry on DZone (or any other news aggregator)&lt;/li&gt;
-&lt;li&gt;endless opportunities&amp;hellip;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>OK, ok, I understand. The title is a bit misleading. Google Reader isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.
+What are we going to achieve? Anyone uses Google Reader to read DZone feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following.</description>
     </item>
     
   </channel>
