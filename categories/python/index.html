@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.17" />
+<meta name="generator" content="Hugo 0.20.7" />
 
   <meta property="og:title" content="Python" />
 <meta property="og:description" content="" />
@@ -39,7 +39,7 @@
 
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
   <link href="http://blog.idempotent.ca/categories/python/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
@@ -51,6 +51,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+
+  
 
   
 
@@ -148,13 +150,15 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
 I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2015/09/03/use-python-bytecode-to-solve-puzzler/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -185,13 +189,15 @@ I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really tru
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
 I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -222,12 +228,14 @@ I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really tru
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	The itch to scratch Everyone in the software industry knows Kent Beck, the pioneers of extreme programming and test-driven development and the co-author of JUnit. One of his lesser known project was JUnitMax, which aims to reduce the time developers have to wait while tests are running. One of the ideas behind that is that when code changes, only the test cases that exercise the code need to be run, instead of running the entire suite.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -262,13 +270,15 @@ I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really tru
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Our company has &ldquo;hack-off&rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this websocket buzz for a while now and would like to build something interesting with it.
 WebSocket Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&rsquo;s more interesting is that the server is able to push messages to the client (browser).
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/04/07/realtime-notification-delivery-using-rabbitmq/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -301,12 +311,14 @@ WebSocket Websocket is a persistent bi-directional connection between the browse
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	It&rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing functional programming and dynamic languages&hellip;I learned Python before I went into Computer Science, and then I learned about functional programming and through learning of Scala and Clojure, my functional programming concepts have been enriched. As I was listening, it suddenly appeared to me that there isn&rsquo;t a way in Python to curry a function.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2010/10/22/use-python-decorator-to-curry-functions/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -339,14 +351,16 @@ WebSocket Websocket is a persistent bi-directional connection between the browse
       					</div>
       				
             </p>
-            <article class="post-summary">
-            	EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See pdb++ or ipdb
-Pretty simple actually…Just put the following code in ~/.pdbrc and then you can use the Tab key during a PDB session to see the available attributes of the current context.
-import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete  
-            </article>
-			<div class="read-more-link">
-				<a href="/2009/06/12/enable-auto-complete-in-a-pdb-session/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+            
+              <p>EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See <a href="https://bitbucket.org/antocuni/pdb/src">pdb++</a> or <a href="https://github.com/gotcha/ipdb">ipdb</a></p>
+
+<p>Pretty simple actually…Just put the following code in <code>~/.pdbrc</code> and then you can use the Tab key during a PDB session to see the available attributes of the current context.</p>
+
+<pre><code class="language-python">import rlcompleter
+pdb.Pdb.complete=rlcompleter.Completer(locals()).complete
+</code></pre>
+
+            
           </section>
         
           <section  class="post">
@@ -377,13 +391,15 @@ import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	EDIT: 2011-04-21 While browsing my old blog posts, I found the code here can be greatly improved. Here it is:
 def words(): with open('/usr/share/dict/words', 'r') as f: return (x.strip().upper() for x in f.readlines()) MAPPING = {'A':'A', 'B':'B', 'C':'C', 'D':'D', 'E':'E', 'F':'F', 'O':'0', 'S':'5', 'I':'1'} def main(): is_hexword = lambda word: all(ch in MAPPING for ch in word) for word in filter(is_hexword, words()): print word, &quot;\t&quot;, ''.join(MAPPING.get(ch, ch) for ch in word) if __name__ == '__main__': main()  So, it’s a relatively slow day at work, and I’ve been “stumbling upon” on Wikipedia when I found this:
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2008/09/03/hexspeak-and-generator/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
       </div>
@@ -396,7 +412,7 @@ def words(): with open('/usr/share/dict/words', 'r') as f: return (x.strip().upp
 		</ul>
 	</div>
 
-	<p>&copy; 2016. All rights reserved.</p>
+	<p>&copy; 2017. All rights reserved.</p>
 </div>
     </div>
   </div>

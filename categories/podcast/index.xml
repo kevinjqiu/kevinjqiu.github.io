@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/podcast/index.xml</link>
-    <description>Recent content on Qiu&#39;s Quibble</description>
+    <title>Podcast on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/podcast/</link>
+    <description>Recent content in Podcast on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="http://blog.idempotent.ca/categories/podcast/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Apr 2016 22:12:59 -0400</lastBuildDate>
+    
+	<atom:link href="http://blog.idempotent.ca/categories/podcast/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Software Engineering Podcasts Review</title>
@@ -14,178 +17,8 @@
       <pubDate>Thu, 28 Apr 2016 22:12:59 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</guid>
-      <description>
-
-&lt;p&gt;UPDATE: I&amp;rsquo;ve got a lot of great comments here and on &lt;a href=&#34;https://redd.it/4hycnz&#34;&gt;reddit&lt;/a&gt;. Thanks everyone for the suggestions.&lt;/p&gt;
-
-&lt;p&gt;As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.&lt;/p&gt;
-
-&lt;h1 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h1&gt;
-
-&lt;p&gt;I&amp;rsquo;m not affiliated with any of the podcasts. Any comments I have on the podcasts are highly subjective. I&amp;rsquo;m mostly a backend web developer interested in devops, distributed systems and scalability, so I don&amp;rsquo;t subscribe to podcasts that are dedicated to iOS/Android development.&lt;/p&gt;
-
-&lt;h1 id=&#34;software-engineering-daily&#34;&gt;Software Engineering Daily&lt;/h1&gt;
-
-
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/sed.png&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-
-&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://softwareengineeringdaily.com/&#34;&gt;http://softwareengineeringdaily.com/&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Frequency:&lt;/strong&gt; everyday&lt;/p&gt;
-
-&lt;p&gt;This has been a revelation for me since I discovered it at the end of last year (2015). It brings an episode of in-depth interview every day without fail, which speaks volume to the host &lt;a href=&#34;https://twitter.com/the_prion&#34;&gt;Jeff Meyerson&lt;/a&gt;&amp;rsquo;s passion for technology. The topics are wide-ranged, from distributed systems to operations (e.g., production monitoring) tobig data and everything in between. It&amp;rsquo;s very-well prepared and the guests are usually highly knowledgable of the subject.&lt;/p&gt;
-
-&lt;p&gt;I highly recommend this podcast.&lt;/p&gt;
-
-&lt;h1 id=&#34;software-engineering-radio&#34;&gt;Software Engineering Radio&lt;/h1&gt;
-
-
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/se-radio-logo.png&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-
-&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://www.se-radio.net/&#34;&gt;http://www.se-radio.net/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; Semi-monthly&lt;/p&gt;
-
-&lt;p&gt;This is one of the first podcasts I subscribed to. It&amp;rsquo;s published by IEEE computer society so it has a high profile. Sometimes the show gets a little too academic that it disconnects with what programmers do on a day-to-day basis. Don&amp;rsquo;t get me wrong, this is an awesome show, and very insightful. However, depending on the topics or the guests, you may or may not get as much out of the show. That said, however, this is still a very solid show with interesting topics and in-depth discussions.&lt;/p&gt;
-
-&lt;h1 id=&#34;the-changelog&#34;&gt;The Changelog&lt;/h1&gt;
-
-
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/the-changelog.svg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-
-&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;https://changelog.com/&#34;&gt;https://changelog.com/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; weekly-ish&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ve been following thechangelog show from its infancy. The show was on hiatus for a while but since they&amp;rsquo;re are back a few years ago, they&amp;rsquo;ve been in full gear, putting together tons of excellent interviews. Its primary focus is on open source projects and have put lots of interesting projects on my tech radar, including Golang and Docker. The depth of the show has been improving as well, and show is not just &amp;ldquo;hey there&amp;rsquo;s this project you probably haven&amp;rsquo;t heard about but you should&amp;rdquo;. The hosts are able to ask some insightful questions and the guests are usually able to provide detailed answers. I also like the show for the fact that you can open suggestions via &lt;a href=&#34;https://github.com/thechangelog/ping&#34;&gt;github issue link&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;security-now&#34;&gt;Security Now&lt;/h1&gt;
-
-
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/sn1400.jpg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-
-&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;https://twit.tv/shows/security-now&#34;&gt;https://twit.tv/shows/security-now&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; Weekly&lt;/p&gt;
-
-&lt;p&gt;Another long-time tech podcast and a prominent one from the popular twit.tv network. It&amp;rsquo;s going on for more than 10 years filling a unique niche. I learned a lot from Steve Gibson, the host. He has a knack of explaining security topics in plain words. His series on &lt;a href=&#34;https://twit.tv/shows/security-now/episodes/309&#34;&gt;How the Internet works&lt;/a&gt; is highly recommended. However, nowadays, the show tends to have trouble staying on topic, with so many non-security related chitchats. However, it&amp;rsquo;s still a good source to stay informed on security news.&lt;/p&gt;
-
-&lt;h1 id=&#34;coderradio&#34;&gt;CoderRadio&lt;/h1&gt;
-
-
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/coderradio.jpeg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-
-&lt;p&gt;&lt;strong&gt;Link:&lt;/strong&gt; &lt;a href=&#34;http://www.jupiterbroadcasting.com/show/coderradio/&#34;&gt;http://www.jupiterbroadcasting.com/show/coderradio/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; Weekly&lt;/p&gt;
-
-&lt;p&gt;I started listening to Coder Radio after I discovered &lt;a href=&#34;http://www.jupiterbroadcasting.com/&#34;&gt;Jupiter Broadcasting&lt;/a&gt; by way of &lt;a href=&#34;http://www.jupiterbroadcasting.com/show/linuxactionshow/&#34;&gt;Linux Action Show&lt;/a&gt;. The host Michael Dominic is an independent developer, so he has some insight on how to run a consulting business and how to do contract negotiation. While I don&amp;rsquo;t fancy being a software contractor at this point of my career, I do appreciate the information. However, this show gets facetious, snarky and dismissive really quickly. I don&amp;rsquo;t mind that occasionally but sometimes I feel the host is over-doing it.&lt;/p&gt;
-
-&lt;p&gt;I do get some value out of the show but it&amp;rsquo;s not known for its depth.&lt;/p&gt;
-
-&lt;h1 id=&#34;turing-incomplete&#34;&gt;Turing-InComplete&lt;/h1&gt;
-
-&lt;p&gt;
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/turing.png&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://turing.cool/&#34;&gt;http://turing.cool/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; No fixed schedule&lt;/p&gt;
-
-&lt;p&gt;This is mostly a talk show among 4 software engineer friends. They have a good diversity: frontend/backend, devops, contractor and so on. They are all enthusiastic about software. The most I get out of the show is inspiration. They&amp;rsquo;re always experimenting with new technology: elixir, clojurescript, new hashicorp tools etc. Listening to their podcast makes me want to learn and be a better software engineer. In the first dozen of episodes, they have a single topic for each show such as TDD, code review, pair programming etc, but as time goes on, the show becomes a grabbag of everything and it gets chatty without a ton of substance. It&amp;rsquo;s a casual conversation among friends having fun, and I guess that could be viewed as a strength.&lt;/p&gt;
-
-&lt;h1 id=&#34;talk-python-to-me&#34;&gt;Talk Python to Me&lt;/h1&gt;
-
-&lt;p&gt;
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/talkpython.jpg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;https://talkpython.fm/&#34;&gt;https://talkpython.fm/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; weekly&lt;/p&gt;
-
-&lt;p&gt;This is a Python-specific podcast hosted by Michael Kennedy. Being primarily a Python developer, I followed the podcast since its infancy. The show started off with a couple really strong interviews with interviewees like Mike Bayer, Kenneith Reitz, Armin Ronacher and David Beazley. The show has good depth, although sometimes it could be a bit stronger. There are gems like the one &lt;a href=&#34;https://talkpython.fm/episodes/show/22/cpython-internals-and-learning-python-with-pythontutor.com&#34;&gt;episode&lt;/a&gt; with Philip Guo which lead me to Philip&amp;rsquo;s excellent CPython internals video series. Overall, a really solid podcast.&lt;/p&gt;
-
-&lt;h1 id=&#34;podcast-init&#34;&gt;Podcast.__init__&lt;/h1&gt;
-
-&lt;p&gt;
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/podcast_init_logo.png&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://podcastinit.com/&#34;&gt;http://podcastinit.com/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; weekly&lt;/p&gt;
-
-&lt;p&gt;Another Python specific podcast started around the same time as Talk Python to Me. Another solid show and I do find it&amp;rsquo;s a little bit more in-depth than TalkPython but it might just be my impression.&lt;/p&gt;
-
-&lt;h1 id=&#34;scale-your-code&#34;&gt;Scale Your Code&lt;/h1&gt;
-
-&lt;p&gt;
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/scaleyourcode.jpg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;https://scaleyourcode.com/&#34;&gt;https://scaleyourcode.com/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; semi-monthly&lt;/p&gt;
-
-&lt;p&gt;I learned about this podcast on an &lt;a href=&#34;http://softwareengineeringdaily.com/2016/04/27/scale-code-christophe-limpalair/&#34;&gt;episode&lt;/a&gt; of another podcast software engineering daily. The host Christophe Limpalair is a super energetic and passionate guy. It&amp;rsquo;s inspiring to hear his journey. I&amp;rsquo;ve only discovered it not too long ago, but the topics are very relevant to what I do and what I interest in. I can&amp;rsquo;t wait to dive into its archive of back episodes.&lt;/p&gt;
-
-&lt;h1 id=&#34;fullstack-radio&#34;&gt;FullStack Radio&lt;/h1&gt;
-
-&lt;p&gt;
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://blog.idempotent.ca/images/fullstack.jpg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-&lt;strong&gt;link:&lt;/strong&gt; &lt;a href=&#34;http://www.fullstackradio.com/&#34;&gt;http://www.fullstackradio.com/&lt;/a&gt;
-&lt;strong&gt;Frequency:&lt;/strong&gt; semi-monthly&lt;/p&gt;
-
-&lt;p&gt;Another podcast I discovered recently. I&amp;rsquo;ve only listened to one &lt;a href=&#34;http://www.fullstackradio.com/38&#34;&gt;episode&lt;/a&gt; so far but I&amp;rsquo;m very impressed by the depth of the show. It&amp;rsquo;s like listening to a technical discussion between two colleagues. The host is not simply an echoing chamber but he&amp;rsquo;s able to provide many counter points, such as discussion about trade-offs. Great stuff!&lt;/p&gt;
-
-&lt;p&gt;What are your favourite or most often listened to software podcasts?&lt;/p&gt;
-</description>
+      <description>UPDATE: I&amp;rsquo;ve got a lot of great comments here and on reddit. Thanks everyone for the suggestions.
+As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.</description>
     </item>
     
   </channel>

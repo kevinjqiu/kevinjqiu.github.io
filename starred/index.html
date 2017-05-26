@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.17" />
+<meta name="generator" content="Hugo 0.20.7" />
 
   <meta property="og:title" content="Starreds" />
 <meta property="og:description" content="" />
@@ -39,7 +39,7 @@
 
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
   <link href="http://blog.idempotent.ca/starred/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
@@ -51,6 +51,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+
+  
 
   
 
@@ -148,13 +150,15 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
 I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -187,13 +191,15 @@ I&rsquo;ve been using Python for about ten years but I&rsquo;ve never really tru
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	In this post, I&rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using rabbitmq&rsquo;s DLX combined with a TTL. The technique has been described at a few places but it is new to me personally and our company. I&rsquo;d like to capture the experience we had both in implementing and in deploying to production.
 The problem At $DAYJOB we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&rsquo;s invoices, and change the invoice status.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -226,14 +232,16 @@ The problem At $DAYJOB we have a service that integrates with a 3rd-party API th
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	The problem is taken from Project-Euler, which asks what is the sum of all prime numbers under 2 million.
 Traditional Approach Project-Euler has many problems like this which looks ridiculously easy in theory, but practically impossible when using the old-school brute force way to solve them.
 Even after applying some well-known techniques to shrink the problem space, the computation still takes a long time (too long for me to stick around and wait it to finish).
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/starred/2009-06-01-fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
       </div>
@@ -246,7 +254,7 @@ Even after applying some well-known techniques to shrink the problem space, the 
 		</ul>
 	</div>
 
-	<p>&copy; 2016. All rights reserved.</p>
+	<p>&copy; 2017. All rights reserved.</p>
 </div>
     </div>
   </div>

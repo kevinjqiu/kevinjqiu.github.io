@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.17" />
+<meta name="generator" content="Hugo 0.20.7" />
 
   <meta property="og:title" content="Clojure" />
 <meta property="og:description" content="" />
@@ -39,7 +39,7 @@
 
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
   <link href="http://blog.idempotent.ca/categories/clojure/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
@@ -51,6 +51,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+
+  
 
   
 
@@ -148,12 +150,14 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	I&rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&rsquo;t a deterrent for me at all, in fact, I&rsquo;m quite fond of it and consider it very elegant. However, it does take some time to get used to. I don&rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2012/03/03/writing-a-simple-clojure-library/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -186,12 +190,14 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	&hellip;yeah, because the world just needs another Sudoku solver. Well, I&rsquo;m not trying to solve world hunger with it, but just an attempt to practice clojure, I took (read: stole) Peter Norvig&rsquo;s sudoku solver algorithm (written in Python) and adapted it into Clojure. I put it up on Github under sudoku-clj. The algorithm itself isn&rsquo;t that hard to understand. The porting to a lisp-y syntax made the code a little longer than its Python counterpart.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2011/03/02/write-sudoku-solver-in-clojure/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -222,13 +228,15 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	About 10 minutes ago I heard about cake clojure build system, and gave it a try. And 10 minutes later, it won me over! Wow, it addresses all the pain points of leiningen.
 BLAZINGLY FAST!!! Sorry for using all CAPS but I&rsquo;m very excited about this improvement over leiningen &ndash; OK, it may not be the fault of leiningen that JVM cold startup time is non-trivial but hey, someone came up with an idea of having a long running JVM process in the background, so subsequent clojure tasks reuse the same JVM instance.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2011/02/11/cake---the-yummy-clojure-build-system/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -259,15 +267,17 @@ BLAZINGLY FAST!!! Sorry for using all CAPS but I&rsquo;m very excited about this
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	In this blog post I’m going to record my recent experience in setting up a Clojure project using the clojure-maven-plugin.
 Clojure-Maven-Plugin First you need to compile the plugin from source:
 git clone git://github.com/talios/clojure-maven-plugin.git cd clojure-maven-plugin mvn install  Of course, you will need to have Maven2 installed already.
 After that, the compiled plugin jar will be in your maven local repository. Create a pom.xml file to use the plugin. I’m using the pom.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2009/11/11/setting-up-a-clojure-project-with-maven/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -298,13 +308,12 @@ After that, the compiled plugin jar will be in your maven local repository. Crea
       					</div>
       				
             </p>
-            <article class="post-summary">
-            	They say the best way to learn a new programming language is by programming in it. Therefore I’m starting this project converting algorithms in the book Programming Collective Intelligence into Clojure, while learning the best practices and language idioms during the process.
-I’ve created a GitHub project for this. I’m not sure how far I’m able to go but let’s see.
-            </article>
-			<div class="read-more-link">
-				<a href="/2009/11/10/programming-collective-intelligence-in-clojure/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+            
+              <p>They say the best way to learn a new programming language is by programming in it. Therefore I’m starting this project converting algorithms in the book <a href="http://oreilly.com/catalog/9780596529321">Programming Collective Intelligence</a> into Clojure, while learning the best practices and language idioms during the process.</p>
+
+<p>I’ve created a GitHub <a href="http://github.com/kevinjqiu/pci-clj">project</a> for this. I’m not sure how far I’m able to go but let’s see.</p>
+
+            
           </section>
         
           <section  class="post">
@@ -335,12 +344,14 @@ I’ve created a GitHub project for this. I’m not sure how far I’m able to g
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	Lately I’ve been teaching myself Clojure, a Lisp dialect on the JVM platform. I still love Erlang and still learning it, but Clojure has a special draw for me being a JVM language and its Lisp roots. I studied Scheme (another Lisp dialect) in my college years and deemed it purely academic. However, Clojure has the potential of changing this and bring the expressiveness of Lisp and the power of functional programming to the Java world.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2009/10/20/explore-clojure-building-a-bifid-cipher/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
       </div>
@@ -353,7 +364,7 @@ I’ve created a GitHub project for this. I’m not sure how far I’m able to g
 		</ul>
 	</div>
 
-	<p>&copy; 2016. All rights reserved.</p>
+	<p>&copy; 2017. All rights reserved.</p>
 </div>
     </div>
   </div>

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/technology/index.xml</link>
-    <description>Recent content on Qiu&#39;s Quibble</description>
+    <title>Technology on Qiu&#39;s Quibble</title>
+    <link>http://blog.idempotent.ca/categories/technology/</link>
+    <description>Recent content in Technology on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="http://blog.idempotent.ca/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Jun 2012 16:54:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.idempotent.ca/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Statically Yours</title>
@@ -14,59 +17,9 @@
       <pubDate>Mon, 18 Jun 2012 16:54:00 +0000</pubDate>
       
       <guid>http://blog.idempotent.ca/2012/06/18/statically-yours/</guid>
-      <description>
-
-&lt;p&gt;&lt;strong&gt;Migrating from wordpress to octopress&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;m not an avid blogger but like everyone else, I have a &lt;a href=&#34;http://reminiscential.wordpress.com&#34;&gt;blog&lt;/a&gt; which I casually write about life and programming. Being hosted by &lt;a href=&#34;http://wordpress.org&#34;&gt;wordpress&lt;/a&gt;, it was an out-of-the-box solution and comes with a lot of bells and whistles. However, for a programming blog, it has some significant shortcomings:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Conflation of content and style.
-A Wordpress post is written in a weird combination of HTML markups and custom wordpress macros, which means you have to rely on their WYSIWYG editor to generate the correct markups, which means you can&amp;rsquo;t use your favourite editor to write a blog post.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Limited versioning.
-Everytime you save a blog post, it creates a revision, but to view the diff is not as easy as &lt;code&gt;git diff&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Embedding a code snippet sucks
-Wordpress uses a syntax highlighting macro, but the language it supports is very limited. There&amp;rsquo;s third-party plugin that allows you to embed code snippet from &lt;a href=&#34;http://gist.github.com&#34;&gt;gist&lt;/a&gt;, but you have to subscribe to their premium plan.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Static site generators are becoming increasingly popular among developers. Developer blogs don&amp;rsquo;t need a ton of visuals, so content with basic styling is more than enough. Most importantly, it has to do code embedding well. A bit of research, it turns out that &lt;a href=&#34;octopress.org&#34;&gt;Octopress&lt;/a&gt; seems to be ubiquitous.&lt;/p&gt;
-
-&lt;p&gt;After a day of setting up, here&amp;rsquo;s what I found:&lt;/p&gt;
-
-&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
-
-&lt;p&gt;I&amp;rsquo;m primarily a Python developer, so setting up a Ruby project is a bit foreign to me, especially since Octopress only works with Ruby 1.9+, I need to setup &lt;a href=&#34;http://rvm.io&#34;&gt;RVM&lt;/a&gt;, and even though it&amp;rsquo;s well documented, it&amp;rsquo;s not without speed bumps on my Ubuntu system. In particular, you need to install &lt;code&gt;libssl-dev&lt;/code&gt; before you let RVM compile and install Ruby, otherwise you will get something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;no such file to load -- openssl (LoadError)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I had to&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo apt-get install libssl-dev
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and re-install Ruby&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rvm reinstall 1.9
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;setting-up-tld&#34;&gt;Setting up TLD&lt;/h2&gt;
-
-&lt;p&gt;After the first deploy, the pages are already accessible via &lt;code&gt;&amp;lt;yourname&amp;gt;.github.com&lt;/code&gt;, but pointing your domain to the page is just as easy. I followed &lt;a href=&#34;https://help.github.com/articles/setting-up-a-custom-domain-with-pages&#34;&gt;this&lt;/a&gt; official article from Github.&lt;/p&gt;
-
-&lt;h2 id=&#34;static-sweetness&#34;&gt;Static sweetness&lt;/h2&gt;
-
-&lt;p&gt;There we go! Sweet static pages:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Page views are extremely fast&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://daringfireball.net/projects/markdown/syntax&#34;&gt;Markdown&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Version controlled blog posts&lt;/li&gt;
-&lt;li&gt;Embedding code is &lt;a href=&#34;http://octopress.org/docs/blogging/code/&#34;&gt;easy&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Migrating from wordpress to octopress
+I&amp;rsquo;m not an avid blogger but like everyone else, I have a blog which I casually write about life and programming. Being hosted by wordpress, it was an out-of-the-box solution and comes with a lot of bells and whistles. However, for a programming blog, it has some significant shortcomings:
+ Conflation of content and style. A Wordpress post is written in a weird combination of HTML markups and custom wordpress macros, which means you have to rely on their WYSIWYG editor to generate the correct markups, which means you can&amp;rsquo;t use your favourite editor to write a blog post.</description>
     </item>
     
   </channel>

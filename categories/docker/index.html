@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.17" />
+<meta name="generator" content="Hugo 0.20.7" />
 
   <meta property="og:title" content="Docker" />
 <meta property="og:description" content="" />
@@ -39,7 +39,7 @@
 
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
   <link href="http://blog.idempotent.ca/categories/docker/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
@@ -51,6 +51,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+
+  
 
   
 
@@ -150,13 +152,15 @@
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	DockerCon 2016 is here and this is the very first day with workshops on various topics. I chose to attend the Docker Security workshop as I&rsquo;m interested in seeing how Docker tackles some security challenges. This blog post is my notes taken from the workshop.
 In order to talk about security, we first have to know how docker works on a higher level to know what to secure. The workshop addresses that question early on.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2016/06/19/docker-security/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
           <section  class="post">
@@ -189,13 +193,15 @@ In order to talk about security, we first have to know how docker works on a hig
       					</div>
       				
             </p>
-            <article class="post-summary">
+            
+              <article class="post-summary">
             	While working with docker related stuff and when I use volume mount to a subdir of my home dir, I always come across the issue of the container littering folders with root:root permission in my home folder and then I have to sudo rm ... it, for example:
 docker run -d $(pwd)/data:/var/lib/mysql/data mysql  It always annoys me but today, it came to me like an epiphany that this is actually a pretty severe security vulnerability.
-            </article>
-			<div class="read-more-link">
+              </article>
+			  <div class="read-more-link">
 				<a href="/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/"><span class="read-more-slashes">//</span>Read More...</a>
-			</div>
+			  </div>
+            
           </section>
         
       </div>
@@ -208,7 +214,7 @@ docker run -d $(pwd)/data:/var/lib/mysql/data mysql  It always annoys me but tod
 		</ul>
 	</div>
 
-	<p>&copy; 2016. All rights reserved.</p>
+	<p>&copy; 2017. All rights reserved.</p>
 </div>
     </div>
   </div>
