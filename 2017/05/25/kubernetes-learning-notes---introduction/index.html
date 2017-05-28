@@ -130,6 +130,7 @@
 				<small class="toc-label">Contents</small>
 		   	 	<nav id="TableOfContents">
 <ul>
+<li><a href="#parts">Parts</a></li>
 <li><a href="#goals">Goals</a></li>
 <li><a href="#anti-goals">Anti-Goals</a></li>
 <li><a href="#requirements">Requirements</a></li>
@@ -174,6 +175,13 @@
 
             
 
+<h1 id="parts">Parts</h1>
+
+<ul>
+<li><a href="2017-05-27-kubernetes-learning-notes-part-1-deployment">Part 1 - Basic Deployment</a></li>
+<li>Part 2 - Deploy CouchDB</li>
+</ul>
+
 <h1 id="goals">Goals</h1>
 
 <p>At <code>$DAYJOB</code> we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:</p>
@@ -209,12 +217,14 @@
 <p>Here are the API definitions:</p>
 
 <ul>
-<li><code>/_health</code> - The health of the overmind and its subordinates</li>
+<li><code>GET /_health</code> - The health of the overmind and its subordinates</li>
 <li><code>GET /zerglings</code> - All zerglings the overmind is aware of and their locations</li>
 <li><code>GET /zerglings/&lt;zergling_id&gt;</code> - Get the status of the specified zergling</li>
-<li><code>POST /zerglings/&lt;zergling_id&gt;/_action</code> - Move the zergling</li>
-<li><code>POST /zerglings/_spawn</code> - Spawn a zergling (through <strong>viper</strong> but omitted for simplicity)</li>
+<li><code>POST /zerglings/&lt;zergling_id&gt;</code> - Move the zergling</li>
+<li><code>POST /zerglings/</code> - Spawn a zergling (through <strong>viper</strong> but omitted for simplicity)</li>
 </ul>
+
+<p>You can find the full source code <a href="https://github.com/kevinjqiu/overmind">here</a>.</p>
 
 <h2 id="storage">Storage</h2>
 
@@ -231,6 +241,11 @@
 				<div class="paging">
 					<span class="paging-label">More Reading</span>
 					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2017/05/27/kubernetes-learning-notes---part-1---deployment/">Kubernetes Learning Notes - Part 1 - Deployment</a>
+		            </div>
+		            
 
 					
 					<div class="paging-older">
