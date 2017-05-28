@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 25 May 2017 20:47:11 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 27 May 2017 17:49:21 -0400</lastBuildDate>
     
 	<atom:link href="http://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes Learning Notes - Part 1 - Deployment</title>
+      <link>http://blog.idempotent.ca/2017/05/27/kubernetes-learning-notes---part-1---deployment/</link>
+      <pubDate>Sat, 27 May 2017 17:49:21 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/05/27/kubernetes-learning-notes---part-1---deployment/</guid>
+      <description>Welcome to the first part of my Kubernetes learning notes series. In this blog post, I&amp;rsquo;m going to record my learning experience for deploying the overmind web service to a Kubernetes cluster.
+The overmind web service is a simple and contrived microservice for managing zerglings. Don&amp;rsquo;t worry if you&amp;rsquo;re not a starcraft fan. The details of the web service doesn&amp;rsquo;t really matter. The web service has a couple of endpoints, some of which involve talking to a database.</description>
+    </item>
     
     <item>
       <title>Kubernetes Learning Notes - Introduction</title>
@@ -17,8 +27,7 @@
       <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</guid>
-      <description>Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:
- Deployments Replica Sets Stateful Sets Services Persistent Volumes Perform Rolling Upgrades Use Helm to deploy Use Helm to manage deployments Use Traefik as Ingress Controller  Anti-Goals I will not be touch on administrating a Kubernetes cluster nor provisioning one.</description>
+      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy CouchDB  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:</description>
     </item>
     
     <item>
