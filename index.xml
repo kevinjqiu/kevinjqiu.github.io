@@ -6,10 +6,21 @@
     <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 May 2017 17:49:21 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 29 May 2017 20:30:20 -0400</lastBuildDate>
     
 	<atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes Learning Notes - Part 2 - Deploying Stateful Services</title>
+      <link>http://blog.idempotent.ca/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/</link>
+      <pubDate>Mon, 29 May 2017 20:30:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/</guid>
+      <description>In the last part of this series, we learned how to do a basic deployment of a stateless service. You may ask what about our CouchDB service? How do we deploy a database which is innately stateful to a Kubernetes cluster. Kubernetes 1.5+ has introduced Stateful Set feature which makes this possible.
+Stateful Sets According to the docs, a stateful set provides containers with the following:
+ stable and unique network identifiers stable persistent storage ordered, graceful deployment and scaling ordered, graceful deletion and termination  For deploying CouchDB, we need to deploy a stateful set of CouchDB containers which allows us to attach a persistent storage to the container so our overmind service does not lose its data.</description>
+    </item>
     
     <item>
       <title>Kubernetes Learning Notes - Part 1 - Deployment</title>
@@ -27,7 +38,7 @@ The overmind web service is a simple and contrived microservice for managing zer
       <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</guid>
-      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy CouchDB  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:</description>
+      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:</description>
     </item>
     
     <item>

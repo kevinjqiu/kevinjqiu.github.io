@@ -134,9 +134,9 @@
 <li><a href="#pods-replica-sets-deployments">Pods, Replica Sets, Deployments</a>
 <ul>
 <li><a href="#pod">Pod</a></li>
-</ul></li>
 <li><a href="#replica-set">Replica Set</a></li>
 <li><a href="#deployment">Deployment</a></li>
+</ul></li>
 <li><a href="#deployment-manifest">Deployment Manifest</a></li>
 <li><a href="#start-deployment">Start Deployment</a></li>
 <li><a href="#services">Services</a></li>
@@ -216,11 +216,11 @@ minikube   Ready     3d        v1.6.0
 
 <p>A <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/">Pod</a> is the most basic building block of a Kubernetes. A pod represents a running process on your cluster. In container terms, a pod is one or more containers the need to work together. They containers in the same pod share the same networking namspace, which means container A can talk to container B in the same pod via <code>localhost</code>. In the overmind service example, we will be deploying the overmind docker container as a pod in the cluster.</p>
 
-<h1 id="replica-set">Replica Set</h1>
+<h2 id="replica-set">Replica Set</h2>
 
 <p>A <a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/">Replica Set</a> is a kubernetes &ldquo;controller&rdquo; that ensures at any given time, the correct number of &ldquo;replicas&rdquo; of a pod is present in the cluster. For example, if I declare that the <code>overmind</code> pod has a replica of 3. The replica set controller makes sure that there are 3 <code>overmind</code> pods running in the cluster. If for some reason, one pod died, the controller will spin up another pod in the cluster to bring the total number of replicas to 3.</p>
 
-<h1 id="deployment">Deployment</h1>
+<h2 id="deployment">Deployment</h2>
 
 <p>A <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a> declares the desired state for pods or replica sets. For example, you can declare that the deployment should use the rolling upgrade strategy so we can have zero-downtime deployment.</p>
 
@@ -383,6 +383,11 @@ http://192.168.99.101:30674
 				<div class="paging">
 					<span class="paging-label">More Reading</span>
 					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/">Kubernetes Learning Notes - Part 2 - Deploying Stateful Services</a>
+		            </div>
+		            
 
 					
 					<div class="paging-older">
