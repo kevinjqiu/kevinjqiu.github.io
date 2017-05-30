@@ -126,6 +126,46 @@
             <header class="post-header">
             
             <h1 class="post-title">
+              <a href="/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/">Kubernetes Learning Notes - Part 2 - Deploying Stateful Services</a>
+            </h1>
+            </header>
+            <p class="post-meta">
+            	
+		          <span class="post-date">
+		            <span class="post-date-day"><sup>29</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2017</span>
+		          </span>
+      				
+      				
+      					
+      				
+              
+                <span class="post-reading-time"><i class="fa fa-clock-o"></i> <em>9 min. read</em></span>
+              
+      				
+      					<div class="post-categories">
+				        
+      					
+					        <a class="post-category post-category-kubernetes" href="http://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
+      					
+      					</div>
+      				
+            </p>
+            
+              <article class="post-summary">
+            	In the last part of this series, we learned how to do a basic deployment of a stateless service. You may ask what about our CouchDB service? How do we deploy a database which is innately stateful to a Kubernetes cluster. Kubernetes 1.5+ has introduced Stateful Set feature which makes this possible.
+Stateful Sets According to the docs, a stateful set provides containers with the following:
+ stable and unique network identifiers stable persistent storage ordered, graceful deployment and scaling ordered, graceful deletion and termination  For deploying CouchDB, we need to deploy a stateful set of CouchDB containers which allows us to attach a persistent storage to the container so our overmind service does not lose its data.
+              </article>
+			  <div class="read-more-link">
+				<a href="/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/"><span class="read-more-slashes">//</span>Read More...</a>
+			  </div>
+            
+          </section>
+        
+          <section  class="post">
+            <header class="post-header">
+            
+            <h1 class="post-title">
               <a href="/2017/05/27/kubernetes-learning-notes---part-1---deployment/">Kubernetes Learning Notes - Part 1 - Deployment</a>
             </h1>
             </header>
@@ -191,7 +231,7 @@ The overmind web service is a simple and contrived microservice for managing zer
             </p>
             
               <article class="post-summary">
-            	Parts  Part 1 - Basic Deployment Part 2 - Deploy CouchDB  Goals At $DAYJOB we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:
+            	Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services  Goals At $DAYJOB we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:
               </article>
 			  <div class="read-more-link">
 				<a href="/2017/05/25/kubernetes-learning-notes---introduction/"><span class="read-more-slashes">//</span>Read More...</a>
