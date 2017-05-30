@@ -38,7 +38,7 @@ The overmind web service is a simple and contrived microservice for managing zer
       <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</guid>
-      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:</description>
+      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Rolling Upgrades Part 5 - TBD  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
     </item>
     
     <item>
