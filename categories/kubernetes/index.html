@@ -126,6 +126,46 @@
             <header class="post-header">
             
             <h1 class="post-title">
+              <a href="/2017/05/31/kubernetes-learning-notes---part-3---service-discovery/">Kubernetes Learning Notes - Part 3 - Service Discovery</a>
+            </h1>
+            </header>
+            <p class="post-meta">
+            	
+		          <span class="post-date">
+		            <span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2017</span>
+		          </span>
+      				
+      				
+      					
+      				
+              
+                <span class="post-reading-time"><i class="fa fa-clock-o"></i> <em>4 min. read</em></span>
+              
+      				
+      					<div class="post-categories">
+				        
+      					
+					        <a class="post-category post-category-kubernetes" href="http://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
+      					
+      					</div>
+      				
+            </p>
+            
+              <article class="post-summary">
+            	In the last two blog posts, we&rsquo;ve set up our overmind service and the backend CouchDB service. How would the overmind service find out where the CouchDB service is? That&rsquo;s where Service Discovery comes in.
+In Kubernetes there are two ways to do service discovery: environment variables and DNS records.
+Environment variables Every Service deployed in Kubernetes automatically gets a set of environment variables accessible to all pods. e.g., if the service name is couchdb, other pods will be getting the environment variables such as the following:
+              </article>
+			  <div class="read-more-link">
+				<a href="/2017/05/31/kubernetes-learning-notes---part-3---service-discovery/"><span class="read-more-slashes">//</span>Read More...</a>
+			  </div>
+            
+          </section>
+        
+          <section  class="post">
+            <header class="post-header">
+            
+            <h1 class="post-title">
               <a href="/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/">Kubernetes Learning Notes - Part 2 - Deploying Stateful Services</a>
             </h1>
             </header>
@@ -231,7 +271,7 @@ The overmind web service is a simple and contrived microservice for managing zer
             </p>
             
               <article class="post-summary">
-            	Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Rolling Upgrades Part 5 - TBD  Goals At $DAYJOB we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.
+            	Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.
               </article>
 			  <div class="read-more-link">
 				<a href="/2017/05/25/kubernetes-learning-notes---introduction/"><span class="read-more-slashes">//</span>Read More...</a>

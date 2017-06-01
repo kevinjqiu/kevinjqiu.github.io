@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 May 2017 20:30:20 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 31 May 2017 18:06:20 -0400</lastBuildDate>
     
 	<atom:link href="http://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes Learning Notes - Part 3 - Service Discovery</title>
+      <link>http://blog.idempotent.ca/2017/05/31/kubernetes-learning-notes---part-3---service-discovery/</link>
+      <pubDate>Wed, 31 May 2017 18:06:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/05/31/kubernetes-learning-notes---part-3---service-discovery/</guid>
+      <description>In the last two blog posts, we&amp;rsquo;ve set up our overmind service and the backend CouchDB service. How would the overmind service find out where the CouchDB service is? That&amp;rsquo;s where Service Discovery comes in.
+In Kubernetes there are two ways to do service discovery: environment variables and DNS records.
+Environment variables Every Service deployed in Kubernetes automatically gets a set of environment variables accessible to all pods. e.g., if the service name is couchdb, other pods will be getting the environment variables such as the following:</description>
+    </item>
     
     <item>
       <title>Kubernetes Learning Notes - Part 2 - Deploying Stateful Services</title>
@@ -38,7 +49,7 @@ The overmind web service is a simple and contrived microservice for managing zer
       <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</guid>
-      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Rolling Upgrades Part 5 - TBD  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
+      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
     </item>
     
     <item>
