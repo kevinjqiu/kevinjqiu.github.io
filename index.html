@@ -127,6 +127,45 @@
                 <header class="post-header">
                     
                     <h1 class="post-title">
+                      <a href="/2017/06/04/kubernetes-learning-notes---part-4---service-bootstrapping-with-init-containers/">Kubernetes Learning Notes - Part 4 - Service Bootstrapping with Init Containers</a>
+                  </h1>
+              </header>
+              <p class="post-meta">
+                  
+                  <span class="post-date">
+                    <span class="post-date-day"><sup>4</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Jun</span> <span class="post-date-year">2017</span>
+                </span>
+                
+                
+                    
+                
+                
+                    <span class="post-reading-time"><i class="fa fa-clock-o"></i> <em>4 min. read</em></span>
+                
+                
+                <div class="post-categories">
+                    
+                    <a class="post-category post-category-kubernetes" href="http://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
+                    
+                </div>
+                
+            </p>
+            
+              <article class="post-summary">
+                  Up until now, we have deployed the overmind service to the Kubernetes cluster, deployed the backing CouchDB service and wired up the two services through service discovery.
+Web services usually have administerial tasks, such as bootstrapping a database. It&rsquo;s usually a good practice that individual services are responsible for their own data initialization. This is where initContainers come in handy.
+Init Containers Init containers run inside the same pod as your main container (such as the container that runs the microservice), just like any other containers.
+              </article>
+              <div class="read-more-link">
+                  <a href="/2017/06/04/kubernetes-learning-notes---part-4---service-bootstrapping-with-init-containers/"><span class="read-more-slashes">//</span>Read More...</a>
+              </div>
+            
+          </section>
+          
+            <section  class="post">
+                <header class="post-header">
+                    
+                    <h1 class="post-title">
                       <a href="/2017/05/31/kubernetes-learning-notes---part-3---service-discovery/">Kubernetes Learning Notes - Part 3 - Service Discovery</a>
                   </h1>
               </header>
@@ -268,7 +307,7 @@ The overmind web service is a simple and contrived microservice for managing zer
             </p>
             
               <article class="post-summary">
-                  Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.
+                  Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping with Init Containers Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.
               </article>
               <div class="read-more-link">
                   <a href="/2017/05/25/kubernetes-learning-notes---introduction/"><span class="read-more-slashes">//</span>Read More...</a>
@@ -4066,7 +4105,7 @@ Graduated with distinction from University of Toronto Computer Science program, 
               <p class="post-meta">
                   
                   <span class="post-date">
-                    <span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2017</span>
+                    <span class="post-date-day"><sup>4</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Jun</span> <span class="post-date-year">2017</span>
                 </span>
                 
                 
@@ -4274,7 +4313,7 @@ Graduated with distinction from University of Toronto Computer Science program, 
               <p class="post-meta">
                   
                   <span class="post-date">
-                    <span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2017</span>
+                    <span class="post-date-day"><sup>4</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Jun</span> <span class="post-date-year">2017</span>
                 </span>
                 
                 
@@ -4326,7 +4365,7 @@ Graduated with distinction from University of Toronto Computer Science program, 
               <p class="post-meta">
                   
                   <span class="post-date">
-                    <span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2017</span>
+                    <span class="post-date-day"><sup>4</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Jun</span> <span class="post-date-year">2017</span>
                 </span>
                 
                 
