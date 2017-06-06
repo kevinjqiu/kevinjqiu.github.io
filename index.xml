@@ -6,10 +6,21 @@
     <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 31 May 2017 18:06:20 -0400</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jun 2017 23:14:20 -0400</lastBuildDate>
     
 	<atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes Learning Notes - Part 4 - Service Bootstrapping with Init Containers</title>
+      <link>http://blog.idempotent.ca/2017/06/04/kubernetes-learning-notes---part-4---service-bootstrapping-with-init-containers/</link>
+      <pubDate>Sun, 04 Jun 2017 23:14:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/06/04/kubernetes-learning-notes---part-4---service-bootstrapping-with-init-containers/</guid>
+      <description>Up until now, we have deployed the overmind service to the Kubernetes cluster, deployed the backing CouchDB service and wired up the two services through service discovery.
+Web services usually have administerial tasks, such as bootstrapping a database. It&amp;rsquo;s usually a good practice that individual services are responsible for their own data initialization. This is where initContainers come in handy.
+Init Containers Init containers run inside the same pod as your main container (such as the container that runs the microservice), just like any other containers.</description>
+    </item>
     
     <item>
       <title>Kubernetes Learning Notes - Part 3 - Service Discovery</title>
@@ -49,7 +60,7 @@ The overmind web service is a simple and contrived microservice for managing zer
       <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</guid>
-      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
+      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping with Init Containers Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
     </item>
     
     <item>
