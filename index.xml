@@ -6,10 +6,20 @@
     <description>Recent content on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jun 2017 23:14:20 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 06 Jun 2017 20:04:20 -0400</lastBuildDate>
     
 	<atom:link href="http://blog.idempotent.ca/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes Learning Notes - Part 5 - Horizontal Scaling and Rolling Upgrade</title>
+      <link>http://blog.idempotent.ca/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/</link>
+      <pubDate>Tue, 06 Jun 2017 20:04:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/</guid>
+      <description>Some of the promises of Kubernetes are scaling and rolling upgrades. In this blog post, we&amp;rsquo;re going to try these out for our service to see how easy it is to achieve these operations which are otherwise difficult to do without a container orchestration tool.
+Horizontal Scaling When we wrote the manifest for overmind deployment, we specified that we want 3 replicas of pods for this deployment. We can scale up the number of replicas to handle increased traffic by using kubectl scale command:</description>
+    </item>
     
     <item>
       <title>Kubernetes Learning Notes - Part 4 - Service Bootstrapping with Init Containers</title>
@@ -60,7 +70,7 @@ The overmind web service is a simple and contrived microservice for managing zer
       <pubDate>Thu, 25 May 2017 20:47:11 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/</guid>
-      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping with Init Containers Part 5 - Rolling Upgrades Part 6 - TBD  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
+      <description>Parts  Part 1 - Basic Deployment Part 2 - Deploy Stateful Services Part 3 - Service Discovery Part 4 - Service Bootstrapping with Init Containers Part 5 - Scaling and Rolling Upgrades  Goals At $DAYJOB we&amp;rsquo;re moving away from our homebrew way of deploying and &amp;ldquo;orchestrating&amp;rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&amp;rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster.</description>
     </item>
     
     <item>
