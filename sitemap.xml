@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://blog.idempotent.ca/2017/08/31/campfire-story---the-peril-of-dev/</loc>
+    <lastmod>2017-08-31T18:04:20-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.idempotent.ca/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/</loc>
     <lastmod>2017-06-06T20:04:20-04:00</lastmod>
   </url>
@@ -391,6 +396,12 @@
   </url>
   
   <url>
+    <loc>http://blog.idempotent.ca/categories/gitlab/</loc>
+    <lastmod>2017-08-31T18:04:20-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.idempotent.ca/categories/golang/</loc>
     <lastmod>2013-11-20T11:53:00+00:00</lastmod>
     <priority>0</priority>
@@ -422,7 +433,7 @@
   
   <url>
     <loc>http://blog.idempotent.ca/categories/kubernetes/</loc>
-    <lastmod>2017-06-06T20:04:20-04:00</lastmod>
+    <lastmod>2017-08-31T18:04:20-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -470,7 +481,7 @@
   
   <url>
     <loc>http://blog.idempotent.ca/post/</loc>
-    <lastmod>2017-06-06T20:04:20-04:00</lastmod>
+    <lastmod>2017-08-31T18:04:20-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -482,7 +493,7 @@
   
   <url>
     <loc>http://blog.idempotent.ca/</loc>
-    <lastmod>2017-06-06T20:04:20-04:00</lastmod>
+    <lastmod>2017-08-31T18:04:20-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -513,6 +524,12 @@
   <url>
     <loc>http://blog.idempotent.ca/starred/</loc>
     <lastmod>2015-09-03T22:16:36-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.idempotent.ca/categories/story/</loc>
+    <lastmod>2017-08-31T18:04:20-04:00</lastmod>
     <priority>0</priority>
   </url>
   

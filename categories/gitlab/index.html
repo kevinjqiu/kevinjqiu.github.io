@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
   <title>
-    Debugging // Qiu&#39;s Quibble
+    Gitlab // Qiu&#39;s Quibble
   </title>
 
   <link href="http://gmpg.org/xfn/11" rel="profile">
@@ -16,11 +16,11 @@
 <meta name="author" content="">
 <meta name="generator" content="Hugo 0.26" />
 
-  <meta property="og:title" content="Debugging" />
+  <meta property="og:title" content="Gitlab" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:url" content="http://blog.idempotent.ca/categories/debugging/" />
+<meta property="og:url" content="http://blog.idempotent.ca/categories/gitlab/" />
 
 
   
@@ -42,7 +42,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
 
   
-  <link href="http://blog.idempotent.ca/categories/debugging/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+  <link href="http://blog.idempotent.ca/categories/gitlab/index.xml" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
 
     
   
@@ -126,41 +126,42 @@
             <header class="post-header">
             
             <h1 class="post-title">
-              <a href="/2009/06/12/enable-auto-complete-in-a-pdb-session/">Enable Auto-complete in a PDB session</a>
+              <a href="/2017/08/31/campfire-story---the-peril-of-dev/">Campfire Story - The &#34;peril&#34; of `dev`</a>
             </h1>
             </header>
             <p class="post-meta">
             	
 		          <span class="post-date">
-		            <span class="post-date-day"><sup>12</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Jun</span> <span class="post-date-year">2009</span>
+		            <span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Aug</span> <span class="post-date-year">2017</span>
 		          </span>
       				
       				
       					
       				
               
-                <span class="post-reading-time"><i class="fa fa-clock-o"></i> <em>1 min. read</em></span>
+                <span class="post-reading-time"><i class="fa fa-clock-o"></i> <em>7 min. read</em></span>
               
       				
       					<div class="post-categories">
 				        
       					
-					        <a class="post-category post-category-python" href="http://blog.idempotent.ca/categories/python">python</a>
+					        <a class="post-category post-category-kubernetes" href="http://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
       					
-					        <a class="post-category post-category-debugging" href="http://blog.idempotent.ca/categories/debugging">debugging</a>
+					        <a class="post-category post-category-gitlab" href="http://blog.idempotent.ca/categories/gitlab">gitlab</a>
+      					
+					        <a class="post-category post-category-story" href="http://blog.idempotent.ca/categories/story">story</a>
       					
       					</div>
       				
             </p>
             
-              <p>EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See <a href="https://bitbucket.org/antocuni/pdb/src">pdb++</a> or <a href="https://github.com/gotcha/ipdb">ipdb</a></p>
-
-<p>Pretty simple actually…Just put the following code in <code>~/.pdbrc</code> and then you can use the Tab key during a PDB session to see the available attributes of the current context.</p>
-
-<pre><code class="language-python">import rlcompleter
-pdb.Pdb.complete=rlcompleter.Completer(locals()).complete
-</code></pre>
-
+              <article class="post-summary">
+            	Through out my career, I have investigated and solved numerous bizarre issues. This one is right up there as being one of the weirdest as well as being one of the most hilarious ones when the truth came out in the end.
+At $DAYJOB, we are moving piece by piece our services to Kubernetes. One of such service slated for migration is the Gitlab runners. If you&rsquo;re not familiar with Gitlab, it&rsquo;s like Github you can self-host and it boasts a very powerful and flexible CI/CD pipeline.
+              </article>
+			  <div class="read-more-link">
+				<a href="/2017/08/31/campfire-story---the-peril-of-dev/"><span class="read-more-slashes">//</span>Read More...</a>
+			  </div>
             
           </section>
         

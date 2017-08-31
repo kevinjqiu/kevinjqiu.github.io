@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Jun 2017 20:04:20 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 31 Aug 2017 18:04:20 -0400</lastBuildDate>
     
 	<atom:link href="http://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Campfire Story - The &#34;peril&#34; of `dev`</title>
+      <link>http://blog.idempotent.ca/2017/08/31/campfire-story---the-peril-of-dev/</link>
+      <pubDate>Thu, 31 Aug 2017 18:04:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/08/31/campfire-story---the-peril-of-dev/</guid>
+      <description>Through out my career, I have investigated and solved numerous bizarre issues. This one is right up there as being one of the weirdest as well as being one of the most hilarious ones when the truth came out in the end.
+At $DAYJOB, we are moving piece by piece our services to Kubernetes. One of such service slated for migration is the Gitlab runners. If you&amp;rsquo;re not familiar with Gitlab, it&amp;rsquo;s like Github you can self-host and it boasts a very powerful and flexible CI/CD pipeline.</description>
+    </item>
     
     <item>
       <title>Kubernetes Learning Notes - Part 5 - Horizontal Scaling and Rolling Upgrade</title>
