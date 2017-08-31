@@ -119,6 +119,15 @@
     </item>
     
     <item>
+      <title>Gitlab</title>
+      <link>http://blog.idempotent.ca/categories/gitlab/</link>
+      <pubDate>Thu, 31 Aug 2017 18:04:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/gitlab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Golang</title>
       <link>http://blog.idempotent.ca/categories/golang/</link>
       <pubDate>Wed, 20 Nov 2013 11:53:00 +0000</pubDate>
@@ -166,7 +175,7 @@
     <item>
       <title>Kubernetes</title>
       <link>http://blog.idempotent.ca/categories/kubernetes/</link>
-      <pubDate>Tue, 06 Jun 2017 20:04:20 -0400</pubDate>
+      <pubDate>Thu, 31 Aug 2017 18:04:20 -0400</pubDate>
       
       <guid>http://blog.idempotent.ca/categories/kubernetes/</guid>
       <description></description>
@@ -277,6 +286,15 @@
       <pubDate>Sun, 19 Jun 2016 21:49:51 -0700</pubDate>
       
       <guid>http://blog.idempotent.ca/categories/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Story</title>
+      <link>http://blog.idempotent.ca/categories/story/</link>
+      <pubDate>Thu, 31 Aug 2017 18:04:20 -0400</pubDate>
+      
+      <guid>http://blog.idempotent.ca/categories/story/</guid>
       <description></description>
     </item>
     
