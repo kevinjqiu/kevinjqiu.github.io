@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.30.2" />
+<meta name="generator" content="Hugo 0.36" />
 
   <meta property="og:title" content="QCon San Francisco Day 1 Recap" />
 <meta property="og:description" content="" />
@@ -178,6 +178,23 @@
 <li><a href="#content-understand-your-audience-and-their-needs">Content - Understand your audience and their needs</a></li>
 </ul></li>
 </ul></li>
+<li><a href="#polyglot-persistence">Polyglot Persistence</a>
+<ul>
+<li><a href="#data-stores">Data stores</a>
+<ul>
+<li><a href="#cdn-url-service">CDN URL service</a></li>
+<li><a href="#playback-manifest-service">Playback Manifest service</a></li>
+<li><a href="#viewing-history">Viewing History</a></li>
+<li><a href="#digital-asset-management">Digital Asset Management</a></li>
+<li><a href="#distributed-delayed-queues">Distributed delayed queues</a></li>
+</ul></li>
+<li><a href="#challenges-approaches">Challenges &amp; Approaches</a>
+<ul>
+<li><a href="#approaches">Approaches</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#200-self-driving-cars-with-raspi-and-tensor-flow">$200 Self-Driving cars with RasPi and Tensor Flow</a></li>
+<li><a href="#istio-weaving-the-service-mesh">Istio - Weaving the service mesh</a></li>
 </ul>
 </nav>
 		    </div>
@@ -210,7 +227,7 @@
 
 <p>The big day has finally arrived. I&rsquo;m here at QCon, a conference I have been tracking for a long time almost since the beginning of my career. Now, almost 10 years after, thanks to <a href="https://points.com">my employer</a>, I&rsquo;m finally able to attend one in person!</p>
 
-<p>In the next couple of blog posts, I&rsquo;m going to recap these three talk-packed days and record my learnings here.</p>
+<p>In this blog post, I&rsquo;m going to recap these three talk-packed days and record my learnings here.</p>
 
 <h1 id="key-note-how-to-make-a-spaceship-julian-guthrie-dan-kreigh">Key Note - How to make a spaceship (Julian Guthrie, Dan Kreigh)</h1>
 
@@ -416,6 +433,114 @@ Only need partial ordering (account for concurrent events or events with no caus
 ** only after the structure then you create the slides</li>
 </ul>
 
+<h1 id="polyglot-persistence">Polyglot Persistence</h1>
+
+<p>The first talk I went to was Polyglot Persistence from Roopa Tangirala from Netflix. She covered 5 use cases of data persistence at Netflix, the challenges and the approaches to the data problem.</p>
+
+<p>One of the promises of microservice architecture is that you&rsquo;re no longer bound to a single or homogenous data store. Each component in the microservice stack can choose their own data store according to their use case and what Roopa has demonstrated here was a prime example of such promise.</p>
+
+<h2 id="data-stores">Data stores</h2>
+
+<p>The data stores she talked about in the talk were:</p>
+
+<ul>
+<li>Elasticsearch: For search analyze and visualize in near real time</li>
+<li>EVCache: Distributed in-memory caching solution based on memcached</li>
+<li>Cassandra: Distributed nosql database to handle large datasets providing high availability</li>
+<li>Dynamite: Distributed dynamo layer for different storage engines and protocols supporting Redis, memcached, RocksDB</li>
+<li>TitanDB: Scalable graph database optimized for storing and querying graph datasets</li>
+</ul>
+
+<h3 id="cdn-url-service">CDN URL service</h3>
+
+<p>requirements:
+- high availability
+- very low r/w latency (less than 1ms)
+- high throughtput per node</p>
+
+<p><strong>EVCache</strong> is chosen. In-memory so it provides very low latency.</p>
+
+<h3 id="playback-manifest-service">Playback Manifest service</h3>
+
+<p>requirements:
+- quick incident resolution
+- interactive dashboards
+- near realtime search
+- adhoc queries</p>
+
+<p><strong>Elasticsearch</strong> is chosen. Powerful search &amp; analytics and interactive dashboards.</p>
+
+<h3 id="viewing-history">Viewing History</h3>
+
+<p>requirements:
+- time series dataset
+- support high writes
+- cross region replication
+- large dataset</p>
+
+<p><strong>Cassandra</strong> is chosen. Multi-datacentre, multi-directional replication and HA and highly scalable.</p>
+
+<h3 id="digital-asset-management">Digital Asset Management</h3>
+
+<p>requirements:
+- one backend plane for all asset metadata
+- storage of relationships/connected data
+- searchable</p>
+
+<p><strong>TitanDB</strong>. Distributed graph db and support for vaious storage backends.</p>
+
+<h3 id="distributed-delayed-queues">Distributed delayed queues</h3>
+
+<p>requirements:
+- distributed
+- highly concurrent
+- at-least-once delivery semantics
+- delayed queue
+- priorities within the shard</p>
+
+<p><strong>Dynamite</strong>. Pluggable data store supporting Redis and multi-datacentre replication.
+They tried to use cassandra as a queue but it&rsquo;s not great at being a backend for queues.</p>
+
+<h2 id="challenges-approaches">Challenges &amp; Approaches</h2>
+
+<ul>
+<li>Capacity planning</li>
+<li>Maintenance</li>
+<li>Monitoring</li>
+</ul>
+
+<h3 id="approaches">Approaches</h3>
+
+<ul>
+<li>Subject matter experts (2 or 3). Work with microservice team to come up with requirements.</li>
+<li>CDE service (a self-serving service to provision data stores)
+
+<ul>
+<li>thresholds/SLAs</li>
+<li>cluster metadata</li>
+<li>self service</li>
+</ul></li>
+<li>Proactive maintenance
+
+<ul>
+<li>don&rsquo;t wait for amazon to terminate the instances</li>
+</ul></li>
+<li>Upgrade
+
+<ul>
+<li>Use NdBench to build up confidence</li>
+<li>Open source and have pluggable backends</li>
+</ul></li>
+</ul>
+
+<h1 id="200-self-driving-cars-with-raspi-and-tensor-flow">$200 Self-Driving cars with RasPi and Tensor Flow</h1>
+
+<p>This talk has less relevance to my day-to-day job but more of a curiosity of mine. However, I didn&rsquo;t get too much out of it. The project itself is pretty cool and it sounds like something you can DIY because all the components are low-cost and instructions are freely available.</p>
+
+<h1 id="istio-weaving-the-service-mesh">Istio - Weaving the service mesh</h1>
+
+<p>Service mesh seems to be the next battle ground after the container orchestration layer. Since Kubernetes is &ldquo;winning&rdquo; the orchestration war, the battle has gone up the stack.</p>
+
 	
 			
 
@@ -429,7 +554,7 @@ Only need partial ordering (account for concurrent events or events with no caus
 					
 					<div class="paging-older">
 						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
-			            <a class="paging-link" href="/2017/08/31/campfire-story---the-peril-of-dev/">Campfire Story - The &#34;peril&#34; of `dev`</a>
+			            <a class="paging-link" href="/2017/11/21/qcon-san-francisco-day-2-recap/">QCon San Francisco Day 2 Recap</a>
 		            </div>
 		            
 	            </div>
@@ -466,7 +591,7 @@ Only need partial ordering (account for concurrent events or events with no caus
 		</ul>
 	</div>
 
-	<p>&copy; 2017. All rights reserved.</p>
+	<p>&copy; 2018. All rights reserved.</p>
 </div>
 
     </div>

@@ -18,8 +18,19 @@
       
       <guid>http://blog.idempotent.ca/2017/11/21/qcon-san-francisco-day-1-recap/</guid>
       <description>The big day has finally arrived. I&amp;rsquo;m here at QCon, a conference I have been tracking for a long time almost since the beginning of my career. Now, almost 10 years after, thanks to my employer, I&amp;rsquo;m finally able to attend one in person!
-In the next couple of blog posts, I&amp;rsquo;m going to recap these three talk-packed days and record my learnings here.
+In this blog post, I&amp;rsquo;m going to recap these three talk-packed days and record my learnings here.
 Key Note - How to make a spaceship (Julian Guthrie, Dan Kreigh) The keynote is given by Julian Guthrie and Dan Kreigh who together wrote a book How to make a spaceship.</description>
+    </item>
+    
+    <item>
+      <title>QCon San Francisco Day 2 Recap</title>
+      <link>http://blog.idempotent.ca/2017/11/21/qcon-san-francisco-day-2-recap/</link>
+      <pubDate>Tue, 21 Nov 2017 16:48:44 -0500</pubDate>
+      
+      <guid>http://blog.idempotent.ca/2017/11/21/qcon-san-francisco-day-2-recap/</guid>
+      <description>Day 1 was a great start to the conference. Here we are on the second day of the conference.
+Polyglot Persistence The first talk I went to was Polyglot Persistence from Roopa Tangirala from Netflix. She covered 5 use cases of data persistence at Netflix, the challenges and the approaches to the data problem.
+One of the promises of microservice architecture is that you&amp;rsquo;re no longer bound to a single or homogenous data store.</description>
     </item>
     
     <item>
