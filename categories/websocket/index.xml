@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Websocket on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/websocket/</link>
+    <link>https://blog.idempotent.ca/categories/websocket/</link>
     <description>Recent content in Websocket on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 07 Apr 2012 16:50:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/websocket/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/websocket/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Realtime notification delivery using rabbitmq</title>
-      <link>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
+      <link>https://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
       <pubDate>Sat, 07 Apr 2012 16:50:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
+      <guid>https://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
       <description>Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this websocket buzz for a while now and would like to build something interesting with it.
 WebSocket Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser).</description>
     </item>

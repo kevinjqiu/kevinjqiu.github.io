@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Design Patterns on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/design-patterns/</link>
+    <link>https://blog.idempotent.ca/categories/design-patterns/</link>
     <description>Recent content in Design Patterns on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 01 Mar 2010 19:32:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/design-patterns/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/design-patterns/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Use delegation to write map/filter in Java</title>
-      <link>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</link>
+      <link>https://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</link>
       <pubDate>Mon, 01 Mar 2010 19:32:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</guid>
       <description>The problem In Java, imagine you have a list of User objects, each encapsulates the user&amp;rsquo;s id, first name, last name and age. Then you want to call a web service UserService.deleteUsersByIds(List&amp;lt;Integer&amp;gt; userIds) to delete the users from your data store. It doesn&amp;rsquo;t sound too hard, does it? All you need to do is to transform you List&amp;lt;User&amp;gt; to List&amp;lt;Integer&amp;gt;. So you go ahead and write the following code:</description>
     </item>
     

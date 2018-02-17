@@ -2,41 +2,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gwt on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/gwt/</link>
+    <link>https://blog.idempotent.ca/categories/gwt/</link>
     <description>Recent content in Gwt on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 26 Mar 2010 13:38:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/gwt/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/gwt/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>GWT code split is awesome</title>
-      <link>http://blog.idempotent.ca/2010/03/26/gwt-code-split-is-awesome/</link>
+      <link>https://blog.idempotent.ca/2010/03/26/gwt-code-split-is-awesome/</link>
       <pubDate>Fri, 26 Mar 2010 13:38:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/26/gwt-code-split-is-awesome/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/26/gwt-code-split-is-awesome/</guid>
       <description>For the past few days, I&amp;rsquo;ve been working on code splitting our existing GWT application. The application is fairly big with about 20k loc (excluding javadoc, comments and tests). The download size (with obfuscated mode) is about 1.5M, and with pretty mode, is a whooping 10+M. Obviously this is not acceptable.
 GWT2 provides developer guided code splitting feature. It sounds complicated and under the hood, it may very well be (involves a lot of graph theories to figure out dependencies and so on) but from the user&amp;rsquo;s point of view, it&amp;rsquo;s very easy.</description>
     </item>
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 5)</title>
-      <link>http://blog.idempotent.ca/2010/03/09/building-a-gae-gwt-application-using-the-best-practices-part-5/</link>
+      <link>https://blog.idempotent.ca/2010/03/09/building-a-gae-gwt-application-using-the-best-practices-part-5/</link>
       <pubDate>Tue, 09 Mar 2010 13:24:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/09/building-a-gae-gwt-application-using-the-best-practices-part-5/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/09/building-a-gae-gwt-application-using-the-best-practices-part-5/</guid>
       <description>Building a GAE+GWT application using the best practices series  Part 1 Part 2 Part 3 Part 4 Part 5  In the last post of the series, I&amp;rsquo;ve shown how to setup a client side GIN+MVP project. This post will discuss the actual building of the UI and GWT-RPC web service calls using GWT-Dispatch on the client side.
 Use cases Before we dive into the code, let&amp;rsquo;s go over again the use cases our little app has.</description>
     </item>
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 4)</title>
-      <link>http://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-4/</link>
+      <link>https://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-4/</link>
       <pubDate>Wed, 03 Mar 2010 13:15:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-4/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-4/</guid>
       <description>Building a GAE+GWT application using the best practices series  Part 1 Part 2 Part 3 Part 4 Part 5  In the last blog post, we went over how to write GWT-RPC handlers using GWT-dispatch and dependency injection (Guice). This section, we&amp;rsquo;re going to see how the client side is set up.
 Dependencies We need the following dependencies * Gin * GWT-dispatch * GWT-presenter * GWT-log
 They need to be on the classpath when you compile your GWT code, but not under the war directory like the server dependencies need to be.</description>
@@ -44,10 +44,10 @@ They need to be on the classpath when you compile your GWT code, but not under t
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 3)</title>
-      <link>http://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-3/</link>
+      <link>https://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-3/</link>
       <pubDate>Wed, 03 Mar 2010 01:02:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-3/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/03/building-a-gae-gwt-application-using-the-best-practices-part-3/</guid>
       <description>Building a GAE+GWT application using the best practices series  Part 1 Part 2 Part 3 Part 4 Part 5  In this part of the series, we&amp;rsquo;re going to explore the designing of the web services for RateChecker and coding them using the command pattern from GWT-dispatch based on Ray Ryan&amp;rsquo;s presentation.
 The big picture 
 To correctly implement web services using the command pattern, we first have to get the big picture.</description>
@@ -55,40 +55,40 @@ To correctly implement web services using the command pattern, we first have to 
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 2)</title>
-      <link>http://blog.idempotent.ca/2010/03/01/building-a-gae-gwt-application-using-the-best-practices-part-2/</link>
+      <link>https://blog.idempotent.ca/2010/03/01/building-a-gae-gwt-application-using-the-best-practices-part-2/</link>
       <pubDate>Mon, 01 Mar 2010 00:44:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/01/building-a-gae-gwt-application-using-the-best-practices-part-2/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/01/building-a-gae-gwt-application-using-the-best-practices-part-2/</guid>
       <description>Building a GAE+GWT application using the best practices series  Part 1 Part 2 Part 3 Part 4 Part 5  In Part 2, we&amp;rsquo;re going to go over project setup for GAE and GWT applications, and wire the server (servlet) using Guice and GWT-Dispatch.
 Project setup I&amp;rsquo;m using Eclipse as my development environment. Install Google Eclipse plugin, and install the provided GWT (2.0.2) and GAE (1.3.1) with the plugin.</description>
     </item>
     
     <item>
       <title>Building a GAE&#43;GWT application using the best practices (Part 1)</title>
-      <link>http://blog.idempotent.ca/2010/02/26/building-a-gae-gwt-application-using-the-best-practices-part-1/</link>
+      <link>https://blog.idempotent.ca/2010/02/26/building-a-gae-gwt-application-using-the-best-practices-part-1/</link>
       <pubDate>Fri, 26 Feb 2010 00:39:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/02/26/building-a-gae-gwt-application-using-the-best-practices-part-1/</guid>
+      <guid>https://blog.idempotent.ca/2010/02/26/building-a-gae-gwt-application-using-the-best-practices-part-1/</guid>
       <description>Building a GAE+GWT application using the best practices series  Part 1 Part 2 Part 3 Part 4 Part 5  This is the first installment of the series Building a GAE+GWT application using the best practices.
 Introduction In the next few blog posts, I&amp;rsquo;m going to present my experience building a simple (but non-trivial) web application using GWT and Google App Engine, while applying the best practices introduced by Ray Ryan in his excellent GWT best practices at Google IO last year.</description>
     </item>
     
     <item>
       <title>GXT Widget Expander 1.0 release</title>
-      <link>http://blog.idempotent.ca/2010/02/09/gxt-widget-expander-1.0-release/</link>
+      <link>https://blog.idempotent.ca/2010/02/09/gxt-widget-expander-1.0-release/</link>
       <pubDate>Tue, 09 Feb 2010 00:37:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/02/09/gxt-widget-expander-1.0-release/</guid>
+      <guid>https://blog.idempotent.ca/2010/02/09/gxt-widget-expander-1.0-release/</guid>
       <description>This project aims to add flexibility to GXT row expander by enabling putting arbitrary widgets in the expanded row.
 GXT&amp;rsquo;s grid widget is great, especially with the RowExpander plugin, it allows the creation of a Google Reader style grid (a list with expandable rows). However, the current GXT&amp;rsquo;s RowExpander design only allows rendering by XTemplate. XTemplate falls short in a number of ways, especially when it comes to user interaction inside the expanded rows.</description>
     </item>
     
     <item>
       <title>Setting up GWT2 project with gwt-maven-plugin</title>
-      <link>http://blog.idempotent.ca/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/</link>
+      <link>https://blog.idempotent.ca/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/</link>
       <pubDate>Fri, 18 Dec 2009 00:29:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/</guid>
+      <guid>https://blog.idempotent.ca/2009/12/18/setting-up-gwt2-project-with-gwt-maven-plugin/</guid>
       <description>GWT2 offers a lot of exciting new features: OOPHM, SOYC, code splitting, declarative UI, to name a few. This evening, I experimented setting up a GWT2 project using Codehaus&amp;rsquo;s gwt-maven-plugin.
 I&amp;rsquo;m using Eclipse, so obviously, you need m2eclipse and Google Eclipse Plugin. First step is creating a Maven project: File-&amp;gt;New-&amp;gt;Project...-&amp;gt;Maven Project
 In the archetype selection dialog, select org.codehaus.mojo.gwt-maven-plugin:1.1. 
@@ -97,20 +97,20 @@ We choose this to create an archetype but 1.1 doesn&amp;rsquo;t work with GWT2.<
     
     <item>
       <title>Solving a GWT deferred binding mystery</title>
-      <link>http://blog.idempotent.ca/2009/11/18/solving-a-gwt-deferred-binding-mystery/</link>
+      <link>https://blog.idempotent.ca/2009/11/18/solving-a-gwt-deferred-binding-mystery/</link>
       <pubDate>Wed, 18 Nov 2009 10:55:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/11/18/solving-a-gwt-deferred-binding-mystery/</guid>
+      <guid>https://blog.idempotent.ca/2009/11/18/solving-a-gwt-deferred-binding-mystery/</guid>
       <description>This morning at work, I was running our GWT application with some deferred binding logic in it, and all of a sudden I got this ridiculous message:
 [ERROR] Class &#39;mycompany.rebind.HistoryResourceGenerator&#39; must derive from &#39;com.google.gwt.core.ext.Generator&#39; [ERROR] Failure while parsing XML com.google.gwt.core.ext.UnableToCompleteException: (see previous log entries) at com.google.gwt.dev.cfg.ModuleDefSchema$ObjAttrCvt.convertToArg(ModuleDefSchema.java:729) at com.google.gwt.dev.util.xml.HandlerArgs.convertToArg(HandlerArgs.java:64) at com.google.gwt.dev.util.xml.HandlerMethod.invokeBegin(HandlerMethod.java:214) at com.google.gwt.dev.util.xml.ReflectiveParser$Impl.startElement(ReflectiveParser.java:257) at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(Abstract...)  It was running fine yesterday when I left work, and now it tells me that my generator isn’t a subclass of the GWT Generator?</description>
     </item>
     
     <item>
       <title>Integrating SmartGWT with ASP.NET JSON web service</title>
-      <link>http://blog.idempotent.ca/2009/03/19/integrating-smartgwt-with-asp.net-json-web-service/</link>
+      <link>https://blog.idempotent.ca/2009/03/19/integrating-smartgwt-with-asp.net-json-web-service/</link>
       <pubDate>Thu, 19 Mar 2009 09:08:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/03/19/integrating-smartgwt-with-asp.net-json-web-service/</guid>
+      <guid>https://blog.idempotent.ca/2009/03/19/integrating-smartgwt-with-asp.net-json-web-service/</guid>
       <description>Many web API authors are using third party libraries like JayRock to convert ASP.NET web service method return values to JSON. ASP.NET does have the ability to return JSON objects for web methods. It’s not a very well-known feature (I guess) as there are only a few places mentioning it.
 For example, suppose the web method we are calling is /ItemService.asmx/GetList, and it’s expecting a parameter “uid”. For JSON web service to work, we have to set the request content type to “application/json” and provide the request parameter as a JSON object and send it through HTTP POST data ({uid:&#39;12345&#39;}).</description>
     </item>

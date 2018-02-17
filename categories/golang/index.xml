@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/golang/</link>
+    <link>https://blog.idempotent.ca/categories/golang/</link>
     <description>Recent content in Golang on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 20 Nov 2013 11:53:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>First dip into Golang&#39;s concurrency</title>
-      <link>http://blog.idempotent.ca/2013/11/20/first-dip-into-golangs-concurrency/</link>
+      <link>https://blog.idempotent.ca/2013/11/20/first-dip-into-golangs-concurrency/</link>
       <pubDate>Wed, 20 Nov 2013 11:53:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2013/11/20/first-dip-into-golangs-concurrency/</guid>
+      <guid>https://blog.idempotent.ca/2013/11/20/first-dip-into-golangs-concurrency/</guid>
       <description>I have been toying with Google&amp;rsquo;s Go language lately. The native support for concurrent programming is one of Go&amp;rsquo;s major selling point.
 Go has low-level primitives for concurrent programming such as mutexes and atomic, but also provides high-level language constructs for building concurrent programs via goroutines and channels.
 Goroutines are functions executing in the same address space as other goroutines, like threads, but unlike threads, they communicate to each other via channels, not shared variables.</description>

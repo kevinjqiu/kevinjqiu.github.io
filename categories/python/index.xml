@@ -2,69 +2,69 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/python/</link>
+    <link>https://blog.idempotent.ca/categories/python/</link>
     <description>Recent content in Python on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 03 Sep 2015 22:16:36 -0400</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/python/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Use Python bytecode to solve puzzler</title>
-      <link>http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</link>
+      <link>https://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</link>
       <pubDate>Thu, 03 Sep 2015 22:16:36 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</guid>
+      <guid>https://blog.idempotent.ca/2015/09/03/use-python-bytecode-to-solve-puzzler/</guid>
       <description>Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
 I&amp;rsquo;ve been using Python for about ten years but I&amp;rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.</description>
     </item>
     
     <item>
       <title>Use Python bytecode to solve puzzler</title>
-      <link>http://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</link>
+      <link>https://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</link>
       <pubDate>Thu, 03 Sep 2015 22:16:36 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</guid>
+      <guid>https://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</guid>
       <description>Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
 I&amp;rsquo;ve been using Python for about ten years but I&amp;rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.</description>
     </item>
     
     <item>
       <title>Use Python&#39;s sys.settrace() for fun and for profit</title>
-      <link>http://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</link>
+      <link>https://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</link>
       <pubDate>Tue, 17 Apr 2012 16:58:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</guid>
+      <guid>https://blog.idempotent.ca/2012/04/17/use-pythons-sys.settrace-for-fun-and-for-profit/</guid>
       <description>The itch to scratch Everyone in the software industry knows Kent Beck, the pioneers of extreme programming and test-driven development and the co-author of JUnit. One of his lesser known project was JUnitMax, which aims to reduce the time developers have to wait while tests are running. One of the ideas behind that is that when code changes, only the test cases that exercise the code need to be run, instead of running the entire suite.</description>
     </item>
     
     <item>
       <title>Realtime notification delivery using rabbitmq</title>
-      <link>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
+      <link>https://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</link>
       <pubDate>Sat, 07 Apr 2012 16:50:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
+      <guid>https://blog.idempotent.ca/2012/04/07/realtime-notification-delivery-using-rabbitmq/</guid>
       <description>Our company has &amp;ldquo;hack-off&amp;rdquo; days once a while, where we developers get to choose whatever we would like to work on and present it to the entire company by the end of the day. I have been hearing this websocket buzz for a while now and would like to build something interesting with it.
 WebSocket Websocket is a persistent bi-directional connection between the browser and the server. With websocket, web browser can post message to the server, but what&amp;rsquo;s more interesting is that the server is able to push messages to the client (browser).</description>
     </item>
     
     <item>
       <title>Use Python decorator to curry functions</title>
-      <link>http://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</link>
+      <link>https://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</link>
       <pubDate>Fri, 22 Oct 2010 20:06:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</guid>
+      <guid>https://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</guid>
       <description>It&amp;rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing functional programming and dynamic languages&amp;hellip;I learned Python before I went into Computer Science, and then I learned about functional programming and through learning of Scala and Clojure, my functional programming concepts have been enriched. As I was listening, it suddenly appeared to me that there isn&amp;rsquo;t a way in Python to curry a function.</description>
     </item>
     
     <item>
       <title>Enable Auto-complete in a PDB session</title>
-      <link>http://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</link>
+      <link>https://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</link>
       <pubDate>Fri, 12 Jun 2009 09:25:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</guid>
+      <guid>https://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</guid>
       <description>EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See pdb++ or ipdb
 Pretty simple actually…Just put the following code in ~/.pdbrc and then you can use the Tab key during a PDB session to see the available attributes of the current context.
 import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete  </description>
@@ -72,10 +72,10 @@ import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete  </
     
     <item>
       <title>Hexspeak and Generator</title>
-      <link>http://blog.idempotent.ca/2008/09/03/hexspeak-and-generator/</link>
+      <link>https://blog.idempotent.ca/2008/09/03/hexspeak-and-generator/</link>
       <pubDate>Wed, 03 Sep 2008 00:03:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2008/09/03/hexspeak-and-generator/</guid>
+      <guid>https://blog.idempotent.ca/2008/09/03/hexspeak-and-generator/</guid>
       <description>EDIT: 2011-04-21 While browsing my old blog posts, I found the code here can be greatly improved. Here it is:
 def words(): with open(&#39;/usr/share/dict/words&#39;, &#39;r&#39;) as f: return (x.strip().upper() for x in f.readlines()) MAPPING = {&#39;A&#39;:&#39;A&#39;, &#39;B&#39;:&#39;B&#39;, &#39;C&#39;:&#39;C&#39;, &#39;D&#39;:&#39;D&#39;, &#39;E&#39;:&#39;E&#39;, &#39;F&#39;:&#39;F&#39;, &#39;O&#39;:&#39;0&#39;, &#39;S&#39;:&#39;5&#39;, &#39;I&#39;:&#39;1&#39;} def main(): is_hexword = lambda word: all(ch in MAPPING for ch in word) for word in filter(is_hexword, words()): print word, &amp;quot;\t&amp;quot;, &#39;&#39;.join(MAPPING.get(ch, ch) for ch in word) if __name__ == &#39;__main__&#39;: main()  So, it’s a relatively slow day at work, and I’ve been “stumbling upon” on Wikipedia when I found this:</description>
     </item>

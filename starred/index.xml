@@ -2,41 +2,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Starreds on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/starred/</link>
+    <link>https://blog.idempotent.ca/starred/</link>
     <description>Recent content in Starreds on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 03 Sep 2015 22:16:36 -0400</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/starred/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/starred/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Use Python bytecode to solve puzzler</title>
-      <link>http://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</link>
+      <link>https://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</link>
       <pubDate>Thu, 03 Sep 2015 22:16:36 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</guid>
+      <guid>https://blog.idempotent.ca/starred/2015-09-03-use-python-bytecode-to-solve-puzzler/</guid>
       <description>Learning Python Internals Recently I stumbled upon this wonderful set of videos on Python interpreter internals. (Thanks to Philip Guo for creating them and thanks to Michael Kennedy (@mkennedy) and his Talk Python to me show that brought this on my radar)
 I&amp;rsquo;ve been using Python for about ten years but I&amp;rsquo;ve never really truly been able to understand how the interpreter works, nor was I familiar with the Python virtual machine or the bytecode.</description>
     </item>
     
     <item>
       <title>Use rabbitmq DLX to implement delayed retry</title>
-      <link>http://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</link>
+      <link>https://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</link>
       <pubDate>Thu, 30 Apr 2015 00:37:42 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
+      <guid>https://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
       <description>In this post, I&amp;rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using rabbitmq&amp;rsquo;s DLX combined with a TTL. The technique has been described at a few places but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.
 The problem At $DAYJOB we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status.</description>
     </item>
     
     <item>
       <title>Fast and elegant way to sum primes in a gigantic range</title>
-      <link>http://blog.idempotent.ca/starred/2009-06-01-fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/</link>
+      <link>https://blog.idempotent.ca/starred/2009-06-01-fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/</link>
       <pubDate>Mon, 01 Jun 2009 09:37:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/starred/2009-06-01-fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/</guid>
+      <guid>https://blog.idempotent.ca/starred/2009-06-01-fast-and-elegant-way-to-sum-primes-in-a-gigantic-range/</guid>
       <description>The problem is taken from Project-Euler, which asks what is the sum of all prime numbers under 2 million.
 Traditional Approach Project-Euler has many problems like this which looks ridiculously easy in theory, but practically impossible when using the old-school brute force way to solve them.
 Even after applying some well-known techniques to shrink the problem space, the computation still takes a long time (too long for me to stick around and wait it to finish).</description>

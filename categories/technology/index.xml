@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Technology on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/technology/</link>
+    <link>https://blog.idempotent.ca/categories/technology/</link>
     <description>Recent content in Technology on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 18 Jun 2012 16:54:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/technology/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Statically Yours</title>
-      <link>http://blog.idempotent.ca/2012/06/18/statically-yours/</link>
+      <link>https://blog.idempotent.ca/2012/06/18/statically-yours/</link>
       <pubDate>Mon, 18 Jun 2012 16:54:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/06/18/statically-yours/</guid>
+      <guid>https://blog.idempotent.ca/2012/06/18/statically-yours/</guid>
       <description>Migrating from wordpress to octopress
 I&amp;rsquo;m not an avid blogger but like everyone else, I have a blog which I casually write about life and programming. Being hosted by wordpress, it was an out-of-the-box solution and comes with a lot of bells and whistles. However, for a programming blog, it has some significant shortcomings:
  Conflation of content and style. A Wordpress post is written in a weird combination of HTML markups and custom wordpress macros, which means you have to rely on their WYSIWYG editor to generate the correct markups, which means you can&amp;rsquo;t use your favourite editor to write a blog post.</description>

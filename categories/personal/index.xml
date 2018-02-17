@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Personal on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/personal/</link>
+    <link>https://blog.idempotent.ca/categories/personal/</link>
     <description>Recent content in Personal on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 02 Jan 2011 19:47:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/personal/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/personal/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>New Year&#39;s Resolution</title>
-      <link>http://blog.idempotent.ca/2011/01/02/new-years-resolution/</link>
+      <link>https://blog.idempotent.ca/2011/01/02/new-years-resolution/</link>
       <pubDate>Sun, 02 Jan 2011 19:47:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/01/02/new-years-resolution/</guid>
+      <guid>https://blog.idempotent.ca/2011/01/02/new-years-resolution/</guid>
       <description>2011 here we come! In the spirit of continual learning, I&amp;rsquo;m going to write down the technology I&amp;rsquo;d love to learn this year.
 Haskell Now that I&amp;rsquo;m more interested in functional languages, I&amp;rsquo;d love to look into this &amp;ldquo;pure&amp;rdquo; functional language that inspired countless other ones of its kind.
 Lift Last year I scratched the surface of Scala, a hybrid JVM language. I&amp;rsquo;m very fond of it, and think it has tremendous potential.</description>

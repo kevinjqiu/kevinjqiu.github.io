@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vimscript on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/vimscript/</link>
+    <link>https://blog.idempotent.ca/categories/vimscript/</link>
     <description>Recent content in Vimscript on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 20 Apr 2011 20:09:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/vimscript/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/vimscript/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spectrum.vim - My first Vim plugin</title>
-      <link>http://blog.idempotent.ca/2011/04/20/spectrum.vim---my-first-vim-plugin/</link>
+      <link>https://blog.idempotent.ca/2011/04/20/spectrum.vim---my-first-vim-plugin/</link>
       <pubDate>Wed, 20 Apr 2011 20:09:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/04/20/spectrum.vim---my-first-vim-plugin/</guid>
+      <guid>https://blog.idempotent.ca/2011/04/20/spectrum.vim---my-first-vim-plugin/</guid>
       <description>ver the past few months, I&amp;rsquo;ve been using Vim as my primary development tool at work and at home, and I have to say, I&amp;rsquo;m addicted to it! I&amp;rsquo;m thinking about writing a blog post of why I get hooked on walking without crutches, but for this post, I&amp;rsquo;m just going to introduce you to my first plugin in Vim - Spectrum.
 Introduction Spectrum is a vim colorscheme roulette. Ever getting tired of staring at the same colorscheme every day?</description>
     </item>
