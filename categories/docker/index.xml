@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docker on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/docker/</link>
+    <link>https://blog.idempotent.ca/categories/docker/</link>
     <description>Recent content in Docker on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 19 Jun 2016 21:49:51 -0700</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/docker/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/docker/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Docker Security</title>
-      <link>http://blog.idempotent.ca/2016/06/19/docker-security/</link>
+      <link>https://blog.idempotent.ca/2016/06/19/docker-security/</link>
       <pubDate>Sun, 19 Jun 2016 21:49:51 -0700</pubDate>
       
-      <guid>http://blog.idempotent.ca/2016/06/19/docker-security/</guid>
+      <guid>https://blog.idempotent.ca/2016/06/19/docker-security/</guid>
       <description>DockerCon 2016 is here and this is the very first day with workshops on various topics. I chose to attend the Docker Security workshop as I&amp;rsquo;m interested in seeing how Docker tackles some security challenges. This blog post is my notes taken from the workshop.
 In order to talk about security, we first have to know how docker works on a higher level to know what to secure. The workshop addresses that question early on.</description>
     </item>
     
     <item>
       <title>Docker...root...root...Docker (a.k.a. the docker group is a backdoor)</title>
-      <link>http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</link>
+      <link>https://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</link>
       <pubDate>Tue, 03 May 2016 22:52:41 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</guid>
+      <guid>https://blog.idempotent.ca/2016/05/03/docker...root...root...docker-a.k.a.-the-docker-group-is-a-backdoor/</guid>
       <description>While working with docker related stuff and when I use volume mount to a subdir of my home dir, I always come across the issue of the container littering folders with root:root permission in my home folder and then I have to sudo rm ... it, for example:
 docker run -d $(pwd)/data:/var/lib/mysql/data mysql  It always annoys me but today, it came to me like an epiphany that this is actually a pretty severe security vulnerability.</description>
     </item>

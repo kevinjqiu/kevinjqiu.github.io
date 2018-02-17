@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mysql on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/mysql/</link>
+    <link>https://blog.idempotent.ca/categories/mysql/</link>
     <description>Recent content in Mysql on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 27 Nov 2014 00:56:59 -0500</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>MySQL EXPLAIN explained</title>
-      <link>http://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</link>
+      <link>https://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</link>
       <pubDate>Thu, 27 Nov 2014 00:56:59 -0500</pubDate>
       
-      <guid>http://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</guid>
+      <guid>https://blog.idempotent.ca/2014/11/27/mysql-explain-explained/</guid>
       <description>Below is my notes from watching the MySQL&amp;rsquo;s EXPLAIN demystified webinar. All credits go to Baron Schwartz for this excellent intro to MySQL&amp;rsquo;s query explain.
 How does MySQL execute queries?  SQL =&amp;gt; Parse Tree =&amp;gt; Execution plan The execution plan is a data structure, not byte-code The executor makes storage engine calls  Execution plan &amp;ldquo;Deep left tree&amp;rdquo; &amp;ndash; always
 Explain output columns id  which SELECT the row belongs to Labelled sequentially complex select:  subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id   select_type  simple: there&amp;rsquo;s only one SELECT in the whole query, select_type is PRIMARY complex:  subquery: numbered according to the position in SQL text derived: executed as a temporary table union: fill a temp table, then read out with a NULL id   table  table name or alias &amp;lt;DerivedN&amp;gt;, N correspond to id &amp;lt;unionM,N&amp;gt;, M, N correspond to id  type  describes how MySQL will access the rows Possible values:  ALL: table scan index: full index scan range: range of an index ref: value as a reference to look into an index if rows in the index match the value eq_ref: like ref but unique (unique index or PK) const system: does not require accessing a table, e.</description>

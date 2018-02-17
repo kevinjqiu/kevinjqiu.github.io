@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Misc on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/misc/</link>
+    <link>https://blog.idempotent.ca/categories/misc/</link>
     <description>Recent content in Misc on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 19 May 2010 19:42:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/misc/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/misc/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Google IO 2010 is here</title>
-      <link>http://blog.idempotent.ca/2010/05/19/google-io-2010-is-here/</link>
+      <link>https://blog.idempotent.ca/2010/05/19/google-io-2010-is-here/</link>
       <pubDate>Wed, 19 May 2010 19:42:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/05/19/google-io-2010-is-here/</guid>
+      <guid>https://blog.idempotent.ca/2010/05/19/google-io-2010-is-here/</guid>
       <description>This year&amp;rsquo;s Google IO conference is finally here! I don&amp;rsquo;t want to sound like a fanboy but I benefited a lot from last year&amp;rsquo;s IO sessions and looking at this year&amp;rsquo;s session list, I&amp;rsquo;m sure I won&amp;rsquo;t be disappointed.
 This year&amp;rsquo;s keynote speech is an overview of Google&amp;rsquo;s strategy to bring web to the next level. It seems HTML5 is rapidly gaining grounds. Although the specification is not finalized yet, many of the new features are already implemented in most modern browsers, such as AppCache, WebSQL, LocalStorage, Web Worker, and WebSocket.</description>
     </item>

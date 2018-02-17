@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dead Letter Exchange on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/dead-letter-exchange/</link>
+    <link>https://blog.idempotent.ca/categories/dead-letter-exchange/</link>
     <description>Recent content in Dead Letter Exchange on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 30 Apr 2015 00:37:42 -0400</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/dead-letter-exchange/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/dead-letter-exchange/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Use rabbitmq DLX to implement delayed retry</title>
-      <link>http://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</link>
+      <link>https://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</link>
       <pubDate>Thu, 30 Apr 2015 00:37:42 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
+      <guid>https://blog.idempotent.ca/2015/04/30/use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
       <description>In this post, I&amp;rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using rabbitmq&amp;rsquo;s DLX combined with a TTL. The technique has been described at a few places but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.
 The problem At $DAYJOB we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status.</description>
     </item>
     
     <item>
       <title>Use rabbitmq DLX to implement delayed retry</title>
-      <link>http://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</link>
+      <link>https://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</link>
       <pubDate>Thu, 30 Apr 2015 00:37:42 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
+      <guid>https://blog.idempotent.ca/starred/2015-04-30-use-rabbitmq-dlx-to-implement-delayed-retry/</guid>
       <description>In this post, I&amp;rsquo;m going to describe the experience at $DAYJOB regarding implementing delayed retry using rabbitmq&amp;rsquo;s DLX combined with a TTL. The technique has been described at a few places but it is new to me personally and our company. I&amp;rsquo;d like to capture the experience we had both in implementing and in deploying to production.
 The problem At $DAYJOB we have a service that integrates with a 3rd-party API that processes credit card payments and when successful, records a payment object on our customer&amp;rsquo;s invoices, and change the invoice status.</description>
     </item>

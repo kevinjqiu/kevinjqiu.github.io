@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Javascript on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/javascript/</link>
+    <link>https://blog.idempotent.ca/categories/javascript/</link>
     <description>Recent content in Javascript on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 04 Oct 2011 20:14:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/javascript/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/javascript/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Building a Google Reader plugin using Chrome extension</title>
-      <link>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</link>
+      <link>https://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</link>
       <pubDate>Tue, 04 Oct 2011 20:14:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</guid>
+      <guid>https://blog.idempotent.ca/2011/10/04/building-a-google-reader-plugin-using-chrome-extension/</guid>
       <description>OK, ok, I understand. The title is a bit misleading. Google Reader isn&amp;rsquo;t open for 3rd party plugins, and there&amp;rsquo;s no indication that Google will ever. However, with Google Chrome extension, we can build such local &amp;ldquo;plugins&amp;rdquo;.
 What are we going to achieve? Anyone uses Google Reader to read DZone feeds? I do. DZone is a very good tech news aggregator and you can vote and comment on stories. With Google Reader, you get DZone feeds like the following.</description>
     </item>

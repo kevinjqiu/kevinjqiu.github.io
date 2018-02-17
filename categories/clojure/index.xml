@@ -2,49 +2,49 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Clojure on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/clojure/</link>
+    <link>https://blog.idempotent.ca/categories/clojure/</link>
     <description>Recent content in Clojure on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 03 Mar 2012 20:25:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/clojure/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/clojure/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Writing a Simple Clojure Library</title>
-      <link>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</link>
+      <link>https://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</link>
       <pubDate>Sat, 03 Mar 2012 20:25:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</guid>
+      <guid>https://blog.idempotent.ca/2012/03/03/writing-a-simple-clojure-library/</guid>
       <description>I&amp;rsquo;ve been learning/using Clojure on and off for about 2 years. The lispy syntax isn&amp;rsquo;t a deterrent for me at all, in fact, I&amp;rsquo;m quite fond of it and consider it very elegant. However, it does take some time to get used to. I don&amp;rsquo;t use Clojure or anything remotely close in my day job, but I love to find something useful to implement using Clojure. In the past few days I found such niche.</description>
     </item>
     
     <item>
       <title>Write sudoku solver in Clojure</title>
-      <link>http://blog.idempotent.ca/2011/03/02/write-sudoku-solver-in-clojure/</link>
+      <link>https://blog.idempotent.ca/2011/03/02/write-sudoku-solver-in-clojure/</link>
       <pubDate>Wed, 02 Mar 2011 20:00:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/03/02/write-sudoku-solver-in-clojure/</guid>
+      <guid>https://blog.idempotent.ca/2011/03/02/write-sudoku-solver-in-clojure/</guid>
       <description>&amp;hellip;yeah, because the world just needs another Sudoku solver. Well, I&amp;rsquo;m not trying to solve world hunger with it, but just an attempt to practice clojure, I took (read: stole) Peter Norvig&amp;rsquo;s sudoku solver algorithm (written in Python) and adapted it into Clojure. I put it up on Github under sudoku-clj. The algorithm itself isn&amp;rsquo;t that hard to understand. The porting to a lisp-y syntax made the code a little longer than its Python counterpart.</description>
     </item>
     
     <item>
       <title>Cake - the yummy Clojure build system</title>
-      <link>http://blog.idempotent.ca/2011/02/11/cake---the-yummy-clojure-build-system/</link>
+      <link>https://blog.idempotent.ca/2011/02/11/cake---the-yummy-clojure-build-system/</link>
       <pubDate>Fri, 11 Feb 2011 19:56:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/02/11/cake---the-yummy-clojure-build-system/</guid>
+      <guid>https://blog.idempotent.ca/2011/02/11/cake---the-yummy-clojure-build-system/</guid>
       <description>About 10 minutes ago I heard about cake clojure build system, and gave it a try. And 10 minutes later, it won me over! Wow, it addresses all the pain points of leiningen.
 BLAZINGLY FAST!!! Sorry for using all CAPS but I&amp;rsquo;m very excited about this improvement over leiningen &amp;ndash; OK, it may not be the fault of leiningen that JVM cold startup time is non-trivial but hey, someone came up with an idea of having a long running JVM process in the background, so subsequent clojure tasks reuse the same JVM instance.</description>
     </item>
     
     <item>
       <title>Setting up a Clojure Project with Maven</title>
-      <link>http://blog.idempotent.ca/2009/11/11/setting-up-a-clojure-project-with-maven/</link>
+      <link>https://blog.idempotent.ca/2009/11/11/setting-up-a-clojure-project-with-maven/</link>
       <pubDate>Wed, 11 Nov 2009 11:00:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/11/11/setting-up-a-clojure-project-with-maven/</guid>
+      <guid>https://blog.idempotent.ca/2009/11/11/setting-up-a-clojure-project-with-maven/</guid>
       <description>In this blog post I’m going to record my recent experience in setting up a Clojure project using the clojure-maven-plugin.
 Clojure-Maven-Plugin First you need to compile the plugin from source:
 git clone git://github.com/talios/clojure-maven-plugin.git cd clojure-maven-plugin mvn install  Of course, you will need to have Maven2 installed already.
@@ -53,20 +53,20 @@ After that, the compiled plugin jar will be in your maven local repository. Crea
     
     <item>
       <title>Programming Collective Intelligence in Clojure</title>
-      <link>http://blog.idempotent.ca/2009/11/10/programming-collective-intelligence-in-clojure/</link>
+      <link>https://blog.idempotent.ca/2009/11/10/programming-collective-intelligence-in-clojure/</link>
       <pubDate>Tue, 10 Nov 2009 11:08:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/11/10/programming-collective-intelligence-in-clojure/</guid>
+      <guid>https://blog.idempotent.ca/2009/11/10/programming-collective-intelligence-in-clojure/</guid>
       <description>They say the best way to learn a new programming language is by programming in it. Therefore I’m starting this project converting algorithms in the book Programming Collective Intelligence into Clojure, while learning the best practices and language idioms during the process.
 I’ve created a GitHub project for this. I’m not sure how far I’m able to go but let’s see.</description>
     </item>
     
     <item>
       <title>Explore Clojure: Building a Bifid cipher</title>
-      <link>http://blog.idempotent.ca/2009/10/20/explore-clojure-building-a-bifid-cipher/</link>
+      <link>https://blog.idempotent.ca/2009/10/20/explore-clojure-building-a-bifid-cipher/</link>
       <pubDate>Tue, 20 Oct 2009 00:00:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/10/20/explore-clojure-building-a-bifid-cipher/</guid>
+      <guid>https://blog.idempotent.ca/2009/10/20/explore-clojure-building-a-bifid-cipher/</guid>
       <description>Lately I’ve been teaching myself Clojure, a Lisp dialect on the JVM platform. I still love Erlang and still learning it, but Clojure has a special draw for me being a JVM language and its Lisp roots. I studied Scheme (another Lisp dialect) in my college years and deemed it purely academic. However, Clojure has the potential of changing this and bring the expressiveness of Lisp and the power of functional programming to the Java world.</description>
     </item>
     

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tips on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/tips/</link>
+    <link>https://blog.idempotent.ca/categories/tips/</link>
     <description>Recent content in Tips on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 09 Jun 2010 19:45:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/tips/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/tips/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Launch Windows Explorer and goto the current working directory in shell</title>
-      <link>http://blog.idempotent.ca/2010/06/09/launch-windows-explorer-and-goto-the-current-working-directory-in-shell/</link>
+      <link>https://blog.idempotent.ca/2010/06/09/launch-windows-explorer-and-goto-the-current-working-directory-in-shell/</link>
       <pubDate>Wed, 09 Jun 2010 19:45:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/06/09/launch-windows-explorer-and-goto-the-current-working-directory-in-shell/</guid>
+      <guid>https://blog.idempotent.ca/2010/06/09/launch-windows-explorer-and-goto-the-current-working-directory-in-shell/</guid>
       <description>I like working in the command prompt - it&amp;rsquo;s fast and you can do batch processing, etc, but sometimes, I need a GUI (Windows explorer) to explore files in the current directory. I know I can type &amp;ldquo;explorer.exe&amp;rdquo; on the command line to launch Windows explorer, but can it automatically go to the directory I&amp;rsquo;m working in? The answer is yes, although hardly ever advertised
 Now, we need to find a way to find out the current working directory.</description>
     </item>

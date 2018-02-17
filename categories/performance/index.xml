@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Performance on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/performance/</link>
+    <link>https://blog.idempotent.ca/categories/performance/</link>
     <description>Recent content in Performance on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 19 Dec 2016 23:34:56 -0500</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/performance/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/performance/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>CouchDB Indexing Benchmark</title>
-      <link>http://blog.idempotent.ca/2016/12/19/couchdb-indexing-benchmark/</link>
+      <link>https://blog.idempotent.ca/2016/12/19/couchdb-indexing-benchmark/</link>
       <pubDate>Mon, 19 Dec 2016 23:34:56 -0500</pubDate>
       
-      <guid>http://blog.idempotent.ca/2016/12/19/couchdb-indexing-benchmark/</guid>
+      <guid>https://blog.idempotent.ca/2016/12/19/couchdb-indexing-benchmark/</guid>
       <description>In the last post, we discussed how CouchDB&amp;rsquo;s external query server works by examining the raw protocol. In this post, we&amp;rsquo;re going to take a look at the performance of different query servers.
 The code used in this benchmarking is here.
 I listed below the method of the benchmark in detail. If you want you can jump to conclusion.

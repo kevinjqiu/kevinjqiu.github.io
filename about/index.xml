@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Abouts on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/about/</link>
+    <link>https://blog.idempotent.ca/about/</link>
     <description>Recent content in Abouts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 01 Jan 2000 00:00:00 -0400</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/about/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/about/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About Me</title>
-      <link>http://blog.idempotent.ca/about/me/</link>
+      <link>https://blog.idempotent.ca/about/me/</link>
       <pubDate>Sat, 01 Jan 2000 00:00:00 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/about/me/</guid>
+      <guid>https://blog.idempotent.ca/about/me/</guid>
       <description>Kevin Jing Qiu Born in the booming city of Shanghai, PRC in the 80s, Kevin got his first personal computer when he was 8, watching his dad tinkering with Apple II Basic late at night. Kevin fell in love with computer programming in the 90s, and pursued his dream of becoming a software engineer, which lead him to North America.
 Graduated with distinction from University of Toronto Computer Science program, Kevin has been working in the industry since 2008.</description>
     </item>

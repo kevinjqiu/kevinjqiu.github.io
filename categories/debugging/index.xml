@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Debugging on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/debugging/</link>
+    <link>https://blog.idempotent.ca/categories/debugging/</link>
     <description>Recent content in Debugging on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 12 Jun 2009 09:25:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/debugging/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/debugging/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Enable Auto-complete in a PDB session</title>
-      <link>http://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</link>
+      <link>https://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</link>
       <pubDate>Fri, 12 Jun 2009 09:25:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</guid>
+      <guid>https://blog.idempotent.ca/2009/06/12/enable-auto-complete-in-a-pdb-session/</guid>
       <description>EDIT: 2012-06-19 There are so many other much better options now that renders recipe obsolete. See pdb++ or ipdb
 Pretty simple actually…Just put the following code in ~/.pdbrc and then you can use the Tab key during a PDB session to see the available attributes of the current context.
 import rlcompleter pdb.Pdb.complete=rlcompleter.Completer(locals()).complete  </description>

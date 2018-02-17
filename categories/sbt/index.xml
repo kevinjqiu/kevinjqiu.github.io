@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Sbt on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/sbt/</link>
+    <link>https://blog.idempotent.ca/categories/sbt/</link>
     <description>Recent content in Sbt on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 17 Mar 2011 20:04:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/sbt/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/sbt/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Scala Simple Build Tool -- Not so simple after all</title>
-      <link>http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</link>
+      <link>https://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</link>
       <pubDate>Thu, 17 Mar 2011 20:04:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</guid>
+      <guid>https://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</guid>
       <description>Update: I got sbt working by building directly from the master branch from their github repo. The current version is 0.7.5. The tagged 0.9.4 version is actually an older version. Anyway, tried it and kinda loved it.
 This is just another late night rambling&amp;hellip;I was trying to get a proper scala build system setup. I was using Maven scala plugin for a while, but longing for something simpler and more scalanic (is there such a word?</description>
     </item>

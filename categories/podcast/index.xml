@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Podcast on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/podcast/</link>
+    <link>https://blog.idempotent.ca/categories/podcast/</link>
     <description>Recent content in Podcast on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 Apr 2016 22:12:59 -0400</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/podcast/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/podcast/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Software Engineering Podcasts Review</title>
-      <link>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</link>
+      <link>https://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</link>
       <pubDate>Thu, 28 Apr 2016 22:12:59 -0400</pubDate>
       
-      <guid>http://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</guid>
+      <guid>https://blog.idempotent.ca/2016/04/28/software-engineering-podcasts-review/</guid>
       <description>UPDATE: I&amp;rsquo;ve got a lot of great comments here and on reddit. Thanks everyone for the suggestions.
 As software developers, we need to always keep learning and keep ourselves up-to-date with what&amp;rsquo;s happening in the industry. Listening to podcasts is a great way to do so for myself since I have a 2-hour commute every day. In this blog post I&amp;rsquo;m going to review software engineering podcasts that I frequently listen to and hopefully this post will be remotely useful to anyone looking for software podcasts.</description>
     </item>

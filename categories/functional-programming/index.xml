@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Functional Programming on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/functional-programming/</link>
+    <link>https://blog.idempotent.ca/categories/functional-programming/</link>
     <description>Recent content in Functional Programming on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 22 Oct 2010 20:06:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/functional-programming/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Use Python decorator to curry functions</title>
-      <link>http://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</link>
+      <link>https://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</link>
       <pubDate>Fri, 22 Oct 2010 20:06:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</guid>
+      <guid>https://blog.idempotent.ca/2010/10/22/use-python-decorator-to-curry-functions/</guid>
       <description>It&amp;rsquo;s been a while since the last time I wrote about Python. This morning, I was listening to a podcast on my way to work. They were discussing functional programming and dynamic languages&amp;hellip;I learned Python before I went into Computer Science, and then I learned about functional programming and through learning of Scala and Clojure, my functional programming concepts have been enriched. As I was listening, it suddenly appeared to me that there isn&amp;rsquo;t a way in Python to curry a function.</description>
     </item>
     
     <item>
       <title>Use delegation to write map/filter in Java</title>
-      <link>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</link>
+      <link>https://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</link>
       <pubDate>Mon, 01 Mar 2010 19:32:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</guid>
+      <guid>https://blog.idempotent.ca/2010/03/01/use-delegation-to-write-map/filter-in-java/</guid>
       <description>The problem In Java, imagine you have a list of User objects, each encapsulates the user&amp;rsquo;s id, first name, last name and age. Then you want to call a web service UserService.deleteUsersByIds(List&amp;lt;Integer&amp;gt; userIds) to delete the users from your data store. It doesn&amp;rsquo;t sound too hard, does it? All you need to do is to transform you List&amp;lt;User&amp;gt; to List&amp;lt;Integer&amp;gt;. So you go ahead and write the following code:</description>
     </item>
     

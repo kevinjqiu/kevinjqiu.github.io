@@ -2,41 +2,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ctf on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/ctf/</link>
+    <link>https://blog.idempotent.ca/categories/ctf/</link>
     <description>Recent content in Ctf on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 19 Sep 2012 00:01:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/ctf/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/ctf/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Stripe Capture The Flag 2.0 - Problem 3</title>
-      <link>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</link>
+      <link>https://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</link>
       <pubDate>Wed, 19 Sep 2012 00:01:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</guid>
+      <guid>https://blog.idempotent.ca/2012/09/19/stripe-capture-the-flag-2.0---problem-3/</guid>
       <description>Level 3 Finally we get to level 3. Here&amp;rsquo;s the setup:
 After the fiasco back in Level 0, management has decided to fortify the Secret Safe into an unbreakable solution (kind of like Unbreakable Linux). The resulting product is Secret Vault, which is so secure that it requires human intervention to add new secrets. A beta version has launched with some interesting secrets (including the password to access Level 4)  Here&amp;rsquo;s the code for the server (Python finally!</description>
     </item>
     
     <item>
       <title>Stripe Capture The Flag 2.0 - Problem 2</title>
-      <link>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</link>
+      <link>https://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</link>
       <pubDate>Wed, 12 Sep 2012 23:50:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</guid>
+      <guid>https://blog.idempotent.ca/2012/09/12/stripe-capture-the-flag-2.0---problem-2/</guid>
       <description>Level 2  In level 2, we&amp;rsquo;re faced with a PHP app that allows you to upload a &amp;ldquo;profile picture&amp;rdquo;. The password to level 3 is contained in a &amp;ldquo;password.txt&amp;rdquo; file of the document root, as revealed in line 49. Of course, you won&amp;rsquo;t be able to click on the link and get the file. The directory is protected, and we have to somehow exploit the code.
 Reading through the code, it&amp;rsquo;s a clear that whatever file uploaded to the server will be under uploads/, and the file is publicly accessible through &amp;lt;base&amp;gt;/uploads/&amp;lt;your_file_name&amp;gt;, as seen on line 37.</description>
     </item>
     
     <item>
       <title>Stripe Capture The Flag 2.0 - Problem 1</title>
-      <link>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</link>
+      <link>https://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</link>
       <pubDate>Mon, 10 Sep 2012 14:14:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</guid>
+      <guid>https://blog.idempotent.ca/2012/09/10/stripe-capture-the-flag-2.0---problem-1/</guid>
       <description>Level 1 Now we get to level 1. We are presented with a simple web form with the PHP code powering it.
  The PHP script checks if the input combination matches the combination in &amp;lsquo;secret-combination.txt&amp;rsquo; file, and present the user with the password to the next level if the combinations match. Obviously, we&amp;rsquo;re not going to guess the combination.
 There are a few &amp;lsquo;handy&amp;rsquo; methods in PHP that are extremely dangerous.</description>
@@ -44,10 +44,10 @@ There are a few &amp;lsquo;handy&amp;rsquo; methods in PHP that are extremely da
     
     <item>
       <title>Stripe Capture The Flag 2.0 - Problem 0</title>
-      <link>http://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</link>
+      <link>https://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</link>
       <pubDate>Sun, 09 Sep 2012 23:11:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</guid>
+      <guid>https://blog.idempotent.ca/2012/09/09/stripe-capture-the-flag-2.0---problem-0/</guid>
       <description>Stripe just finished running a second &amp;ldquo;capture the flag&amp;rdquo; challenge. They ran a similar challenge this February and was more focused on system level. This time, it&amp;rsquo;s full-on web security.
 In the next few posts, I&amp;rsquo;m going to discuss the problems in the challenge, how I solved them and what did I learn from from each challenge.
 Problem 0 Here are the code for level 0:

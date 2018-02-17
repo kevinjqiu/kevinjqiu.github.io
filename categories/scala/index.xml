@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Scala on Qiu&#39;s Quibble</title>
-    <link>http://blog.idempotent.ca/categories/scala/</link>
+    <link>https://blog.idempotent.ca/categories/scala/</link>
     <description>Recent content in Scala on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 17 Mar 2011 20:04:00 +0000</lastBuildDate>
     
-	<atom:link href="http://blog.idempotent.ca/categories/scala/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.idempotent.ca/categories/scala/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Scala Simple Build Tool -- Not so simple after all</title>
-      <link>http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</link>
+      <link>https://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</link>
       <pubDate>Thu, 17 Mar 2011 20:04:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</guid>
+      <guid>https://blog.idempotent.ca/2011/03/17/scala-simple-build-tool----not-so-simple-after-all/</guid>
       <description>Update: I got sbt working by building directly from the master branch from their github repo. The current version is 0.7.5. The tagged 0.9.4 version is actually an older version. Anyway, tried it and kinda loved it.
 This is just another late night rambling&amp;hellip;I was trying to get a proper scala build system setup. I was using Maven scala plugin for a while, but longing for something simpler and more scalanic (is there such a word?</description>
     </item>
     
     <item>
       <title>My impression on Scala so far</title>
-      <link>http://blog.idempotent.ca/2010/10/07/my-impression-on-scala-so-far/</link>
+      <link>https://blog.idempotent.ca/2010/10/07/my-impression-on-scala-so-far/</link>
       <pubDate>Thu, 07 Oct 2010 20:01:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/10/07/my-impression-on-scala-so-far/</guid>
+      <guid>https://blog.idempotent.ca/2010/10/07/my-impression-on-scala-so-far/</guid>
       <description>I&amp;rsquo;ve been exploring Scala on and off for some time now. Here&amp;rsquo;s my highly subjective and very limited impression of Scala.
 What I like about Scala:
 0) It&amp;rsquo;s statically-typed language. That&amp;rsquo;s right! I don&amp;rsquo;t care what you ninjas say. As much as I love dynamic languages, I just prefer statically typed language for big projects. The benefit of having type information is enormous for a project with a large code base.</description>
@@ -34,20 +34,20 @@ What I like about Scala:
     
     <item>
       <title>Use function currying to reduce repetition and make code clean</title>
-      <link>http://blog.idempotent.ca/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/</link>
+      <link>https://blog.idempotent.ca/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/</link>
       <pubDate>Wed, 29 Sep 2010 19:56:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/</guid>
+      <guid>https://blog.idempotent.ca/2010/09/29/use-function-currying-to-reduce-repetition-and-make-code-clean/</guid>
       <description>Lately, I&amp;rsquo;ve been writing a parser using the Scala parser-combinator framework to parse some saves from a game. As a responsible programmer (:P), I write unit tests for each rule. However, I found myself having to write the following code over and over again:
 @Test def testRule1() { parserRule.apply(new CharSequence(&amp;quot;someInput&amp;quot;)) match { case Success(result, _) =&amp;gt; { assertEquals(&amp;quot;expected&amp;quot;, result) /* other asserts if the result is a collection of something else */ } case NoSuccess(msg, _) =&amp;gt; fail(msg) } }  It&amp;rsquo;s worth noting that you cannot pass in a string value to a Parser.</description>
     </item>
     
     <item>
       <title>Finding Happy Numbers using Scala</title>
-      <link>http://blog.idempotent.ca/2010/07/23/finding-happy-numbers-using-scala/</link>
+      <link>https://blog.idempotent.ca/2010/07/23/finding-happy-numbers-using-scala/</link>
       <pubDate>Fri, 23 Jul 2010 19:48:00 +0000</pubDate>
       
-      <guid>http://blog.idempotent.ca/2010/07/23/finding-happy-numbers-using-scala/</guid>
+      <guid>https://blog.idempotent.ca/2010/07/23/finding-happy-numbers-using-scala/</guid>
       <description>The problem was posted on Programming Praxis. The algorithm itself is pretty straightforward, anyone can do it with a few if/else/fors, but to coerce myself to think functionally, I decide to practice writing it in Scala.
 A number is a happy number if the sum of square of its digits eventually arrive at 1. For example, 7=&amp;gt;72=49=&amp;gt;42+92=97=&amp;gt;92+72=&amp;gt;130=12+32+02=10=&amp;gt;12+02=1, so 7 is a happy number. 17 is not a happy number because by applying the above process, it goes into a loop.</description>
     </item>
