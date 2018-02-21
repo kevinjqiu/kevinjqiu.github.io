@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Nov 2017 16:48:44 -0500</lastBuildDate>
+    <lastBuildDate>Wed, 21 Feb 2018 00:13:33 -0500</lastBuildDate>
     
 	<atom:link href="https://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>TIL - a static site for your notes</title>
+      <link>https://blog.idempotent.ca/2018/02/21/til---a-static-site-for-your-notes/</link>
+      <pubDate>Wed, 21 Feb 2018 00:13:33 -0500</pubDate>
+      
+      <guid>https://blog.idempotent.ca/2018/02/21/til---a-static-site-for-your-notes/</guid>
+      <description>A couple of years ago I was introduced the idea of TIL (Today I Learned) and the habit of noting down things I learned that are note-worthy. Since then I&amp;rsquo;ve been looking for a perfect system that would allow me to:
+ record what I learned quickly and efficiently version control the notes browse the notes either via vim or via browser search through them using keywords  I tried a couple of ways:</description>
+    </item>
     
     <item>
       <title>QCon San Francisco Recap</title>
