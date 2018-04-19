@@ -83,6 +83,24 @@
     </item>
     
     <item>
+      <title>Devops</title>
+      <link>https://blog.idempotent.ca/categories/devops/</link>
+      <pubDate>Wed, 18 Apr 2018 23:09:59 -0400</pubDate>
+      
+      <guid>https://blog.idempotent.ca/categories/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Dns</title>
+      <link>https://blog.idempotent.ca/categories/dns/</link>
+      <pubDate>Wed, 18 Apr 2018 23:09:59 -0400</pubDate>
+      
+      <guid>https://blog.idempotent.ca/categories/dns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Docker</title>
       <link>https://blog.idempotent.ca/categories/docker/</link>
       <pubDate>Sun, 19 Jun 2016 21:49:51 -0700</pubDate>

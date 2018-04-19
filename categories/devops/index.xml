@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Devops on Qiu&#39;s Quibble</title>
+    <link>https://blog.idempotent.ca/categories/devops/</link>
+    <description>Recent content in Devops on Qiu&#39;s Quibble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 18 Apr 2018 23:09:59 -0400</lastBuildDate>
+    
+	<atom:link href="https://blog.idempotent.ca/categories/devops/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Run Your Own Home DNS on coredns</title>
+      <link>https://blog.idempotent.ca/2018/04/18/run-your-own-home-dns-on-coredns/</link>
+      <pubDate>Wed, 18 Apr 2018 23:09:59 -0400</pubDate>
+      
+      <guid>https://blog.idempotent.ca/2018/04/18/run-your-own-home-dns-on-coredns/</guid>
+      <description>I have been running my home DNS on a pair of RaspberryPi&amp;rsquo;s for some time now. The main reason for running my own DNS server is to utilize the excellent pihole project to block 3rd-party ads from being served to my home network.
+I ansiblized the config files. It has been running great for a couple of months.
+Recently, I have acquired an orangepi, a RaspberryPi 3 and a new desktop.</description>
+    </item>
+    
+  </channel>
+</rss>
