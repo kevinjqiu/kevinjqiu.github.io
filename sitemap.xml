@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.idempotent.ca/2018/04/18/run-your-own-home-dns-on-coredns/</loc>
+    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.idempotent.ca/2018/02/21/til---a-static-site-for-your-notes/</loc>
     <lastmod>2018-02-21T00:13:33-05:00</lastmod>
   </url>
@@ -382,6 +387,18 @@
   </url>
   
   <url>
+    <loc>https://blog.idempotent.ca/categories/devops/</loc>
+    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.idempotent.ca/categories/dns/</loc>
+    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.idempotent.ca/categories/docker/</loc>
     <lastmod>2016-06-19T21:49:51-07:00</lastmod>
     <priority>0</priority>
@@ -497,7 +514,7 @@
   
   <url>
     <loc>https://blog.idempotent.ca/post/</loc>
-    <lastmod>2018-02-21T00:13:33-05:00</lastmod>
+    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -509,7 +526,7 @@
   
   <url>
     <loc>https://blog.idempotent.ca/</loc>
-    <lastmod>2018-02-21T00:13:33-05:00</lastmod>
+    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
     <priority>0</priority>
   </url>
   
