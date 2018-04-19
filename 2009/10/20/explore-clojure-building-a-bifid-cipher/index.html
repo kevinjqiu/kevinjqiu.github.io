@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Explore Clojure: Building a Bifid cipher // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.39" />
+
+  <meta property="og:title" content="Explore Clojure: Building a Bifid cipher" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.idempotent.ca/2009/10/20/explore-clojure-building-a-bifid-cipher/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="https://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="https://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#polybius-square">Polybius Square</a></li>
+<li><a href="#the-codec-maps">The codec maps</a></li>
+<li><a href="#encode">Encode</a></li>
+<li><a href="#putting-it-together">Putting it together</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2009/10/20/explore-clojure-building-a-bifid-cipher/">Explore Clojure: Building a Bifid cipher</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>20</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Oct</span> <span class="post-date-year">2009</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-clojure" href="https://blog.idempotent.ca/categories/clojure">clojure</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<p>Lately I’ve been teaching myself <a href="http://clojure.org">Clojure</a>, a Lisp dialect on the JVM platform. I still love Erlang and still learning it, but Clojure has a special draw for me being a JVM language and its Lisp roots. I studied Scheme (another Lisp dialect) in my college years and deemed it purely academic. However, Clojure has the potential of changing this and bring the expressiveness of Lisp and the power of functional programming to the Java world.</p>
+
+<p>The best way to learn a language is to use it to solve some non-trivial practical problems. I stumbled <a href="http://programmingpraxis.com/2009/10/13/bifid-cipher/">this</a> problem on <a href="http://programmingpraxis.com/">Programming Praxis</a>. It’s about building a <a href="http://en.wikipedia.org/wiki/Bifid_cipher">Bifid</a> cipher, which I thought could be a good practical problem for me to solve in Clojure.</p>
+
+<h2 id="polybius-square">Polybius Square</h2>
+
+<p>Bifid cipher is based on <a href="http://en.wikipedia.org/wiki/Polybius_square">Polybius Square</a>, which looks like this:</p>
+
+<pre><code>  1 2 3 4 5
+1 B G W K Z
+2 Q P N D S
+3 I O A X E
+4 F C L U M
+5 T H Y V R
+</code></pre>
+
+<p>Every encodable letter is given a vector value, which is the coordinate in this square. For example, <code>X=[3 4]</code>, <code>H=[5 2]</code>. The first task would be building the Polybius square in Clojure.</p>
+
+<p>My function <code>polybius-square</code> is going to take 2 parameters: <code>charset</code> is a list of encodable characters, and <code>size</code> is the size of the Polybius square.</p>
+
+<pre><code class="language-clojure">(defn polybius-square
+  &quot;Polybius square by the given charset and size&quot;
+  [charset square-size]
+  (map #(vector %1 [%2 %3]) charset
+    (for [x (range 1 (+ 1 square-size)), y (range 1 (+ 1 square-size))] x)
+    (take (* square-size square-size) (cycle (range 1 (+ 1 square-size))))))
+</code></pre>
+
+<p>Let’s see how this works. Suppose you’re calling this function with
+<code>(polybius-square &quot;ABCDE&quot; 3)</code>, <code>charset</code> is bound to “ABCDE” and <code>size</code> is bound to 3. What I want is a seq of vectors in the form of: <code>(\Letter [x y])</code> where <code>x</code> and <code>y</code> are the coordinates. It’s natural to use <code>map</code>, with the function-to-map taking three parameters and vectorize them. That’s what the anonymous function does:</p>
+
+<pre><code class="language-clojure">#(vector %1 [%2 %3])
+</code></pre>
+
+<p><code>%1</code> is the letter, <code>%2</code> and <code>%3</code> are the coordinates. I want the coordinate sequence to be like this: <code>[1 1], [1 2], [1 3], [2 1], [2 2], [2 3]</code>. In imperative language, you’d use a nested for loop, but we’ve established that’s ugly. We want the parameters fed to map to be of the following:
+<code>&quot;ABCDEFGHJI&quot; (1 1 1 2 2 2 3 3 3) (1 2 3 1 2 3 1 2 3 1 2 3)</code></p>
+
+<p>To generate the first list, we use list comprehension:</p>
+
+<pre><code class="language-clojure">(for [ x (range 1 (+ 1 square-size)), y (range 1 (+ 1 square-size))] x)
+</code></pre>
+
+<p>It reads: for every <code>x</code> in range 1 to <code>square-size</code>+1 (because “range” is right-exclusive) and for every <code>y</code> in the same range, output the value of <code>x</code> and take the whole output as the list. Because the binding of <code>y</code> comes later, and Lisp evaluates from right to left, the result of this list comprehension is <code>(1 1 1 2 2 2 3 3 3)</code></p>
+
+<p>Now let’s look at the other list: <code>(1 2 3 1 2 3 1 2 3)</code> – a cyclic list. Fortunately, Clojure has a built-in <code>cycle</code> function, which returns a lazy sequence of cycles of a collection. We want to call it with cycle <code>'(1 2 3)</code>, so it’s going to be <code>(cycle (range 1 (+ 1 square-size)))</code>. Because cycle will be evaluated to an infinite sequence, we have to tell it when to stop.</p>
+
+<p>When you see the square as a flat list, it’s clear that the cycle should stop when it reaches <code>square-size^2</code>, hence <code>(take (\* square-size square-size) (cycle (range 1 (+ 1 square-size))))</code>.</p>
+
+<h2 id="the-codec-maps">The codec maps</h2>
+
+<p>After the Polybius square is built, we have the bases for our encryption. However, it’s not user-friendly: it’s a flat list of tuples. We want two maps for fast searching from letters to their encoding forms <code>(letter-2-code)</code> and from transposed vectors to the letters <code>(transposed-2-letter)</code>.</p>
+
+<pre><code class="language-clojure">(defn- letter-2-code
+  &quot;Produce a mapping between letters and their codes&quot;
+  [square]
+  (letfn [(helper [the-square the-map]
+          (if (empty? the-square)
+            the-map
+            (let [the-item (first the-square)
+                  the-key (first the-item)
+                  the-number (second the-item)]
+              (recur (rest the-square) (assoc the-map the-key the-number)))))]
+    (helper square (empty hash-map))))
+</code></pre>
+
+<p>The strategy here is to walk through the list, add each item to a <code>hash-map</code>. Here we define an inner function, which is basically a recursive helper. The function itself is pretty straightforward. Take note that in Clojure, when you need to do tail recursion, always use <code>recur</code> instead of calling the function by its name. This is because JVM cannot do automatic tail cut optimization (TCO), but Clojure does the optimization through the <code>recur</code> function. After the binding, we kick off the recursion by calling it with the initial list.</p>
+
+<p>In the similar fashion, we have:</p>
+
+<pre><code class="language-clojure">(defn- transposed-2-letter
+  &quot;Produce a mapping between the transposed codes to letter&quot;
+  [square]
+  (letfn [(helper [the-square the-map]
+            (if (empty? the-square)
+              the-map
+              (let [the-item (first the-square)
+                    the-key (second the-item)
+                    the-letter (first the-item)]
+                (recur (rest the-square) (assoc the-map the-key the-letter)))))]
+    (helper square (empty hash-map))))
+</code></pre>
+
+<h2 id="encode">Encode</h2>
+
+<p>Now comes the <code>encode</code> function. It’s important to note that the encoding will be different if a different polybius square is provided. Therefore, both <code>encode</code> and <code>decode</code> functions take the Polybius square as parameter.</p>
+
+<p>During the encoding phase, we first convert every character in the message into a vector, then reorganize the vectors. To better illustrate, we use an example:
+Suppose we have the following mapping:
+<code>{I [3 3], H [3 2], G [3 1], F [2 3], E [2 2], D [2 1], C [1 3], B [1 2], A [1 1]}</code>
+and we want to encode the word “CEDE”
+<code>CEDE =&gt; ([1 3] [2 2] [2 1] [2 2])</code>, then we want to transpose the “matrix” composed of the above vectors, so it would be like:
+<code>([1 2] [2 2] [3 2] [1 2])</code>, and finally looking up every item in the transposed-2-letter mapping</p>
+
+<pre><code>{[3 3] I, [3 2] H, [3 1] G, [2 3] F, [2 2] E, [2 1] D, [1 3] C, [1 2] B, [1 1] A}
+=&gt;BEHB
+</code></pre>
+
+<p>To get a mapping of message to vectors, we again map a function to the list:
+<code>(map #(get l2c % %) message)</code> (l2c has been bound)</p>
+
+<p>Then we apply the interleave function to the result, this gives:
+<code>(1 2 2 2 3 2 1 2)</code>. This is good but we want a list of vectors instead of a flat list. Clojure provides partition function, which does exactly it:
+<code>(partition 2 '(1 2 2 2 3 2 1 2))</code>
+gives:
+<code>([1 2] [2 2] [3 2] [1 2])</code></p>
+
+<p>Then, we want to lookup every item in the result in the <code>transposed-to-letter</code> map and get a list of mapped characters. To achieve this, again, we use map, providing a different mapping:
+<code>(map #(get tr2l % %) ...)</code> (tr2l is bound)</p>
+
+<p>This returns a list of characters. We want a string, so we concatenate the characters by applying <code>str</code> function:
+<code>(apply str (map #(get tr2l % %) ...))</code></p>
+
+<p>Here’s the complete code:</p>
+
+<pre><code class="language-clojure">(defn encode
+  &quot;Return the message encoded by the specified polybius-square&quot;
+  [message polybius-square]
+  (let [l2c (letter-2-code polybius-square)
+        tr2l (transposed-2-letter polybius-square)]
+    (apply str
+      (map #(get tr2l % %) (partition 2 (apply interleave (map #(get l2c % %) message)))))))
+</code></pre>
+
+<p>Here you see the expressiveness of Clojure: all operations are chained together and formed in expression.</p>
+
+<p>The <code>decode</code> function behaves similarly. The only trick is we need to split the translated code list in two. We use <code>partition</code> method again, with <code>size</code> being half of the entire list.</p>
+
+<pre><code class="language-clojure">(defn decode
+  &quot;Return the decoded message using the specified polybius-square&quot;
+  [encoded polybius-square]
+  (let [l2c (letter-2-code polybius-square)
+        c2l (transposed-2-letter polybius-square)
+        codes (apply concat (map #(get l2c % %) encoded))
+        len (count codes)
+        parts (partition (/ len 2) codes)]
+    (apply str (map #(get c2l %1 %1) (map #(vector %1 %2) (first parts) (second parts))))))
+</code></pre>
+
+<h2 id="putting-it-together">Putting it together</h2>
+
+<p>Now with all the pieces are in place, we can put it together by writing a simple test:</p>
+
+<pre><code class="language-clojure">(defn -main
+  &quot;A simple test case entry point&quot;
+  []
+  (let [square (polybius-square &quot;ABCDEFGHIKLMNOPQRSTUVWXYZ&quot; 5)]
+    (do (println (encode &quot;BIFIDCIPHER&quot; square))
+      (println (decode (encode &quot;BIFIDCIPHER&quot; square) square)))))
+</code></pre>
+
+<p>Output:</p>
+
+<p>BGAHFRQTOXW
+BIFIDCIPHER</p>
+
+<p>Have the complete source code <a href="http://github.com/kevinjqiu/bifid-clj">here</a>, I’m sure there are a lot to be improved of the above implementation of the Bifid cipher. Especially currently I have no elegant way to solve the situation where the letter to be encoded is not in the Polybius square. Also, I’m sure my code isn’t entirely the idiomatic Clojure. If you have any suggestions, don’t hesitate to write a comment.</p>
+
+<p>Although I have been learning Clojure for 3 days, I’m already enjoying its expressiveness and the clean look. As a Java programmer, Clojure also gives me the benefit of full access to the Java land. The potential is endless!</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2009/11/10/programming-collective-intelligence-in-clojure/">Programming Collective Intelligence in Clojure</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2009/06/12/enable-auto-complete-in-a-pdb-session/">Enable Auto-complete in a PDB session</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "idempotentca" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2018. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

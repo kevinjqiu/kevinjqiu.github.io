@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Campfire Story - The &#34;peril&#34; of `dev` // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.39" />
+
+  <meta property="og:title" content="Campfire Story - The &#34;peril&#34; of `dev`" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.idempotent.ca/2017/08/31/campfire-story---the-peril-of-dev/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="https://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="https://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2017/08/31/campfire-story---the-peril-of-dev/">Campfire Story - The &#34;peril&#34; of `dev`</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>31</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Aug</span> <span class="post-date-year">2017</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-kubernetes" href="https://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
+				
+					<a class="post-category post-category-gitlab" href="https://blog.idempotent.ca/categories/gitlab">gitlab</a>
+				
+					<a class="post-category post-category-story" href="https://blog.idempotent.ca/categories/story">story</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            <p>Through out my career, I have investigated and solved numerous bizarre issues. This one is right up there as being one of the weirdest as well as being one of the most hilarious ones when the truth came out in the end.</p>
+
+<p>At $DAYJOB, we are moving piece by piece our services to <a href="k8s.io">Kubernetes</a>. One of such service slated for migration is the <a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner">Gitlab runners</a>. If you&rsquo;re not familiar with <a href="https://gitlab.com">Gitlab</a>, it&rsquo;s like Github you can self-host and it boasts a very powerful and flexible CI/CD pipeline. At the centre of the CI/CD pipeline infrastructure is the <code>gitlab-ci-multi-runner</code> component. You can run <code>gitlab-ci-multi-runner</code> anywhere, register it with Gitlab and you have yourself a build agent that&rsquo;s capable of running builds.</p>
+
+<p>What makes the <code>gitlab-ci-multi-runner</code> more interesting is it itself can run inside a kubernetes cluster, thus, it can be scaled up/down easily and we don&rsquo;t have to worry about keeping a static list of gitlab runners.</p>
+
+<p>Running gitlab runners on Kubernetes is relatively easy. They have a <a href="https://docs.gitlab.com/ee/install/kubernetes/gitlab_runner_chart.html">helm chart</a> which we had to customize heavily, adding support for many configs (such as specifying runner tags) and features (such as de-register runner automatically when the runner pod shuts down), but nothing unsurmountable. Finally I got a successful build of a project on the kubernetes runner and everything is rosy.</p>
+
+<p>So I announced the availability of Kubernetes-backed gitlab runners and ask people to update their projects to use them. However, error reports started coming in on projects in our main development group (<code>/dev</code>). When a build is started on their project, it fails right away with the following message:</p>
+
+<pre><code>Running with gitlab-ci-multi-runner 9.5.0~beta.39.ge0b8a7b (e0b8a7b)
+  on gitlab-runner-python-docker-compose-gitlab-runner-40176365mfghl (f1d98b78)
+  Using Kubernetes namespace: default
+  Using Kubernetes executor with image [...] ...
+  Waiting for pod default/runner-f1d98b78-project-81-concurrent-0l3bq5 to be running, status is Pending
+  ERROR: Job failed (system failure): pod status is failed
+</code></pre>
+
+<p>Perplexed, I forked their project into my own group, started a build and everything was fine. What on earth is going on?</p>
+
+<p>The pipeline is run on the <strong>exact</strong> same code (also the same <code>.gitlab-ci.yml</code> file). Could there be differences in the project settings? After meticulously comparing and updating the settings of the upstream and my projects, I kicked off a build again, and nope, still failed with the same error. I asked co-workers to fork the same project into their group and trigger a build and guess what, they pass!</p>
+
+<p>At this point, I felt I need to look beneath the surface; beneath what Gitlab UI is providing us. I cordoned off all but one node of the cluster, and scaled the runners down to 1 replica (so all builds will go through that runner on that node).</p>
+
+<p>First, I need to find out what happened exactly to that pod that failed. Unfortunately, when a pod dies, Kubernetes automatically cleans it up faster than I can manually get a hold of the pod&rsquo;s status. Knowing a computer can do things a lot faster than I can type, I quickly wrote down this:</p>
+
+<pre><code>while true; do ids=$(docker ps | grep -v ... | grep -v ... | grep -v pause | cut -d' ' -f1); for id in ids; do docker inspect $id; done; sleep 1; done
+</code></pre>
+
+<p>Basically I want to do <code>docker inspect</code> on any new containers and output it to stdout which I can grab and analyze later. Having this script running and triggering a build, I got the reason why the container was failing:</p>
+
+<pre><code>...
+        &quot;State&quot;: {
+            &quot;Status&quot;: &quot;created&quot;,
+            &quot;Running&quot;: false,
+            &quot;Paused&quot;: false,
+            &quot;Restarting&quot;: false,
+            &quot;OOMKilled&quot;: false,
+            &quot;Dead&quot;: false,
+            &quot;Pid&quot;: 0,
+            &quot;ExitCode&quot;: 128,
+            &quot;Error&quot;: &quot;invalid header field value \&quot;oci runtime error: container_linux.go:247: starting container process caused \\\&quot;no such 
+file or directory\\\&quot;\\n\&quot;&quot;,
+            &quot;StartedAt&quot;: &quot;0001-01-01T00:00:00Z&quot;,
+            &quot;FinishedAt&quot;: &quot;0001-01-01T00:00:00Z&quot;
+        },
+...
+</code></pre>
+
+<p>Ahh, the dreaded &ldquo;no such file or directory&rdquo; error. This usually happens when the container run command cannot be found. What&rsquo;s the container run command? From the same inspect output:</p>
+
+<pre><code>...
+        &quot;Path&quot;: &quot;sh&quot;,
+        &quot;Args&quot;: [
+            &quot;-c&quot;,
+            &quot;if [ -x /usr/local/bin/bash ]; then\n\texec /usr/local/bin/bash \nelif [ -x /usr/bin/bash ]; then\n\texec /usr/bin/bash \nelif 
+[ -x /bin/bash ]; then\n\texec /bin/bash \nelif [ -x /usr/local/bin/sh ]; then\n\texec /usr/local/bin/sh \nelif [ -x /usr/bin/sh ]; then\n\t
+exec /usr/bin/sh \nelif [ -x /bin/sh ]; then\n\texec /bin/sh \nelse\n\techo shell not found\n\texit 1\nfi\n\n&quot;
+        ],
+...
+
+</code></pre>
+
+<p><code>sh</code>! The shell. But wait a sec, if the <code>sh</code> cannot be found, how come it works for builds from other groups? I grabbed the same inspect output from a successful build, and compared them with the failed output, the command and args are <strong>exactly</strong> the same. Also, when I <code>kubectl exec -it POD sh</code> I did get a shell. Sigh&hellip;</p>
+
+<p>Maybe there&rsquo;s something extra going on at the docker daemon level? There&rsquo;s gotta be different requests called on the docker socket, right?</p>
+
+<p>I tuned up the docker daemon logging on that node, rerun the build, and capture the requests hitting the docker daemon. Filtering all the <code>GET</code> requests and comparing the rest, there&rsquo;s no discernable difference again.</p>
+
+<p>At this point, I was getting quite frustrated. There&rsquo;s no new lead for me to pursue and it felt like you&rsquo;re a detective watching a case going cold right in front of your eyes.</p>
+
+<p>&ldquo;Have you checked the kubelet logs?&rdquo;. Someone across the cubical asked. I did check the kubelet logs before but nothing jumped out. It doesn&rsquo;t hurt trying it again, right?</p>
+
+<p><code>journalctl -u kubelet -f</code> and off we go. Triggering a build and watching the wall of text run by. Suddenly, something caught my eye:</p>
+
+<pre><code>Aug 25 21:13:51 ip-10-120-10-250.ca-central-1.compute.internal kubelet-wrapper[2380]: ... {CI_REGISTRY_USER gitlab-ci-token nil} {CI_BUILD_ID 19929 nil} {CI_BUILD_REF 9275e3ca5f6d41a6ee2c1abaf59e654b660ef912 nil} {CI_BUILD_BEFORE_SHA 9275e3ca5f6d41a6ee2c1abaf59e654b660ef912 nil} {CI_BUILD_REF_NAME master nil} {CI_BUILD_REF_SLUG master nil} {CI_BUILD_NAME build nil} {CI_BUILD_STAGE build nil} {CI_PROJECT_ID 4 nil} {CI_PROJECT_NAME YYYY nil} {CI_PROJECT_PATH dev/YYYY nil} {CI_PROJECT_PATH_SLUG dev-YYYY nil} {CI_PROJECT_NAMESPACE dev nil} {CI_PROJECT_URL https://XXXX/dev/YYYY nil} {CI_PIPELINE_ID 4543 nil} {CI_CONFIG_PATH .gitlab-ci.yml nil} {CI_PIPELINE_SOURCE push nil} {CI_RUNNER_ID 177 nil} {CI_RUNNER_DESCRIPTION gitlab-runner-kevin-gitlab-runner-3304628716-38wwj nil} {CI_RUNNER_TAGS python-docker-compose, k8s nil} {CI_REGISTRY XXXX nil} {CI_REGISTRY_IMAGE XXXX/dev/YYYY nil} {REGISTRY registry.points.com nil} {APP_IMAGE XXXX/dev/YYYY:4543 nil} {GITLAB_USER_ID 8 nil}] {map[] map[]} [{repo false /dev } {var-run-docker-sock false /var/run/docker.sock } {default-token-f6qcx true /var/run/secrets/kubernetes.io/serviceaccount }] ...
+</code></pre>
+
+<p>In particular, <strong>this</strong>: <code>{repo false /dev } {var-run-docker-sock false /var/run/docker.sock }...</code>. By the look of it, it&rsquo;s describing the volume mount of the pod. The name of the volume is <code>repo</code> but look at the path. It&rsquo;s <code>/dev</code>! The build container declares <code>/dev</code> a volume mount for checking out the code repo. This essentially makes the <code>/dev</code> folder of the build container empty, which is not going to please the container runtime. Why is it <code>/dev</code> though? Could it be that it&rsquo;s checking out the project according to their group name? Running the build on a different project, and lo and behold, the mount point becomes the name of the group of that project!</p>
+
+<p>Tracing through the <code>gitlab-ci-multi-runner</code> code, the code repo checkout is at <code>Config.BuildsDir</code>. <code>BuildsDir</code> happened to be one of the configuration parameter that neither the original chart nor our fork customized:</p>
+
+<pre><code>   --builds-dir                                                 Directory where builds are stored [$RUNNER_BUILDS_DIR]
+</code></pre>
+
+<p>The checkout directory is defined to be <code>$BUILDS_DIR/$GROUP_NAME/$PROJECT_NAME</code> and since <code>$BUILDS_DIR</code> is not specified (empty string), the checkout directory is <code>/$GROUP_NAME/$PROJECT_NAME</code> and since <code>$GROUP_NAME</code> here is <code>dev</code>, thus the hilarity! Fortunately we don&rsquo;t have groups named <code>proc</code>, <code>var</code> or <code>etc</code>!</p>
+
+<p>Added <code>$RUNNER_BUILDS_DIR</code> customization to our helm chart, redeploy and now the builds are happy.</p>
+
+<p>There you go. This was seemingly a very complicated issue, but it all came down to a configuration error (or the lack thereof). The moral of the story is don&rsquo;t get hung up on your assumptions. &ldquo;No such file or directory&rdquo; doesn&rsquo;t always mean the system cannot find executables. Also, in hindsight, I probably went down to investigate the docker daemon a little too quickly. Probably should have exhausted all kubernetes logs before checking docker daemon requests.</p>
+
+<p>Anyway, this is definitely one of the more memorable issues I&rsquo;ve investigated.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2017/11/21/qcon-san-francisco-recap/">QCon San Francisco Recap</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/">Kubernetes Learning Notes - Part 5 - Horizontal Scaling and Rolling Upgrade</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "idempotentca" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2018. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

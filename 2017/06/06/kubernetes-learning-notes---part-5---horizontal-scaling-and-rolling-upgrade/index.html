@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Kubernetes Learning Notes - Part 5 - Horizontal Scaling and Rolling Upgrade // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.39" />
+
+  <meta property="og:title" content="Kubernetes Learning Notes - Part 5 - Horizontal Scaling and Rolling Upgrade" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.idempotent.ca/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="https://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="https://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#horizontal-scaling">Horizontal Scaling</a></li>
+<li><a href="#rolling-upgrades">Rolling Upgrades</a></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/">Kubernetes Learning Notes - Part 5 - Horizontal Scaling and Rolling Upgrade</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>6</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Jun</span> <span class="post-date-year">2017</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-kubernetes" href="https://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<p>Some of the promises of Kubernetes are scaling and rolling upgrades. In this blog post, we&rsquo;re going to try these out for our service to see how easy it is to achieve these operations which are otherwise difficult to do without a container orchestration tool.</p>
+
+<h1 id="horizontal-scaling">Horizontal Scaling</h1>
+
+<p>When we wrote the <a href="/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/">manifest</a> for <code>overmind</code> deployment, we specified that we want 3 replicas of pods for this deployment. We can scale up the number of replicas to handle increased traffic by using <code>kubectl scale</code> command:</p>
+
+<pre><code>$ kubectl scale --replicas=5 deployment/overmind
+</code></pre>
+
+<p>Output:</p>
+
+<pre><code>deployment &quot;overmind&quot; scaled
+</code></pre>
+
+<p>Now verify that we should have 5 replicas of the overmind pod running:</p>
+
+<pre><code>$ kubectl get pods -l app=overmind
+NAME                       READY     STATUS    RESTARTS   AGE
+overmind-762504672-1cr20   1/1       Running   1          1d
+overmind-762504672-j7lt2   1/1       Running   0          1m
+overmind-762504672-lpf6h   1/1       Running   1          1d
+overmind-762504672-rc3m8   1/1       Running   1          1d
+overmind-762504672-sw3fr   1/1       Running   0          1m
+</code></pre>
+
+<p>Notice we used <code>-l app=overmind</code> to select only the pods matching the label <code>app=overmind</code>.</p>
+
+<p>Scaling down a deployment is just as important as scaling up. It allows for more resources to be made available to services that need them. Scaling down is as simple as specifying <code>--replica=N</code> where <code>N</code> is less than the current number of replicas.</p>
+
+<pre><code>$ kubectl scale --replicas=1 deployment/overmind
+deployment &quot;overmind&quot; scaled
+</code></pre>
+
+<p>If you run <code>kubectl get pods</code> right away, chances are you will catch a glimpse of Kubernetes shutting down excess containers (notice the &ldquo;Terminating&rdquo; status):</p>
+
+<pre><code>kubectl get pods -l app=overmind
+NAME                       READY     STATUS        RESTARTS   AGE
+overmind-762504672-1cr20   0/1       Terminating   1          1d
+overmind-762504672-lpf6h   1/1       Running       1          1d
+overmind-762504672-sw3fr   0/1       Terminating   0          7m
+</code></pre>
+
+<p>Eventually, the system should converge to the desired state:</p>
+
+<pre><code>$ kubectl get pods -l app=overmind
+NAME                       READY     STATUS    RESTARTS   AGE
+overmind-762504672-lpf6h   1/1       Running   1          1d
+</code></pre>
+
+<p>Okay, this is scaling in a nutshell. As you can see, it&rsquo;s super easy to scale up and down stateless deployments. Kubernetes also supports auto-scaling where you can specify the minimum and maximum numbrer of pods for a deployment and have it auto-scale depending on the CPU utilization condition that you have set. See <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">here</a> for more details.</p>
+
+<h1 id="rolling-upgrades">Rolling Upgrades</h1>
+
+<p>A rolling upgrade is a deployment strategy whereby a deployment is rolled out to a subset of the pods to the new version and gradually replace the old pods with the new pods. This allows for zero downtime deployment and mitigate the risk of a bad deployment.</p>
+
+<p>In earlier versions of Kubernetes, rolling upgrade of replication controllers is done through a separate sub-command <code>rolling-update</code>, but since the introduction of <code>Deployment</code>, rolling update becomes a strategy for the deployment. No special command is needed, instead, you simply apply the deployment with the strategy and the deployment controller takes care of doing rolling updates.</p>
+
+<p>Put the following in <code>overmind-deployment-04.yaml</code>:</p>
+
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: overmind
+spec:
+    replicas: 3
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 1
+    minReadySeconds: 5
+    template:
+        metadata:
+            labels:
+                app: overmind
+                tier: web
+        spec:
+            containers:
+                - name: overmind
+                  image: kevinjqiu/overmind:1
+                  imagePullPolicy: Always
+                  env:
+                      - name: OVERMIND_HTTP_ADDR
+                        value: &quot;0.0.0.0:8080&quot;
+                      - name: COUCHDB_USERNAME
+                        value: admin
+                      - name: COUCHDB_PASSWORD
+                        valueFrom:
+                            secretKeyRef:
+                                name: couchdb-password
+                                key: password
+            initContainers:
+                - name: init-overmind-create-user
+                  image: byrnedo/alpine-curl
+                  command: ['sh', '-c', 'curl -XPUT http://$COUCHDB_SERVICE_HOST:$COUCHDB_SERVICE_PORT/_config/admins/$COUCHDB_USERNAME -d&quot;\&quot;$COUCHDB_PASSWORD&quot;\&quot;']
+                  env:
+                      - name: COUCHDB_USERNAME
+                        value: admin
+                      - name: COUCHDB_PASSWORD
+                        valueFrom:
+                            secretKeyRef:
+                                name: couchdb-password
+                                key: password
+                - name: init-overmind-create-database
+                  image: byrnedo/alpine-curl
+                  command: ['sh', '-c', 'curl -XPUT http://$COUCHDB_USERNAME:$COUCHDB_PASSWORD@$COUCHDB_SERVICE_HOST:$COUCHDB_SERVICE_PORT/zerglings']
+                  env:
+                      - name: COUCHDB_USERNAME
+                        value: admin
+                      - name: COUCHDB_PASSWORD
+                        valueFrom:
+                            secretKeyRef:
+                                name: couchdb-password
+                                key: password
+</code></pre>
+
+<p>As you can see, we&rsquo;ve added two more keys for the spec:</p>
+
+<pre><code class="language-yaml">    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 1
+    minReadySeconds: 5
+</code></pre>
+
+<ul>
+<li><code>maxSurge</code>: the maximum amount of pods more than the desired number of pods. This can be a number of a percentage. e.g., we have replicas set to 3. With <code>maxSurge</code> set to 1, the maximum number of pods during the upgrade process will be at most 4.</li>
+<li><code>maxUnavailable</code>: the maximum amount of pods that can be unavailable during the upgrade process. Also can be an absolute number of a percentage.</li>
+<li><code>minReadySeconds</code>: Kubernetes will wait this amount of time until the next pod creation.</li>
+</ul>
+
+<p>To cause the rolling update, we can update the deployment image to point to an &ldquo;upgraded&rdquo; version. We can update our service to use the <code>kevinjqiu/overmind:2</code> image, since the currently deployed version is <code>kevinjqiu/overmind:1</code>.</p>
+
+<p>Before we update the deployment, let&rsquo;s open up a separate terminal and run:</p>
+
+<pre><code>while true; do curl $(minikube service overmind --url)/_health; sleep 0.2; done
+
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+...
+</code></pre>
+
+<p>This way, we are watching the <code>_health</code> endpoint to see the currently deployed version.</p>
+
+<p>Now, let&rsquo;s trigger a deployment:</p>
+
+<pre><code>kubectl set image deployment/overmind overmind=kevinjqiu/overmind:2
+deployment &quot;overmind&quot; image updated
+</code></pre>
+
+<p>Switch to the terminal where we have the curl command running. We can see something like this:</p>
+
+<pre><code>...
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;2.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;2.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;1.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;2.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;2.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;2.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+{&quot;health&quot;:{&quot;version&quot;:&quot;2.0.0&quot;,&quot;brain&quot;:&quot;ok&quot;}}
+...
+</code></pre>
+
+<p>As you can see, during the cut over, some requests were load-balanced to the new pods where others are still on the old version. Eventually, the cluster state converges to the desired state, which is the new version of the service, but the deployment is done in a rolling manner, upgrading one pod at a time.</p>
+
+<p>For more information, including rolling back and deployment history, see <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">here</a>.</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2017/08/31/campfire-story---the-peril-of-dev/">Campfire Story - The &#34;peril&#34; of `dev`</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2017/06/04/kubernetes-learning-notes---part-4---service-bootstrapping-with-init-containers/">Kubernetes Learning Notes - Part 4 - Service Bootstrapping with Init Containers</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "idempotentca" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2018. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

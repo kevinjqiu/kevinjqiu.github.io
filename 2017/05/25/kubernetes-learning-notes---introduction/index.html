@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Kubernetes Learning Notes - Introduction // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.39" />
+
+  <meta property="og:title" content="Kubernetes Learning Notes - Introduction" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.idempotent.ca/2017/05/25/kubernetes-learning-notes---introduction/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="https://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="https://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#parts">Parts</a></li>
+<li><a href="#goals">Goals</a></li>
+<li><a href="#anti-goals">Anti-Goals</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#overmind">Overmind</a>
+<ul>
+<li><a href="#overmind-service">Overmind Service</a></li>
+<li><a href="#storage">Storage</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2017/05/25/kubernetes-learning-notes---introduction/">Kubernetes Learning Notes - Introduction</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>25</sup></span><span class="post-date-separator">/</span><span class="post-date-month">May</span> <span class="post-date-year">2017</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-kubernetes" href="https://blog.idempotent.ca/categories/kubernetes">kubernetes</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<h1 id="parts">Parts</h1>
+
+<ul>
+<li><a href="/2017/05/27/kubernetes-learning-notes---part-1---deployment/">Part 1 - Basic Deployment</a></li>
+<li><a href="/2017/05/29/kubernetes-learning-notes---part-2---deploying-stateful-services/">Part 2 - Deploy Stateful Services</a></li>
+<li><a href="/2017/05/31/kubernetes-learning-notes---part-3---service-discovery/">Part 3 - Service Discovery</a></li>
+<li><a href="/2017/06/04/kubernetes-learning-notes---part-4---service-bootstrapping-with-init-containers/">Part 4 - Service Bootstrapping with Init Containers</a></li>
+<li><a href="/2017/06/06/kubernetes-learning-notes---part-5---horizontal-scaling-and-rolling-upgrade/">Part 5 - Scaling and Rolling Upgrades</a></li>
+</ul>
+
+<h1 id="goals">Goals</h1>
+
+<p>At <code>$DAYJOB</code> we&rsquo;re moving away from our homebrew way of deploying and &ldquo;orchestrating&rdquo; docker containers to the promise land of Kubernetes. To solidify my learning, I&rsquo;m going to practise what I learn by coming up with a hands-on project deploying a simple dockerized microservice with a database backend onto a Kubernetes cluster. Here are the Kubernetes features and 3rd party tools I foresee I will touch upon:</p>
+
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployments</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/">Replica Sets</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">Stateful Sets</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/service/">Services</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</a></li>
+<li>Perform Rolling Upgrades</li>
+<li><a href="https://github.com/kubernetes/helm">Use Helm to deploy</a></li>
+<li>Use Helm to manage deployments</li>
+<li>Use <a href="https://github.com/containous/traefik">Traefik</a> as Ingress Controller</li>
+</ul>
+
+<h1 id="anti-goals">Anti-Goals</h1>
+
+<p>I will not be touch on administrating a Kubernetes cluster nor provisioning one. The Kubernetes architecture is very interesting by itself and a whole series of blogposts could be written to address that. Instead, this series only deals with the practical usage of a Kubernetes cluster from a beginner&rsquo;s perspective.</p>
+
+<h1 id="requirements">Requirements</h1>
+
+<p>I&rsquo;ll be using <a href="https://github.com/kubernetes/minikube">minikube</a> as the target. I&rsquo;m fully aware that minikube is in no way shape or form resemble an actual production-grade Kubernetes cluster, but for learning purpose it&rsquo;s an adequate and convenient substitute for an actual cluster.</p>
+
+<p>The minikube version I&rsquo;ll be using is 1.9 which comes with Kubernetes 1.6.</p>
+
+<h1 id="overmind">Overmind</h1>
+
+<p>The demo project we&rsquo;ll be using here is a highly contrived one consisting of 3 microservices: Overmind, Viper and Zergling. In StarCraft, overmind, viper and zergling are units from the Zerg race. The overmind is the service that the user communicate with to control the swarm. Overmind can be instructed to spawn zerglings through a viper and control the spawned zerglings.</p>
+
+<h2 id="overmind-service">Overmind Service</h2>
+
+<p>Here are the API definitions:</p>
+
+<ul>
+<li><code>GET /_health</code> - The health of the overmind and its subordinates</li>
+<li><code>GET /zerglings</code> - All zerglings the overmind is aware of and their locations</li>
+<li><code>GET /zerglings/&lt;zergling_id&gt;</code> - Get the status of the specified zergling</li>
+<li><code>POST /zerglings/&lt;zergling_id&gt;</code> - Move the zergling</li>
+<li><code>POST /zerglings/</code> - Spawn a zergling (through <strong>viper</strong> but omitted for simplicity)</li>
+</ul>
+
+<p>You can find the full source code <a href="https://github.com/kevinjqiu/overmind">here</a>.</p>
+
+<h2 id="storage">Storage</h2>
+
+<p>Overmind service uses <a href="https://couchdb.apache.org">CouchDB</a> as its &ldquo;brain&rdquo; to keep track of the zerglings and their statuses. We will be deploying a CouchDB instance in the cluster to learn how to use <code>PersistentVolume</code>s and <code>StatefulSet</code>s.</p>
+
+<p>Okay, I think that&rsquo;s enough intro for now. Tune in for the next blogpost on learning to deploy the overmind service on Kubernetes!</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2017/05/27/kubernetes-learning-notes---part-1---deployment/">Kubernetes Learning Notes - Part 1 - Deployment</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2016/12/19/couchdb-indexing-benchmark/">CouchDB Indexing Benchmark</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "idempotentca" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2018. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

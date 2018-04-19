@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    CouchDB Indexing Benchmark // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.39" />
+
+  <meta property="og:title" content="CouchDB Indexing Benchmark" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.idempotent.ca/2016/12/19/couchdb-indexing-benchmark/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="https://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="https://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#the-setup">The Setup</a>
+<ul>
+<li><a href="#preparing-the-data">Preparing the data</a></li>
+<li><a href="#setup-python-query-server">Setup Python Query Server</a></li>
+<li><a href="#benchmark-javascript-views">Benchmark Javascript views</a>
+<ul>
+<li><a href="#map-reduce-function">Map/Reduce function</a></li>
+<li><a href="#monitor-changes-per-second-metric">Monitor changes-per-second metric</a></li>
+<li><a href="#builtin-reducer">Builtin Reducer</a></li>
+</ul></li>
+<li><a href="#benchmark-python-views">Benchmark Python views</a>
+<ul>
+<li><a href="#map-reduce">Map/reduce</a></li>
+<li><a href="#improving-couchpy">Improving couchpy</a>
+<ul>
+<li><a href="#simplejson">simplejson</a></li>
+<li><a href="#pypy">PyPy</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#native-views">Native Views</a>
+<ul>
+<li><a href="#map">Map</a></li>
+<li><a href="#reduce">Reduce</a></li>
+<li><a href="#benchmark">Benchmark</a></li>
+</ul></li>
+<li><a href="#benchmark-with-bigger-documents">Benchmark with bigger documents</a></li>
+<li><a href="#result-comparison">Result Comparison</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2016/12/19/couchdb-indexing-benchmark/">CouchDB Indexing Benchmark</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>19</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Dec</span> <span class="post-date-year">2016</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+				<div class="post-categories">
+				
+					<a class="post-category post-category-couchdb" href="https://blog.idempotent.ca/categories/couchdb">couchdb</a>
+				
+					<a class="post-category post-category-performance" href="https://blog.idempotent.ca/categories/performance">performance</a>
+				
+				</div>
+			
+
+			
+
+			
+
+            
+
+<p>In the <a href="2016-11-16-couchdb-index-view-benchmark">last post</a>, we discussed how CouchDB&rsquo;s external query server works by examining the raw protocol. In this post, we&rsquo;re going to take a look at the performance of different query servers.</p>
+
+<p>The code used in this benchmarking is <a href="https://gist.github.com/kevinjqiu/dd461b36a6f1d6d755d7a317d8f98b75">here</a>.</p>
+
+<p>I listed below the method of the benchmark in detail. If you want you can <a href="#result-comparison">jump to conclusion</a>.</p>
+
+<h1 id="the-setup">The Setup</h1>
+
+<p>The benchmarks are done on my laptop (Intel 6th-gen i7 processor, 8G RAM, SSD) with CouchDB 1.6 in a docker container. Since we&rsquo;re benchmarking python views as well, we&rsquo;re going to customize the docker image add python query server to it. Here&rsquo;s the dockerfile:</p>
+
+<pre><code>FROM couchdb
+RUN apt-get update -yqq &amp;&amp; apt-get install -y python python-pip
+RUN pip install couchdb
+</code></pre>
+
+<p>Build a new image with that dockerfile, and start a couchdb instance with (assuming you named your image <code>couchdb-python</code> from the last step):</p>
+
+<pre><code>docker run -p 9999:5984 -d -v $(pwd)/data:/usr/local/var/lib/couchdb couchdb-python 
+</code></pre>
+
+<p>Your couchdb instance will be accessible via <code>localhost:9999</code>. By default, the container is started in the admin party mode (everybody is an admin) but since we use it only for the purpose of testing, we won&rsquo;t bother with setting up username/password.</p>
+
+<pre><code>$ curl http://localhost:9999/
+{&quot;couchdb&quot;:&quot;Welcome&quot;,&quot;uuid&quot;:&quot;47a7b22e608a73fc2214ed13063923b8&quot;,&quot;version&quot;:&quot;1.6.1&quot;,&quot;vendor&quot;:{&quot;version&quot;:&quot;1.6.1&quot;,&quot;name&quot;:&quot;The Apache Software Foundation&quot;}}
+</code></pre>
+
+<h2 id="preparing-the-data">Preparing the data</h2>
+
+<p>The data we&rsquo;re working have simple structures. We&rsquo;ll be generating data of the following form:</p>
+
+<pre><code class="language-json">{
+    &quot;metadata&quot;: {
+        &quot;docType&quot;: &quot;userscore&quot;,
+        &quot;createdAt&quot;: &quot;2016-12-19T19:28:14.000&quot;
+    },
+    &quot;username&quot;: &quot;barry&quot;,
+    &quot;score&quot;: 912
+}
+</code></pre>
+
+<p>We are storing the name of the user along with their score in the document, whatever that is. It&rsquo;s a contrived example so bear with me :)</p>
+
+<p>To populate a dataset for our benchmarking, let&rsquo;s use a script:</p>
+
+<pre><code class="language-python">import string
+import sys
+import requests
+import random
+import datetime
+from multiprocessing import Pool
+
+
+DB_URL = 'http://localhost:9999/test'
+
+
+def random_name():
+    generate_character = lambda _: random.choice(string.ascii_letters)
+    return ''.join(map(generate_character, range(6)))
+
+
+def random_date():
+    # get a random date from within last year
+    today = datetime.date.today()
+    that_day = today - datetime.timedelta(days=random.randint(0, 366))
+    return datetime.datetime.strftime(that_day, '%Y-%m-%d')
+
+
+def generate_doc(_):
+    doc = {
+        'metadata': {
+            'docType': 'score',
+            'createdAt': random_date()
+        },
+        'username': random_name(),
+        'score': random.randint(0, 5000)
+    }
+    response = requests.post(DB_URL, json=doc)
+    response.raise_for_status()
+
+
+if __name__ == '__main__':
+    num_of_docs = int(sys.argv[1])
+    requests.delete(DB_URL)  # delete the database if it exists already
+    response = requests.put(DB_URL)     # create the test database
+    print('Generating {} docs'.format(num_of_docs))
+    pool = Pool(50)
+    pool.map(generate_doc, range(num_of_docs))
+    stats = requests.get('{}/'.format(DB_URL)).json()
+    print('doc_count: {}'.format(stats['doc_count']))
+    print('disk_size: {}'.format(stats['disk_size']))
+</code></pre>
+
+<p>You can seed the database by using: <code>python /path/to/script.py 100000</code> to create 100k documents. This is likely to take a while:</p>
+
+<pre><code>python generate_data.py 100000
+doc_count: 100000
+disk_size: 111153301
+</code></pre>
+
+<p>As you can see, now we have a test database with 100000 documents.</p>
+
+<h2 id="setup-python-query-server">Setup Python Query Server</h2>
+
+<p>Python query server needs to be activated. You can either change it in the config file on the container and restart it or change it on the fly with the <code>_config</code> endpoint.</p>
+
+<p>We can take a look at what&rsquo;s currently configured:</p>
+
+<pre><code>$ curl http://localhost:9999/_config/query_servers
+{&quot;javascript&quot;:&quot;/usr/local/bin/couchjs /usr/local/share/couchdb/server/main.js&quot;,&quot;coffeescript&quot;:&quot;/usr/local/bin/couchjs /usr/local/share/couchdb/server/main-coffee.js&quot;}
+</code></pre>
+
+<p>Let&rsquo;s add python query server there:</p>
+
+<pre><code>curl -XPUT -H&quot;Content-Type: application/json&quot; http://localhost:9999/_config/query_servers/python -d'&quot;/usr/bin/python /usr/local/bin/couchpy&quot;'
+</code></pre>
+
+<p>and verify that it&rsquo;s saved:</p>
+
+<pre><code>$ curl http://localhost:9999/_config/query_servers
+{&quot;javascript&quot;:&quot;/usr/local/bin/couchjs /usr/local/share/couchdb/server/main.js&quot;,&quot;coffeescript&quot;:&quot;/usr/local/bin/couchjs /usr/local/share/couchdb/server/main-coffee.js&quot;,&quot;python&quot;:&quot;/usr/bin/python /usr/local/bin/couchpy&quot;}
+</code></pre>
+
+<h2 id="benchmark-javascript-views">Benchmark Javascript views</h2>
+
+<p>The view we are going to write is to calculate the total score of all users for a given month. We will have a map function to map each document to <code>([Year, Month], Score)</code> and a reduce function to sum up all the scores.</p>
+
+<h3 id="map-reduce-function">Map/Reduce function</h3>
+
+<p>The map function written in Javascript:</p>
+
+<pre><code class="language-javascript">function(doc) {
+    if (doc.metadata &amp;&amp; doc.metadata.createdAt) {
+        var parts = doc.metadata.createdAt.split(&quot;-&quot;),
+            year = parts[0],
+            month = parts[1];
+        emit([year, month], doc.score);
+    }
+}
+</code></pre>
+
+<p>and the reduce function:</p>
+
+<pre><code class="language-javascript">function(keys, values, rereduce) {
+    return sum(values);
+}
+</code></pre>
+
+<p>Let&rsquo;s save it as a design doc <code>_design/scoresByMonthJS:scoresByMonth</code>. You can use either Futon or curl or <a href="https://github.com/kevinjqiu/cdbcli">cdbcli</a>.</p>
+
+<p>To invoke the view, we can send a curl request to <code>http://localhost:9999/test/_design/scoresByMonthJS/_view/scoresByMonth?limit=11&amp;group=true</code>. However, keep in mind that whenever a view is invoked, the indexer will kick in and index any new changes since the last index. Because this is our first invocation of the view, it will index all changes (100K) so it&rsquo;s going to take some time. This will be the opportunity for us to observe the speed of indexing, so before we invoke that, let&rsquo;s get our script ready to monitor the speed of the indexing.</p>
+
+<h3 id="monitor-changes-per-second-metric">Monitor changes-per-second metric</h3>
+
+<p>CouchDB exposes its indexing status through the <code>/_active_tasks</code> endpoint. It contains the number of changes to be indexed in total and the number of changes already indexed. From that, we can calculate the changes per second as our benchmark. As stated before, you can find the code <a href="https://gist.github.com/kevinjqiu/dd461b36a6f1d6d755d7a317d8f98b75">here</a></p>
+
+<pre><code>python cps.py _design/scoresByMonthJS
+</code></pre>
+
+<p>This starts a monitoring script on the specified design doc, and prints out changes per second number every 1 second.</p>
+
+<p>With this script running, in another terminal, let&rsquo;s trigger the view:</p>
+
+<pre><code>curl &quot;http://localhost:9999/test/_design/scoresByMonthJS/_view/scoresByMonth?limit=11&amp;group=true&quot;
+</code></pre>
+
+<p>Go back to the terminal where the monitoring script is run. We will see that it started to print out cps values:</p>
+
+<pre><code>$ python cps.py _design/scoresByMonthJS
+design doc: _design/scoresByMonthJS
+Press Ctrl+C to exit
+c/s = 4141.00
+c/s = 7373.00
+c/s = 7120.50
+c/s = 5378.25
+c/s = 5534.80
+c/s = 5605.50
+c/s = 5670.43
+c/s = 5719.12
+c/s = 5757.00
+c/s = 6060.00
+c/s = 6110.50
+c/s = 6041.64
+c/s = 5570.54
+c/s = 5605.50
+c/s = 5629.07
+c/s = 5649.69
+c/s = 5632.24
+</code></pre>
+
+<p>And when the indexing is complete, press Ctrl+C and the average will be printed out:</p>
+
+<pre><code>^Caverage = 5799.93
+</code></pre>
+
+<p>and in the other terminal, we will see the result:</p>
+
+<pre><code>$ curl &quot;http://localhost:9999/test/_design/scoresByMonthJS/_view/scoresByMonth?limit=11&amp;group=true&quot;
+
+{&quot;rows&quot;:[
+{&quot;key&quot;:[&quot;2015&quot;,&quot;12&quot;],&quot;value&quot;:8241946},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;01&quot;],&quot;value&quot;:20924965},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;02&quot;],&quot;value&quot;:19422002},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;03&quot;],&quot;value&quot;:21217217},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;04&quot;],&quot;value&quot;:20588868},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;05&quot;],&quot;value&quot;:21011332},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;06&quot;],&quot;value&quot;:20404601},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;07&quot;],&quot;value&quot;:20831013},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;08&quot;],&quot;value&quot;:21446896},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;09&quot;],&quot;value&quot;:20340594},
+{&quot;key&quot;:[&quot;2016&quot;,&quot;10&quot;],&quot;value&quot;:20993863}
+]}
+</code></pre>
+
+<p>So the average for a Javascript view is around 5.8k changes per second.</p>
+
+<h3 id="builtin-reducer">Builtin Reducer</h3>
+
+<p>Many of you with CouchDB knowledge will quick to point out that I used a Javascript function as reducer to calculate the sum of the values. This is not very efficient, since (1) data will have to be serialized and sent to the external query server to calculate the result and (2) Javascript isn&rsquo;t the fastest at mathematics (the default couchjs is using the Spider Monkey engine). We can cut short this loop by using the builtin <code>_sum</code> reducer, which is written in Erlang and run on the same runtime as CouchDB itself, therefore, cut the roundtrip to the query server plus the serialization/deserialization cost.</p>
+
+<p>To use it, simply change the reducer function to <code>_sum</code>. Start the monitoring and trigger indexing.</p>
+
+<pre><code>design doc: _design/scoresByMonthJS
+Press Ctrl+C to exit
+c/s = 3333.00
+c/s = 9696.00
+c/s = 11312.00
+c/s = 11850.67
+c/s = 12069.50
+c/s = 12221.00
+c/s = 12338.83
+c/s = 12365.29
+c/s = 11741.25
+^Caverage = 10769.73
+</code></pre>
+
+<p>So, by simply changing the reducer from external to builtin, the indexing speed improved <code>185.5%</code>!</p>
+
+<h2 id="benchmark-python-views">Benchmark Python views</h2>
+
+<h3 id="map-reduce">Map/reduce</h3>
+
+<p>We save the following map/reduce function as <code>_design/scoresByMonthPY</code>:</p>
+
+<p>Map:</p>
+
+<pre><code>def map(doc):
+    if 'metadata' in doc and 'createdAt' in doc['metadata']:
+        created_at = doc['metadata']['createdAt']
+        year, month, _ = created_at.split('-')
+        yield [year, month], doc['score']
+</code></pre>
+
+<p>Reduce:</p>
+
+<pre><code>def reduce(keys, values, rereduce):
+    return sum(values)
+</code></pre>
+
+<p>We use a sub-optimal reducer to draw comparison with the first Javascript benchmark we did before. And it turned out that Python views are slightly more performant:</p>
+
+<pre><code>$ python cps.py _design/scoresByMonthPY
+design doc: _design/scoresByMonthPY
+Press Ctrl+C to exit
+c/s = 2323.00
+c/s = 6969.00
+c/s = 8433.50
+c/s = 8719.67
+c/s = 8913.25
+c/s = 8948.60
+c/s = 8972.17
+c/s = 9003.43
+c/s = 9014.25
+c/s = 9011.44
+c/s = 9019.30
+^Caverage = 8120.69
+</code></pre>
+
+<p>Let&rsquo;s switch the reducer to CouchDB&rsquo;s builtin <code>_sum</code> function.</p>
+
+<pre><code>design doc: _design/scoresByMonthPY
+Press Ctrl+C to exit
+c/s = 5959.00
+c/s = 8938.50
+c/s = 9864.33
+c/s = 10403.00
+c/s = 11842.25
+c/s = 11837.20
+c/s = 11833.83
+c/s = 11802.57
+c/s = 11753.88
+^Caverage = 10470.51
+</code></pre>
+
+<p>The result isn&rsquo;t that different from Javascript map function with builtin reducer.</p>
+
+<h3 id="improving-couchpy">Improving couchpy</h3>
+
+<h4 id="simplejson">simplejson</h4>
+
+<p>Since an external query server need to deserialize JSON input from CouchDB and serialize the result back into JSON form to be consumed by CouchDB, the implementation of the JSON module could potentially make a difference in performance. As <code>couchpy</code> defaults to use the system <code>json</code> module provided by the Python distribution, it&rsquo;s not the most performant implementation. <code>simplejson</code> is a drop-in replacement for the Python&rsquo;s <code>json</code> module which uses a C implementation for json encoding/decoding. Let&rsquo;s try that.</p>
+
+<p>First, we need to install simplejson (which requires Python C headers to be installed. On Debian, install <code>python-dev</code> package) on the container and then modify the config to use <code>couchpy --json-module=simplejson</code> as the Python query server command.</p>
+
+<p>Let&rsquo;s see the result:</p>
+
+<pre><code>$ python cps.py _design/scoresByMonthPY
+design doc: _design/scoresByMonthPY
+Press Ctrl+C to exit
+c/s = 5454.00
+c/s = 11514.00
+c/s = 12019.00
+c/s = 12120.00
+c/s = 9675.80
+c/s = 9999.00
+c/s = 10316.43
+c/s = 10516.62
+^Caverage = 10201.86
+</code></pre>
+
+<p>Interesting&hellip; <code>simplejson</code> performance is only on-par with dthe stock <code>json</code> module. That&rsquo;s a little unexpected. However, if you look at <code>top</code> while the indexer is running, the Python process never consumes more than 60% of CPU time.</p>
+
+<h4 id="pypy">PyPy</h4>
+
+<p>We can also try to use pypy as our interpreter. PyPy is an alternative implementation of Python that adds a Just-In-Time compiler. The benchmark showed a marginal improvement over CPython.</p>
+
+<pre><code>$ python cps.py _design/scoresByMonthPY
+design doc: _design/scoresByMonthPY
+Press Ctrl+C to exit
+c/s = 6767.00
+c/s = 10453.50
+c/s = 11648.67
+c/s = 12195.75
+c/s = 12524.00
+c/s = 13816.80
+c/s = 12841.43
+^Caverage = 11463.88
+</code></pre>
+
+<p>The performance for PyPy isn&rsquo;t much greater is probably due to the fact how the CouchDB query protocol works: it sends the query server one document at a time to run the map function over. JIT excels at loops but at each request/response cycle, the query server only operates one document at a time. The JIT wasn&rsquo;t given a chance to warmup. That was my conjecture anyway, as I&rsquo;m not an expert on PyPy&rsquo;s JIT internals.</p>
+
+<h2 id="native-views">Native Views</h2>
+
+<p>As we can see, the performance of external query servers don&rsquo;t vary by a lot. Another interesting observation is that the query server process was not fully saturated, doesn&rsquo;t matter when it&rsquo;s Javascript, Python, or PyPy.</p>
+
+<p>Looking at the <a href="2016-11-16-couchdb-index-view-benchmark">CouchDB query protocol</a>, it seemed that the process of feeding data to the external query server is the bottleneck: The CouchDB erlang process serializes the document from Erlang to JSON, send JSON to the query server&rsquo;s process. The query server deserializes JSON, run the map/reduce function and serializes that into JSON to be fed back to the CouchDB process, and the CouchDB process deserializes that back into Erlang&rsquo;s data structure. Wouldn&rsquo;t it be great if all of that can happen within the same runtime as the CouchDB process? That brought me to research writing CouchDB views in Erlang, and indeed, there is <a href="https://wiki.apache.org/couchdb/EnableErlangViews">such a thing</a>.</p>
+
+<p>Having dabbled with Erlang at the beginning of my career, I&rsquo;m not put off by the idea. However, Erlang is not a beginner-friendly language if you&rsquo;re coming from the C/C++/Java line.</p>
+
+<p>First we need to enable Erlang native query server in the configs.</p>
+
+<pre><code>curl -XPUT -H &quot;Content-Type:application/json&quot; http://localhost:9999/_config/native_query_servers/erlang -d'&quot;{couch_native_process, start_link, []}&quot;'
+</code></pre>
+
+<h3 id="map">Map</h3>
+
+<p>It takes some trial-and-error but there it is, the Erlang version of the map function:</p>
+
+<pre><code>fun({Doc})-&gt;
+    case proplists:get_value(&lt;&lt;&quot;metadata&quot;&gt;&gt;, Doc) of
+        {Metadata} -&gt;
+            CreatedAt = proplists:get_value(&lt;&lt;&quot;createdAt&quot;&gt;&gt;, Metadata),
+            case string:tokens(binary_to_list(CreatedAt), &quot;-&quot;) of
+                [Year, Month|_] -&gt; Emit([list_to_binary(Year), list_to_binary(Month)], proplists:get_value(&lt;&lt;&quot;score&quot;&gt;&gt;, Doc))
+        end
+    end
+end.
+</code></pre>
+
+<p>CouchDB documents are represented in Erlang as a tuple of lists (proplists), and hence we use <a href="http://erlang.org/doc/man/proplists.html"><code>proplists:get_value</code></a> to extract values given certain &ldquo;keys&rdquo;. Erlang has great pattern-matching feature so we use it to further extract <code>Year</code> and <code>Month</code> from the split string. Strings in Erlang are represented as a list of binary numbers (referring to their codepoint). <code>&lt;&lt;&quot;createdAt&quot;&gt;&gt;</code> is the literal to convert the string <code>createdAt</code> to its binary list equivalent to match the type of the document object. Again, I&rsquo;m not an Erlang expert, so please point out my inaccuracies with regard to the language.</p>
+
+<h3 id="reduce">Reduce</h3>
+
+<p>We will use the same reducer <code>_sum</code> as it has served us well.</p>
+
+<h3 id="benchmark">Benchmark</h3>
+
+<pre><code>$ python cps.py _design/scoresByMonthERL
+design doc: _design/scoresByMonthERL
+Press Ctrl+C to exit
+c/s = 19821.25
+^Caverage = 19821.25
+</code></pre>
+
+<p>There you have it! The Erlang view is about 173% as fast as the previous fastest (PyPy) option.</p>
+
+<p>One <strong>caveat</strong> about using Erlang native views: since it&rsquo;s running on the same runtime as CouchDB and is not sandboxed, it&rsquo;s able to access CouchDB&rsquo;s internal API and call Erlang functions that maybe destructive. Do not run untrusted view functions directly.</p>
+
+<p>Let&rsquo;s look at where we stand in terms of indexer option and performance:</p>
+
+<pre><code>| Option                             | Average c/s |
+|------------------------------------|-------------|
+| couchjs/external reducer           | 5799.93     |
+| couchjs/builtin reducer            | 10769.73    |
+| couchpy/external reducer           | 8120.69     |
+| couchpy/builtin reducer            | 10470.51    |
+| couchpy/simplejson/builtin reducer | 10201.86    |
+| couchpy/pypy/builtin reducer       | 11463.88    |
+| erlang native view                 | 19821.25    |
+</code></pre>
+
+
+<figure>
+    
+        <img src="/images/couchdb-indexing-benchmark.png" />
+    
+    
+    <figcaption>
+        <h4>Benchmark</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h2 id="benchmark-with-bigger-documents">Benchmark with bigger documents</h2>
+
+<p>The above set of tests are done on documents with smallish size. Let&rsquo;s add some junk data to the documents. I modified the document generation procedure to add in some arbitrary string properties so now the average document size is about 300k.</p>
+
+<pre><code class="language-python">def generate_doc(i):
+    doc = {
+        'metadata': {
+            'docType': 'score',
+            'createdAt': random_date()
+        },
+        'username': random_str(),
+        'score': random.randint(0, 5000),
+        'custom_data': {
+        }
+    }
+
+    for _ in range(random.randint(0, 100)):
+        doc['custom_data'][random_str()] = \
+            base64.b64encode((random_str() * 100).encode('ascii')).decode('ascii')
+</code></pre>
+
+<p>with this new database, rerun the above benchmark. We have:</p>
+
+<pre><code>| Option                             | Average c/s |
+|------------------------------------|-------------|
+| couchjs/external reducer           | 648.50      |
+| couchjs/builtin reducer            | 727.18      |
+| couchpy/external reducer           | 1564.38     |
+| couchpy/builtin reducer            | 1590.20     |
+| couchpy/simplejson/builtin reducer | 2352.69     |
+| couchpy/pypy/builtin reducer       | 1265.20     |
+| erlang native view                 | 9363.44     |
+</code></pre>
+
+
+<figure>
+    
+        <img src="/images/couchdb-indexing-benchmark-300k.png" />
+    
+    
+    <figcaption>
+        <h4>Benchmark @ 300k</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h2 id="result-comparison">Result Comparison</h2>
+
+<p>Let&rsquo;s combine the two tables together:</p>
+
+<pre><code>| Option                             | cps@1k      |   cps@300k  |
+|------------------------------------|-------------|-------------|
+| couchjs/external reducer           | 5799.93     | 648.50      |
+| couchjs/builtin reducer            | 10769.73    | 727.18      |
+| couchpy/external reducer           | 8120.69     | 1564.38     |
+| couchpy/builtin reducer            | 10470.51    | 1590.20     |
+| couchpy/simplejson/builtin reducer | 10201.86    | 2352.69     |
+| couchpy/pypy/builtin reducer       | 11463.88    | 1265.20     |
+| erlang native view                 | 19821.25    | 9363.44     |
+</code></pre>
+
+<p>Here are some conclusions we can draw from this experiment:</p>
+
+<ul>
+<li>Native Erlang views are the fastest by a large margin.</li>
+<li>Native Erlang views&rsquo; advantage is even more obvious when having large documents</li>
+<li>Avoid external reducer as much as you can. (i.e., Use the builtin reducer whenever you can)</li>
+<li>PyPy does not offer performance improvements for Python views (in some cases, it&rsquo;s even worse) probably due to the way query protocol works</li>
+<li>Javascript view performance isn&rsquo;t great out-of-the-box. Maybe SpiderMonkey can be replaced by NodeJS?</li>
+<li>Use simplejson for Python view when documents are larger</li>
+</ul>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/2017/05/25/kubernetes-learning-notes---introduction/">Kubernetes Learning Notes - Introduction</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2016/11/16/couchdb-query-protocol/">CouchDB Query Protocol</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "idempotentca" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2018. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>
