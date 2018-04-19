@@ -482,10 +482,13 @@ srv.qiu.home.           604800  IN      NS      ns2.srv.qiu.home.
 <h2 id="ansiblization">Ansiblization</h2>
 
 <p>OK, that&rsquo;s basically it.  However, in the spirit of infrastructure as code (and save my future headache), I had to ansiblize this process.
-A couple of things worth noting:
-* A <a href="https://github.com/kevinjqiu/home.idempotent.io/blob/master/roles/coredns/files/coredns.service">service unit file</a> has to be written for CoreDNS because we&rsquo;re targeting systemd
-* I used an unprivileged user <code>coredns</code> to run the coredns
-* An unprivileged user isn&rsquo;t able to bind a service to port 53.  I can&rsquo;t hold my nose and run <code>coredns</code> as <code>root</code>, so the <code>coredns</code> binary needs to <a href="https://github.com/kevinjqiu/home.idempotent.io/blob/master/roles/coredns/tasks/main.yml#L23-L27">have the capability to bind to port 53</a>.</p>
+A couple of things worth noting:</p>
+
+<ul>
+<li>A <a href="https://github.com/kevinjqiu/home.idempotent.io/blob/master/roles/coredns/files/coredns.service">service unit file</a> has to be written for CoreDNS because we&rsquo;re targeting systemd</li>
+<li>I used an unprivileged user <code>coredns</code> to run the coredns</li>
+<li>An unprivileged user isn&rsquo;t able to bind a service to port 53.  I can&rsquo;t hold my nose and run <code>coredns</code> as <code>root</code>, so the <code>coredns</code> binary needs to <a href="https://github.com/kevinjqiu/home.idempotent.io/blob/master/roles/coredns/tasks/main.yml#L23-L27">have the capability to bind to port 53</a>.</li>
+</ul>
 
 <p>If anyone is interested, the playbook role is <a href="https://github.com/kevinjqiu/home.idempotent.io/tree/master/roles/coredns">here</a>.</p>
 
