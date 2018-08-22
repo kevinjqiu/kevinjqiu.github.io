@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.39" />
+<meta name="generator" content="Hugo 0.47" />
 
   <meta property="og:title" content="Use rabbitmq DLX to implement delayed retry" />
 <meta property="og:description" content="" />
@@ -267,7 +267,7 @@
 
 <p>At this time, I wanted to try a different approach. Instead of forming hypothesis from observation, I searched for evidence. I went on the server, and start to look at the logs to search for any traces that can be salvaged. The rabbitmq log is very noisy with all the connection messages. Once in a while you get something remotely interesting, but they were not relevant. Then I manually published a message on the queue, and waited for the message and queue to disappear. Lo and behold, there&rsquo;s something in the logs!</p>
 
-<script src="//gist.github.com/kevinjqiu/e626bcc40eb803214968.js"></script>
+<script type="application/javascript" src="//gist.github.com/kevinjqiu/e626bcc40eb803214968.js"></script>
 
 <p>There&rsquo;s our smoking gun! Further gooling revealed <a href="http://lists.rabbitmq.com/pipermail/rabbitmq-discuss/2012-April/019368.html">this</a>. That&rsquo;s EXACTLY our issue! And the version of rabbitmq we&rsquo;re using is EXACTLY 2.8.1! What a relief! We just need to upgrade to 2.8.2 and everything would be fine.</p>
 
@@ -335,7 +335,7 @@ Disk free space limit now exceeded. Free bytes:19033128960 Limit:50634379264
           </section>
           
           	<div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

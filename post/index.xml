@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Qiu&#39;s Quibble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 18 Apr 2018 23:09:59 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 21 Aug 2018 23:32:00 -0400</lastBuildDate>
     
 	<atom:link href="https://blog.idempotent.ca/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Heartbeat-style Failure Detector using Gossip</title>
+      <link>https://blog.idempotent.ca/2018/08/21/heartbeat-style-failure-detector-using-gossip/</link>
+      <pubDate>Tue, 21 Aug 2018 23:32:00 -0400</pubDate>
+      
+      <guid>https://blog.idempotent.ca/2018/08/21/heartbeat-style-failure-detector-using-gossip/</guid>
+      <description>I recently started part-time Master&amp;rsquo;s degree at University of Illinois Urbana-Champaign. It has been on my bucket list for a long time, and I finally got the chance to do it.
+One of the courses I&amp;rsquo;m taking this semester is distributed systems. In my day job, I come in contact a lot with distributed systems, and this course so far has helped me tremendously in understanding a lot of the basic concepts of them.</description>
+    </item>
     
     <item>
       <title>Run Your Own Home DNS on coredns</title>

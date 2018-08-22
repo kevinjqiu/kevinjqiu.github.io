@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.39" />
+<meta name="generator" content="Hugo 0.47" />
 
   <meta property="og:title" content="Building a GAE&#43;GWT application using the best practices (Part 2)" />
 <meta property="og:description" content="" />
@@ -254,20 +254,18 @@
 
 <p>This code is borrowed from <a href="http://james.apache.org/hupa/project-info.html">Hupa</a>. The responsibility of this servlet context listener is to construct an injector (achieved by the last method). Here, our injector contains two modules, <code>ratechecker.server.guice.GuiceServerModule</code> and <code>ratechecker.server.guice.DispatchServletModule</code>.</p>
 
-<p>```java DispatchServletModule.java
-public class DispatchServletModule extends ServletModule {
+<pre><code class="language-java">public class DispatchServletModule extends ServletModule {
     @Override
     protected void configureServlets() {
         super.configureServlets();
-        serve(&ldquo;/ratechecker/dispatch&rdquo;).with(RateCheckerDispatchServlet.class);
+        serve(&quot;/ratechecker/dispatch&quot;).with(RateCheckerDispatchServlet.class);
     }
-}</p>
+}
+</code></pre>
 
-<pre><code>
-This module has a mapping of URIs and its serving classes. It serves &quot;/ratechecker/dispatch&quot; with `RateCheckerDispatchServlet`, which is the entry point for GWT-dispatch.
+<p>This module has a mapping of URIs and its serving classes. It serves &ldquo;/ratechecker/dispatch&rdquo; with <code>RateCheckerDispatchServlet</code>, which is the entry point for GWT-dispatch.</p>
 
-```java GuiceServerModule.java
-public class GuiceServerModule extends ActionHandlerModule {
+<pre><code class="language-java">public class GuiceServerModule extends ActionHandlerModule {
 
     public GuiceServerModule() {
     }
@@ -282,49 +280,44 @@ public class GuiceServerModule extends ActionHandlerModule {
 
 <p>This is where you declare your bindings for the application. We&rsquo;ll come back to this file frequently as the application develops.</p>
 
-<p>```java RateCheckerDispatchServlet.java
-@Singleton
-public class RateCheckerDispatchServlet extends DispatchServiceServlet {</p>
+<pre><code class="language-java">@Singleton
+public class RateCheckerDispatchServlet extends DispatchServiceServlet {
 
-<pre><code>private static final long serialVersionUID = 4895255235709260169L;
+    private static final long serialVersionUID = 4895255235709260169L;
 
-private final Log _logger;
+    private final Log _logger;
 
-@Inject
-public RateCheckerDispatchServlet(final Dispatch dispatch, final Log logger) {
-    super(dispatch);
-    _logger = logger;
-}
-
-@Override
-public Result execute(final Action&lt;?&gt; action) throws ActionException {
-    try {
-        _logger.info(&quot;executing: &quot; + action.getClass().getName());
-        final Result res = super.execute(action);
-        _logger.info(&quot;finished: &quot; + action.getClass().getName());
-        return res;
-    } catch (final ActionException ae) {
-        _logger.error(ae.getMessage());
-        ae.printStackTrace();
-        throw ae;
-    } catch (final Exception e) {
-        _logger.error(&quot;Unexpected exception: &quot; + e.getMessage());
-        e.printStackTrace();
+    @Inject
+    public RateCheckerDispatchServlet(final Dispatch dispatch, final Log logger) {
+        super(dispatch);
+        _logger = logger;
     }
-    return null;
+
+    @Override
+    public Result execute(final Action&lt;?&gt; action) throws ActionException {
+        try {
+            _logger.info(&quot;executing: &quot; + action.getClass().getName());
+            final Result res = super.execute(action);
+            _logger.info(&quot;finished: &quot; + action.getClass().getName());
+            return res;
+        } catch (final ActionException ae) {
+            _logger.error(ae.getMessage());
+            ae.printStackTrace();
+            throw ae;
+        } catch (final Exception e) {
+            _logger.error(&quot;Unexpected exception: &quot; + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 </code></pre>
 
-<p>}</p>
+<p>This servlet extends from GWT-dispatch&rsquo;s DispatchServiceServlet. It&rsquo;s main responsibility is to provide unified logging.</p>
 
-<pre><code>
+<p>Notice you cannot run the application, because Guice is complaining that there&rsquo;s no binding for <code>org.apache.commons.logging.Log</code>, which we declared as a dependency for RateCheckerDispatchServlet. We go ahead write our <code>LogProvider</code> (to provide lazy initialization for the Log object to its users)</p>
 
-This servlet extends from GWT-dispatch's DispatchServiceServlet. It's main responsibility is to provide unified logging.
-
-Notice you cannot run the application, because Guice is complaining that there's no binding for `org.apache.commons.logging.Log`, which we declared as a dependency for RateCheckerDispatchServlet. We go ahead write our `LogProvider` (to provide lazy initialization for the Log object to its users)
-
-```java LogProvider.java
-public class LogProvider implements Provider&lt;Log&gt; {
+<pre><code class="language-java">public class LogProvider implements Provider&lt;Log&gt; {
 
     @Override
     public Log get() {
@@ -334,15 +327,15 @@ public class LogProvider implements Provider&lt;Log&gt; {
 }
 </code></pre>
 
-<p>Now the binding should be added to <code>GuiceServerModule</code>:
-<code>java GuiceServerModule.java
-[...]
+<p>Now the binding should be added to <code>GuiceServerModule</code>:</p>
+
+<pre><code class="language-java">[...]
     @Override
     protected void configureHandlers() {
             bind(Log.class).toProvider(LogProvider.class).in(Singleton.class);
     }
 [...]
-</code></p>
+</code></pre>
 
 <p>Now everytime Guice sees <code>Log.class</code> declared as a dependency in the constructor, it uses <code>LogProvider.get()</code> method to retrieve an instance of the log if there&rsquo;s none, and uses the existing log instance if it&rsquo;s been initialized (because of the singleton scope).</p>
 
@@ -379,7 +372,7 @@ public class LogProvider implements Provider&lt;Log&gt; {
           </section>
           
           	<div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     
