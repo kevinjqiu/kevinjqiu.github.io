@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    Heartbeat-style Failure Detector using Gossip // Qiu&#39;s Quibble
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.47" />
+
+  <meta property="og:title" content="Heartbeat-style Failure Detector using Gossip" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.idempotent.ca/2018/08/21/heartbeat-style-failure-detector-using-gossip/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="https://blog.idempotent.ca/css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Qiu&#39;s Quibble" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', "UA-62238742-2", 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+	
+
+    <h1 class="brand-title">Qiu&#39;s Quibble</h1>
+    <h2 class="brand-tagline">Blog about nothing and everything</h2>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="https://blog.idempotent.ca">Home</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/about/me/">about</a></li>
+        
+          <li class="nav-item"><span class="nav-item-separator">//</span><a href="/starred/">starred posts</a></li>
+        
+      </ul>
+    </nav>
+
+    
+    <div class="social-buttons">
+      
+        
+        <a href="https://github.com/kevinjqiu" target="_blank"><i class='fa fa-github'></i></a>
+        
+      
+        
+        <a href="http://blog.idempotent.ca/index.xml" target="_blank"><i class='fa fa-rss'></i></a>
+        
+      
+        
+        <a href="https://twitter.com/kevinjqiu" target="_blank"><i class='fa fa-twitter'></i></a>
+        
+      
+      
+    </div>
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#components">Components</a>
+<ul>
+<li><a href="#membership">Membership</a></li>
+<li><a href="#multicast">Multicast</a></li>
+<li><a href="#heartbeat-style-failure-detection">Heartbeat-style Failure Detection</a>
+<ul>
+<li><a href="#false-positive-and-suspicion">False positive and Suspicion</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#scope-of-implementation">Scope of Implementation</a>
+<ul>
+<li><a href="#transport-http">Transport: HTTP</a></li>
+<li><a href="#message-format-json">Message Format: JSON</a></li>
+<li><a href="#network-environment-127-0-0-1-8">Network environment: 127.0.0.<sup>1</sup>&frasl;<sub>8</sub></a></li>
+</ul></li>
+<li><a href="#goal-of-simulation">Goal of simulation</a></li>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#harness">Harness</a></li>
+<li><a href="#demo">Demo</a>
+<ul>
+<li><a href="#start-up-a-cluster-of-5-nodes">Start up a cluster of 5 nodes</a></li>
+<li><a href="#verify-that-these-nodes-know-about-each-other">Verify that these nodes know about each other</a></li>
+<li><a href="#add-a-new-node-and-show-its-members-initially-it-should-only-has-itself-and-its-initial-peer">Add a new node and show its members (initially it should only has itself and its initial peer)</a></li>
+<li><a href="#after-a-while-that-node-s-presence-is-gossipped-to-all-the-nodes">After a while, that node&rsquo;s presence is gossipped to all the nodes</a></li>
+<li><a href="#kill-a-random-node-and-watch-it-disappear-from-the-membership-list-of-other-nodes">Kill a random node, and watch it disappear from the membership list of other nodes</a></li>
+</ul></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/2018/08/21/heartbeat-style-failure-detector-using-gossip/">Heartbeat-style Failure Detector using Gossip</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>21</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Aug</span> <span class="post-date-year">2018</span>
+            	</span>
+            	
+            
+            	
+            
+
+			
+			
+
+			
+
+			
+
+            
+
+<p>I recently started part-time Master&rsquo;s degree at University of Illinois Urbana-Champaign.  It has been on my bucket list for a long time, and I finally got the chance to do it.</p>
+
+<p>One of the courses I&rsquo;m taking this semester is <a href="https://www.coursera.org/learn/cloud-computing">distributed systems</a>.  In my day job, I come in contact a lot with distributed systems, and this course so far has helped me tremendously in understanding a lot of the basic concepts of them.  One of such concepts is failure detection and how to multicast messages across the network using gossip.  To enhance my understandings of such top, I figured I could write a simple failure detector using these concepts.</p>
+
+<p><em>Disclaimer</em>: The code example here is purely educational, so don&rsquo;t use it anywhere near a production system.  Also, feel free to contact me regarding any bugs or errors in understanding.</p>
+
+<h1 id="components">Components</h1>
+
+<h2 id="membership">Membership</h2>
+
+<p>In a distributed system composed of a cluster of nodes/processes, how does one node/process know its peers in the cluster?  One way to do it is to maintain a static membership list and keep a copy of it for every node in the cluster, but then how do we disseminate such information to new nodes joining the cluster?  Also, in a distributed system, failure is the norm rather than the exception, so when a node fails, how do other nodes detect failure and remove it from its membership list?</p>
+
+<h2 id="multicast">Multicast</h2>
+
+<p>Multicast is the way in which we disseminate data in a distributed system.  We could use it to multicast the membership list to the nodes in the cluster so nodes in the cluster will have an eventually consistent membership list on each node.</p>
+
+<p>There are many multicast methods, but the <a href="https://en.wikipedia.org/wiki/Gossip_protocol">gossip protocol</a> is the one we&rsquo;re going to implement here, which is fairly simple to conceptualize and fairly efficient.</p>
+
+<p>On the high level, the protocol works as follows:</p>
+
+<p>For each <em>protocol period</em>:
+- Every node picks <code>m</code> (usually 2) of its immediate neighbours and send message to them
+- The <code>m</code> nodes receiving the message in turn pick <code>m</code> of their immediate neighbours and send the message to them</p>
+
+<p>Given a cluster of <code>N</code> nodes, gossip takes on the order of <code>log(N)</code> protocol periods to finish disseminate message to all nodes in the cluster.</p>
+
+<h2 id="heartbeat-style-failure-detection">Heartbeat-style Failure Detection</h2>
+
+<p>Heartbeating is one of the mechanisms for detecting failures in a distributed system.  For every protocol period, a node <code>P</code> increments its own heartbeat counter, and send the counter to neighbouring nodes <code>Q</code> using multicast (e.g., gossip).  If <code>Q</code> does not receive a heartbeat from <code>P</code> for a given amount of time (or missed beats), <code>Q</code> will remove <code>P</code> from its own membership list.</p>
+
+<h3 id="false-positive-and-suspicion">False positive and Suspicion</h3>
+
+<p>Sometimes, network failures happen and the heartbeat message from <code>P</code> to <code>Q</code> may not be delivered in time.  If <code>Q</code> removes <code>P</code> right away, this may lead to false positives.  To reduce the probability, a &ldquo;suspicion&rdquo; mechanism is used so if <code>P</code> misses a couple of heartbeats, it will first be moved to a &ldquo;suspected&rdquo; state, and if <code>Q</code> still hasn&rsquo;t heard from <code>P</code> for a given time period, <code>Q</code> will then remove <code>P</code> from its membership list.</p>
+
+<p>So these are the basics of our heartbeat-style failure detector with gossip.  Let&rsquo;s look at how we can implement it.</p>
+
+<h1 id="scope-of-implementation">Scope of Implementation</h1>
+
+<p>First, I want to spell out the scope of this toy failure detector.</p>
+
+<h2 id="transport-http">Transport: HTTP</h2>
+
+<p>Yes, I know using TCP for heartbeat isn&rsquo;t the most efficient, but for the purpose of this simulation, I&rsquo;m just going to use Python+Flask to quickly build up an API server over HTTP.  Socket programming isn&rsquo;t the focus of this simulation.</p>
+
+<h2 id="message-format-json">Message Format: JSON</h2>
+
+<p>Again, yes, JSON is heavyweight for heartbeating, but it&rsquo;s relatively human-friendly and it allows you to use the familiar tooling to interact with the server (e.g., <code>curl</code> and python-requests)</p>
+
+<h2 id="network-environment-127-0-0-1-8">Network environment: 127.0.0.<sup>1</sup>&frasl;<sub>8</sub></h2>
+
+<p>Yes, I&rsquo;m simulating on the loopback interface, with each process having a different port (and possibly different IP addresses in the <code>/8</code> network).  The implementation should work for processes on different machines/networks as long as they&rsquo;re routable.</p>
+
+<h1 id="goal-of-simulation">Goal of simulation</h1>
+
+<p>The goal of the simulation is to be able to show:</p>
+
+<ul>
+<li>each node maintaining a membership list that&rsquo;s eventually consistent</li>
+<li>when a new node joins the cluster, it will eventually have the same membership list as everybody else</li>
+<li>when a node is killed, the failure is detected, and the failed node is eventually removed from the membership list</li>
+</ul>
+
+<h1 id="implementation">Implementation</h1>
+
+<p>note: The complete code is in this <a href="https://github.com/kevinjqiu/failure_detector">repository</a>.</p>
+
+<p>First, we need a data structure to store membership information for a specific member:</p>
+
+<pre><code class="language-python">class MemberInfo:
+    def __init__(self, id, last_heartbeat, last_timestamp):
+        self.id = id                           # id is in the form of &lt;ip&gt;:&lt;port&gt;
+        self.last_heartbeat = last_heartbeat   # last received heartbeat sequence no.
+        self.last_timestamp = last_timestamp   # last heartbeat received timestamp
+        self.status = 'alive'
+        self._lock = threading.RLock()
+
+    def increment_heartbeat(self):
+        with self._lock:
+            self.last_heartbeat += 1
+            self.last_timestamp = int(time.time())
+
+    def update(self, updated_member_info):
+        with self._lock:
+            if updated_member_info.last_timestamp &lt;= self.last_timestamp:
+                return
+            if updated_member_info.last_heartbeat &lt;= self.last_heartbeat:
+                return
+            self.last_heartbeat = updated_member_info.last_heartbeat
+            self.last_timestamp = int(time.time())
+            self.status = 'alive'
+
+    def set_status(self, status):
+        with self._lock:
+            self.status = status
+</code></pre>
+
+<p>It&rsquo;s a simple Python class to store <code>id</code>, <code>last_heartbeat</code>, <code>last_timestamp</code> and the <code>status</code>.  It uses a reentrant lock to synchronize access to the attributes on object.
+The <code>MemberInfo</code> class has a few methods to update its attributes in a thread-safe way.</p>
+
+<p>We also need a data structure to represent a membership list:</p>
+
+<pre><code class="language-python">class MembershipList:
+    def __init__(self):
+        self._members = {}  # Type: MemberInfo
+        self._lock = threading.RLock()
+
+    ...
+
+    def json(self):
+        &quot;&quot;&quot;Returns the JSON representation of the membership list&quot;&quot;&quot;
+        ...
+
+    def update_all(self, membership_list):
+        with self._lock:
+            for member_to_update in membership_list:
+                member_info = MemberInfo(
+                    member_to_update['id'],
+                    member_to_update['last_heartbeat'],
+                    member_to_update['last_timestamp'],
+                )
+                if not member_to_update['id'] in self._members:
+                    self._members[member_to_update['id']] = member_info
+                else:
+                    existing_member = self._members[member_to_update['id']]
+                    existing_member.update(member_info)
+</code></pre>
+
+<p>The important method here is <code>update_all</code>, where an incoming membership list from another node needs to be &ldquo;merged&rdquo; with the membership list of the current node.</p>
+
+<p>As discussed, for simplicity reasons, we&rsquo;re just going to spin up a Flask API server with two endpoints: <code>GET /members</code> and <code>POST /members</code>.</p>
+
+<ul>
+<li><code>GET /members</code> will simply return the node&rsquo;s membership list in JSON format:</li>
+</ul>
+
+<pre><code class="language-python">@app.route('/members', methods=['GET'])
+def members():
+    return flask.jsonify(membership_list.json())
+</code></pre>
+
+<ul>
+<li><code>POST /members</code> receives the membership list from another node and update the node&rsquo;s membership list using <code>MembershipList::update_all</code> method.</li>
+</ul>
+
+<pre><code>@app.route('/members', methods=['POST'])
+def receive_heartbeat():
+    request_json = flask.request.json
+    membership_list.update_all(request_json)
+    return flask.jsonify({})
+</code></pre>
+
+<p>And finally, we need a task runner that runs a scheduled task at every <code>protocol_period</code> (e.g., 1s).  The task will:</p>
+
+<ul>
+<li>increment its own heartbeat counter</li>
+<li>move the peers it hasn&rsquo;t had a heartbeat exceeding the threshold to &ldquo;suspected&rdquo; state</li>
+<li>remove the peers in suspected state which haven&rsquo;t had any heartbeats exceeding the threshold</li>
+<li>randomly pick two peers to send this node&rsquo;s membership list to</li>
+</ul>
+
+<p>For the scheduler part, I just use the venerable <a href="https://pypi.org/project/APScheduler/">apscheduler</a> package which is fairly easy to use:</p>
+
+<pre><code class="language-python">def tick():
+    # self heartbeat
+    membership_list.update_one(app.node_id,
+                               lambda member_info: member_info.increment_heartbeat())
+
+    membership_list.detect_suspected_nodes(app.suspicion_threshold_beats, app.protocol_period)
+    membership_list.remove_dead_nodes(app.failure_threshold_beats, app.protocol_period)
+
+    peers = membership_list.choose_peers(2, exclude=[app.node_id])
+    for peer in peers:
+        try:
+            response = requests.post('http://{}/members'.format(peer), json=membership_list.json())
+            logging.debug(response)
+        except requests.exceptions.ConnectionError:
+            pass
+</code></pre>
+
+<h1 id="harness">Harness</h1>
+
+<p>So these are the main components of the failure detector.  The next step is to write some harness code to simulate a cluster with these nodes running.</p>
+
+<p>For that, I use <a href="pyinvoke.org">pyinvoke</a> which is a glorified Makefile.</p>
+
+<p>These are the tasks I have:</p>
+
+<ul>
+<li><a href="https://github.com/kevinjqiu/failure_detector/blob/9d9d12ea8c389e1e4d19784af50c124d872e0a85/tasks.py#L90-L105"><code>up</code></a> - bring up the cluster with 3 nodes having each other as peers.</li>
+<li><a href="https://github.com/kevinjqiu/failure_detector/blob/9d9d12ea8c389e1e4d19784af50c124d872e0a85/tasks.py#L123-L136"><code>add-node</code></a> - start up a node and pick a random node in the cluster as its peer. The full membership list will eventually be gossipped to this node.</li>
+<li><a href="https://github.com/kevinjqiu/failure_detector/blob/9d9d12ea8c389e1e4d19784af50c124d872e0a85/tasks.py#L170-L180"><code>list-members</code></a> - print out the membership list for every node in the cluster.</li>
+<li><a href="https://github.com/kevinjqiu/failure_detector/blob/9d9d12ea8c389e1e4d19784af50c124d872e0a85/tasks.py#L51-L72"><code>kill</code></a> - kill a random node (or a specific node) in the cluster. This simulates a node failure.</li>
+</ul>
+
+<h1 id="demo">Demo</h1>
+
+<p>Now we can tie them together and do a demo of how heartbeat-style failure detection works.</p>
+
+<h2 id="start-up-a-cluster-of-5-nodes">Start up a cluster of 5 nodes</h2>
+
+<pre><code>$ inv up --size 3
+Starting node: 127.0.1.1:36991 with peers 127.0.1.1:52326,127.0.1.1:36783
+Starting node: 127.0.1.1:52326 with peers 127.0.1.1:36991,127.0.1.1:36783
+Starting node: 127.0.1.1:36783 with peers 127.0.1.1:36991,127.0.1.1:52326
+</code></pre>
+
+<h2 id="verify-that-these-nodes-know-about-each-other">Verify that these nodes know about each other</h2>
+
+<pre><code>inv list-members
+Node: 127.0.1.1:36991
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:36991                31        1534962198  alive
+127.0.1.1:52326                31        1534962198  alive
+127.0.1.1:36783                31        1534962198  alive
+
+Node: 127.0.1.1:52326
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:52326                31        1534962198  alive
+127.0.1.1:36991                31        1534962198  alive
+127.0.1.1:36783                31        1534962198  alive
+
+Node: 127.0.1.1:36783
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:36783                31        1534962198  alive
+127.0.1.1:36991                31        1534962198  alive
+127.0.1.1:52326                31        1534962198  alive
+</code></pre>
+
+<h2 id="add-a-new-node-and-show-its-members-initially-it-should-only-has-itself-and-its-initial-peer">Add a new node and show its members (initially it should only has itself and its initial peer)</h2>
+
+<pre><code>$ inv add-node &amp;&amp; sleep 1 &amp;&amp; inv list-members
+Starting node: 127.0.1.1:61586 with peers 127.0.1.1:36991
+
+...
+
+Node: 127.0.1.1:61586
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:61586                 0        1534962309  alive
+127.0.1.1:36991                 0        1534962309  alive
+</code></pre>
+
+<h2 id="after-a-while-that-node-s-presence-is-gossipped-to-all-the-nodes">After a while, that node&rsquo;s presence is gossipped to all the nodes</h2>
+
+<pre><code>$ inv list-members
+Node: 127.0.1.1:36991
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:36991               210        1534962377  alive
+127.0.1.1:52326               209        1534962377  alive
+127.0.1.1:36783               209        1534962376  alive
+127.0.1.1:61586                68        1534962377  alive
+
+Node: 127.0.1.1:52326
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:52326               210        1534962377  alive
+127.0.1.1:36991               210        1534962377  alive
+127.0.1.1:36783               210        1534962377  alive
+127.0.1.1:61586                68        1534962377  alive
+
+Node: 127.0.1.1:36783
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:36783               210        1534962377  alive
+127.0.1.1:36991               210        1534962377  alive
+127.0.1.1:52326               209        1534962376  alive
+127.0.1.1:61586                68        1534962377  alive
+
+Node: 127.0.1.1:61586
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:61586                68        1534962377  alive
+127.0.1.1:36991               210        1534962377  alive
+127.0.1.1:52326               210        1534962377  alive
+127.0.1.1:36783               210        1534962377  alive
+</code></pre>
+
+<h2 id="kill-a-random-node-and-watch-it-disappear-from-the-membership-list-of-other-nodes">Kill a random node, and watch it disappear from the membership list of other nodes</h2>
+
+<p>The best way to do this is to have a terminal (or tmux panel) running <code>watch inv list-members</code> while run <code>inv kill</code> in another.</p>
+
+<pre><code>$ inv kill
+Kill peer {'bind': '127.0.1.1:61586', 'pid': 21969}
+</code></pre>
+
+<p>And observe in the other window:</p>
+
+<pre><code>Node: 127.0.1.1:36991
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  ---------
+127.0.1.1:36991               557        1534962724  alive
+127.0.1.1:52326               557        1534962724  alive
+127.0.1.1:36783               557        1534962724  alive
+127.0.1.1:61586               407        1534962716  suspected
+
+Node: 127.0.1.1:52326
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  ---------
+127.0.1.1:52326               557        1534962724  alive
+127.0.1.1:36991               557        1534962724  alive
+127.0.1.1:36783               555        1534962722  alive
+127.0.1.1:61586               407        1534962716  suspected
+
+Node: 127.0.1.1:36783
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  ---------
+127.0.1.1:36783               557        1534962724  alive
+127.0.1.1:36991               556        1534962723  alive
+127.0.1.1:52326               557        1534962724  alive
+127.0.1.1:61586               407        1534962716  suspected
+
+Node: 127.0.1.1:61586
+================================================================
+Node is down
+</code></pre>
+
+<p>Notice the &ldquo;suspected&rdquo; status for the newly killed node.  After a while:</p>
+
+<pre><code>Node: 127.0.1.1:36991
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:36991               638        1534962805  alive
+127.0.1.1:52326               638        1534962805  alive
+127.0.1.1:36783               638        1534962805  alive
+
+Node: 127.0.1.1:52326
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:52326               638        1534962805  alive
+127.0.1.1:36991               638        1534962805  alive
+127.0.1.1:36783               638        1534962805  alive
+
+Node: 127.0.1.1:36783
+================================================================
+id                 last_heartbeat    last_timestamp  status
+---------------  ----------------  ----------------  --------
+127.0.1.1:36783               638        1534962805  alive
+127.0.1.1:36991               638        1534962805  alive
+127.0.1.1:52326               638        1534962805  alive
+
+Node: 127.0.1.1:61586
+================================================================
+Node is down
+</code></pre>
+
+<p>The node <code>127.0.0.1:61586</code> is completely removed from the membership list of other nodes.</p>
+
+<p>I hope this demonstrates the aspects of a simple failure detector with gossip.  It certainly solidified my understanding of such topic while having fun building it :)</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/2018/04/18/run-your-own-home-dns-on-coredns/">Run Your Own Home DNS on coredns</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "idempotentca" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2018. All rights reserved.</p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>

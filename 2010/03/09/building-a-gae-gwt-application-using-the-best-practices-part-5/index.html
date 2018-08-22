@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.39" />
+<meta name="generator" content="Hugo 0.47" />
 
   <meta property="og:title" content="Building a GAE&#43;GWT application using the best practices (Part 5)" />
 <meta property="og:description" content="" />
@@ -137,7 +137,9 @@
 <li><a href="#mvp-pattern">MVP pattern</a></li>
 <li><a href="#mainview">MainView</a>
 <ul>
+<li><a href="#mainpresenter-display">MainPresenter.Display</a></li>
 <li><a href="#mainview-java">MainView.java</a></li>
+<li><a href="#mainpresenter">MainPresenter</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -214,52 +216,50 @@
 
 <p>Here I&rsquo;m using the new GWT2 UiBinder feature. UiBinder makes developing UI less boring.</p>
 
-<p>```xml MainView.ui.xml
-&lt;!DOCTYPE ui:UiBinder SYSTEM &ldquo;<a href="http://dl.google.com/gwt/DTD/xhtml.ent&quot;&gt;">http://dl.google.com/gwt/DTD/xhtml.ent&quot;&gt;</a>
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <a href="ui:style">ui:style</a>
+<pre><code class="language-xml">&lt;!DOCTYPE ui:UiBinder SYSTEM &quot;http://dl.google.com/gwt/DTD/xhtml.ent&quot;&gt;
+&lt;ui:UiBinder xmlns:ui=&quot;urn:ui:com.google.gwt.uibinder&quot;
+    xmlns:g=&quot;urn:import:com.google.gwt.user.client.ui&quot;&gt;
+    &lt;ui:style&gt;
         .rateDisplay {
             font-size: x-large;
             font-weight: bolder;
-        }</p>
+        }
 
-<pre><code>    .mainPanel {
-        padding: 10px;
-    }
-&lt;/ui:style&gt;
+        .mainPanel {
+            padding: 10px;
+        }
+    &lt;/ui:style&gt;
 
-&lt;ui:with type=&quot;ratechecker.client.bundles.RateCheckerClientBundle&quot;
-    field=&quot;bundle&quot;&gt;&lt;/ui:with&gt;
-&lt;g:DecoratorPanel height=&quot;200px&quot;&gt;
-    &lt;g:VerticalPanel styleName=&quot;{style.mainPanel}&quot; verticalAlignment=&quot;ALIGN_TOP&quot;&gt;
-        &lt;g:Label&gt;Latest Selling Rate&lt;/g:Label&gt;
-        &lt;g:Image resource=&quot;{bundle.loading}&quot; visible=&quot;false&quot;
-            ui:field=&quot;loading&quot;&gt;&lt;/g:Image&gt;
-        &lt;g:Label ui:field=&quot;rateDisplay&quot; styleName=&quot;{style.rateDisplay}&quot;&gt;&lt;/g:Label&gt;
-        &lt;g:HorizontalPanel&gt;
-            &lt;g:Button ui:field=&quot;fetchLatest&quot;&gt;Fetch Latest&lt;/g:Button&gt;
-            &lt;g:Button ui:field=&quot;refresh&quot;&gt;Refresh&lt;/g:Button&gt;
-        &lt;/g:HorizontalPanel&gt;
+    &lt;ui:with type=&quot;ratechecker.client.bundles.RateCheckerClientBundle&quot;
+        field=&quot;bundle&quot;&gt;&lt;/ui:with&gt;
+    &lt;g:DecoratorPanel height=&quot;200px&quot;&gt;
+        &lt;g:VerticalPanel styleName=&quot;{style.mainPanel}&quot; verticalAlignment=&quot;ALIGN_TOP&quot;&gt;
+            &lt;g:Label&gt;Latest Selling Rate&lt;/g:Label&gt;
+            &lt;g:Image resource=&quot;{bundle.loading}&quot; visible=&quot;false&quot;
+                ui:field=&quot;loading&quot;&gt;&lt;/g:Image&gt;
+            &lt;g:Label ui:field=&quot;rateDisplay&quot; styleName=&quot;{style.rateDisplay}&quot;&gt;&lt;/g:Label&gt;
+            &lt;g:HorizontalPanel&gt;
+                &lt;g:Button ui:field=&quot;fetchLatest&quot;&gt;Fetch Latest&lt;/g:Button&gt;
+                &lt;g:Button ui:field=&quot;refresh&quot;&gt;Refresh&lt;/g:Button&gt;
+            &lt;/g:HorizontalPanel&gt;
 
-        &lt;g:Label&gt;Recent rates&lt;/g:Label&gt;
-        &lt;g:FlexTable ui:field=&quot;rateTable&quot;&gt;
-        &lt;/g:FlexTable&gt;
-    &lt;/g:VerticalPanel&gt;
-&lt;/g:DecoratorPanel&gt;
+            &lt;g:Label&gt;Recent rates&lt;/g:Label&gt;
+            &lt;g:FlexTable ui:field=&quot;rateTable&quot;&gt;
+            &lt;/g:FlexTable&gt;
+        &lt;/g:VerticalPanel&gt;
+    &lt;/g:DecoratorPanel&gt;
+&lt;/ui:UiBinder&gt;
 </code></pre>
 
-<p><a href="/ui:UiBinder">/ui:UiBinder</a></p>
+<p>UiBinder can inter-operate with GWT2 ClientBundle. If you have used GWT1.x&rsquo;s ImageBundle, ClientBundle is similar to that, except now with ClientBundle, other client resources are able to be bundled such as CSS stylesheet and external text resource.</p>
 
-<pre><code>
-UiBinder can inter-operate with GWT2 ClientBundle. If you have used GWT1.x's ImageBundle, ClientBundle is similar to that, except now with ClientBundle, other client resources are able to be bundled such as CSS stylesheet and external text resource.
+<h3 id="mainpresenter-display">MainPresenter.Display</h3>
 
-### MainPresenter.Display
-The display interface is the only thing presenter knows about the UI, and the presenter operates/manipulates UI only through the display interface.
+<p>The display interface is the only thing presenter knows about the UI, and the presenter operates/manipulates UI only through the display interface.</p>
 
-The display interface can be standalone, but I find it's much more convenient to have it as an inner interface inside the presenter class.
-```java
-    public interface Display extends WidgetDisplay {
+<p>The display interface can be standalone, but I find it&rsquo;s much more convenient to have it as an inner interface inside the presenter class.</p>
+
+<pre><code class="language-java">    public interface Display extends WidgetDisplay {
         HasText getRateDisplayLabel();
         HasClickHandlers getFetchLatest();
         HasClickHandlers getRefresh();
@@ -286,100 +286,98 @@ The display interface can be standalone, but I find it's much more convenient to
 
 <h3 id="mainview-java">MainView.java</h3>
 
-<p>Now we have the display interface, we can map these interface methods onto our UI.
-```java MainView.java
-package ratechecker.client.mvp;</p>
+<p>Now we have the display interface, we can map these interface methods onto our UI.</p>
 
-<p>public class MainView extends Composite implements MainPresenter.Display {</p>
+<pre><code class="language-java">package ratechecker.client.mvp;
 
-<pre><code>private static MainViewUiBinder uiBinder = GWT
-.create(MainViewUiBinder.class);
+public class MainView extends Composite implements MainPresenter.Display {
 
-interface MainViewUiBinder extends UiBinder&lt;Widget, MainView&gt; {
+    private static MainViewUiBinder uiBinder = GWT
+    .create(MainViewUiBinder.class);
+
+    interface MainViewUiBinder extends UiBinder&lt;Widget, MainView&gt; {
+    }
+
+    @UiField
+    Button refresh;
+
+    @UiField
+    Button fetchLatest;
+
+    @UiField
+    Label rateDisplay;
+
+    @UiField
+    FlexTable rateTable;
+
+    @UiField
+    Image loading;
+
+    private final DateTimeFormat _dateTimeFormat;
+
+    @Inject
+    public MainView(final DateTimeFormat dateTimeFormat) {
+        _dateTimeFormat = dateTimeFormat;
+        initWidget(uiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public HasClickHandlers getFetchLatest() {
+        return fetchLatest;
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
+    }
+
+    @Override
+    public HasText getRateDisplayLabel() {
+        return rateDisplay;
+    }
+
+    @Override
+    public void setEnabledFetchLatestButton(final boolean isEnabled) {
+        fetchLatest.setEnabled(isEnabled);
+    }
+
+    @Override
+    public void addToRecentRates(final Rate rate, final boolean toHead) {
+        final int newRowIdx = toHead ? 0 : rateTable.getRowCount();
+        rateTable.insertRow(newRowIdx);
+        rateTable.setText(newRowIdx, 0, _dateTimeFormat.format(rate.getTimeFetched()));
+        rateTable.setText(newRowIdx, 1, String.valueOf(rate.getRate()));
+    }
+
+    @Override
+    public void clearRecentRates() {
+        rateTable.removeAllRows();
+    }
+
+    @Override
+    public HasClickHandlers getRefresh() {
+        return refresh;
+    }
+
+    @Override
+    public void setShowLoadingCurrentRate(final boolean isLoading) {
+        loading.setVisible(isLoading);
+        rateDisplay.setVisible(!isLoading);
+    }
+
+    @Override public void startProcessing() { }
+
+    @Override public void stopProcessing() { }
 }
-
-@UiField
-Button refresh;
-
-@UiField
-Button fetchLatest;
-
-@UiField
-Label rateDisplay;
-
-@UiField
-FlexTable rateTable;
-
-@UiField
-Image loading;
-
-private final DateTimeFormat _dateTimeFormat;
-
-@Inject
-public MainView(final DateTimeFormat dateTimeFormat) {
-    _dateTimeFormat = dateTimeFormat;
-    initWidget(uiBinder.createAndBindUi(this));
-}
-
-@Override
-public HasClickHandlers getFetchLatest() {
-    return fetchLatest;
-}
-
-@Override
-public Widget asWidget() {
-    return this;
-}
-
-@Override
-public HasText getRateDisplayLabel() {
-    return rateDisplay;
-}
-
-@Override
-public void setEnabledFetchLatestButton(final boolean isEnabled) {
-    fetchLatest.setEnabled(isEnabled);
-}
-
-@Override
-public void addToRecentRates(final Rate rate, final boolean toHead) {
-    final int newRowIdx = toHead ? 0 : rateTable.getRowCount();
-    rateTable.insertRow(newRowIdx);
-    rateTable.setText(newRowIdx, 0, _dateTimeFormat.format(rate.getTimeFetched()));
-    rateTable.setText(newRowIdx, 1, String.valueOf(rate.getRate()));
-}
-
-@Override
-public void clearRecentRates() {
-    rateTable.removeAllRows();
-}
-
-@Override
-public HasClickHandlers getRefresh() {
-    return refresh;
-}
-
-@Override
-public void setShowLoadingCurrentRate(final boolean isLoading) {
-    loading.setVisible(isLoading);
-    rateDisplay.setVisible(!isLoading);
-}
-
-@Override public void startProcessing() { }
-
-@Override public void stopProcessing() { }
 </code></pre>
 
-<p>}</p>
+<p>A lot of this is boilerplate code to satisfy both UiBinder and GWT-presenter.Display interface. Ideally, the VIew shouldn&rsquo;t do too much, if any at all. Realistically, this is harder to achieve.</p>
 
-<pre><code>
-A lot of this is boilerplate code to satisfy both UiBinder and GWT-presenter.Display interface. Ideally, the VIew shouldn't do too much, if any at all. Realistically, this is harder to achieve.
+<h3 id="mainpresenter">MainPresenter</h3>
 
-### MainPresenter
+<p>Finally, we can show you the presenter code.</p>
 
-Finally, we can show you the presenter code.
-```java MainPresenter.java
-
+<pre><code class="language-java">
 public class MainPresenter extends WidgetPresenter&lt;MainPresenter.Display&gt; {
 
     private final DispatchAsync _dispatch;
@@ -559,7 +557,7 @@ public class MainPresenter extends WidgetPresenter&lt;MainPresenter.Display&gt; 
           </section>
           
           	<div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

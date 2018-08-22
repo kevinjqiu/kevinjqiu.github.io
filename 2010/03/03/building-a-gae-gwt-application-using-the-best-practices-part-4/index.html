@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.39" />
+<meta name="generator" content="Hugo 0.47" />
 
   <meta property="og:title" content="Building a GAE&#43;GWT application using the best practices (Part 4)" />
 <meta property="og:description" content="" />
@@ -136,7 +136,9 @@
 <li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#module-definition">Module definition</a></li>
 <li><a href="#create-a-gin-module">Create a Gin Module</a></li>
+<li><a href="#apppresenter">AppPresenter</a></li>
 <li><a href="#ginjector">Ginjector</a></li>
+<li><a href="#entry-point">Entry Point</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -231,32 +233,28 @@ RateChecker.gwt.xml</p>
 <p>Gin and Guice implements the same API (or rather, Gin has the same interface as Guice), but Gin uses GWT deferred binding &ldquo;magic&rdquo;. Similar to what we have on the server side, on the client side, we start by defining our module:
 RateCheckerClientModule:</p>
 
-<p>```java RateCheckerClientModule.java
-public class RateCheckerClientModule extends AbstractPresenterModule {</p>
+<pre><code class="language-java">public class RateCheckerClientModule extends AbstractPresenterModule {
 
-<pre><code>public RateCheckerClientModule() {
-}
+    public RateCheckerClientModule() {
+    }
 
-@Override
-protected void configure() {
+    @Override
+    protected void configure() {
 
-    bind(EventBus.class).to(DefaultEventBus.class).in(Singleton.class);
-    bind(PlaceManager.class).in(Singleton.class);
+        bind(EventBus.class).to(DefaultEventBus.class).in(Singleton.class);
+        bind(PlaceManager.class).in(Singleton.class);
 
+    }
 }
 </code></pre>
 
-<p>}</p>
+<p>To start up, we bind EventBus and PlaceManager in the singleton scope. They&rsquo;re both provided by GWT-mvp library.</p>
 
-<pre><code>
-To start up, we bind EventBus and PlaceManager in the singleton scope. They're both provided by GWT-mvp library.
+<h2 id="apppresenter">AppPresenter</h2>
 
-## AppPresenter
+<p>There are different ways to facilitate the MVP pattern but the way I find the most convenient is to have an AppPresenter manage all subsequent presenters. The view the AppPresenter represents is the RootPanel of GWT.</p>
 
-There are different ways to facilitate the MVP pattern but the way I find the most convenient is to have an AppPresenter manage all subsequent presenters. The view the AppPresenter represents is the RootPanel of GWT.
-
-```java AppPresenter.java
-public class AppPresenter {
+<pre><code class="language-java">public class AppPresenter {
 
     private HasWidgets _container;
 
@@ -300,23 +298,21 @@ public class AppPresenter {
 
 <p>Similar to &ldquo;Injector&rdquo; interface on the server side, the client side needs to define a Ginjector that act as a gateway for Gin managed object instances.</p>
 
-<p>```java RateCheckerGinjector.java
-@GinModules({RateCheckerClientModule.class, ClientDispatchModule.class})
-public interface RateCheckerGinjector extends Ginjector {</p>
+<pre><code class="language-java">@GinModules({RateCheckerClientModule.class, ClientDispatchModule.class})
+public interface RateCheckerGinjector extends Ginjector {
 
-<pre><code>AppPresenter getAppPresenter();
+    AppPresenter getAppPresenter();
+
+}
 </code></pre>
 
-<p>}</p>
+<p>Here the annotation <code>@GinModules({...})</code> makes the instances managed by <code>RateCheckerClientModule</code> and <code>ClientDispatchModule</code> available for the ginjector. ClientDispatchModule binds DispatchAsync interface, which is what we will use to interface with the web service methods.</p>
 
-<pre><code>
-Here the annotation `@GinModules({...})` makes the instances managed by `RateCheckerClientModule` and `ClientDispatchModule` available for the ginjector. ClientDispatchModule binds DispatchAsync interface, which is what we will use to interface with the web service methods.
+<h2 id="entry-point">Entry Point</h2>
 
-## Entry Point
+<p>Finally, here&rsquo;s the module entry point:</p>
 
-Finally, here's the module entry point:
-```java
-/**
+<pre><code class="language-java">/**
  * Entry point classes define &lt;code&gt;onModuleLoad()&lt;/code&gt;.
  */
 public class RateChecker implements EntryPoint {
@@ -365,7 +361,7 @@ public class RateChecker implements EntryPoint {
           </section>
           
           	<div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

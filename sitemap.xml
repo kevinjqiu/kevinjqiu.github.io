@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.idempotent.ca/2018/08/21/heartbeat-style-failure-detector-using-gossip/</loc>
+    <lastmod>2018-08-21T23:32:00-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.idempotent.ca/2018/04/18/run-your-own-home-dns-on-coredns/</loc>
     <lastmod>2018-04-18T23:09:59-04:00</lastmod>
   </url>
@@ -514,7 +519,7 @@
   
   <url>
     <loc>https://blog.idempotent.ca/post/</loc>
-    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
+    <lastmod>2018-08-21T23:32:00-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -526,7 +531,7 @@
   
   <url>
     <loc>https://blog.idempotent.ca/</loc>
-    <lastmod>2018-04-18T23:09:59-04:00</lastmod>
+    <lastmod>2018-08-21T23:32:00-04:00</lastmod>
     <priority>0</priority>
   </url>
   

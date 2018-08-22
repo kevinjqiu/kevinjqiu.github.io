@@ -14,7 +14,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta name="generator" content="Hugo 0.39" />
+<meta name="generator" content="Hugo 0.47" />
 
   <meta property="og:title" content="Use Python&#39;s sys.settrace() for fun and for profit" />
 <meta property="og:description" content="" />
@@ -136,6 +136,7 @@
 <li><a href="#here-comes-sys-settrace">Here comes <code>sys.settrace()</code></a></li>
 <li><a href="#how-can-it-be-used">How can it be used?</a></li>
 <li><a href="#a-simple-use-case">A simple use case</a></li>
+<li><a href="#nose-plugin">Nose plugin</a></li>
 <li><a href="#trace-function">Trace function</a></li>
 <li><a href="#data-collection">Data Collection</a></li>
 <li><a href="#potential-problems">Potential Problems</a></li>
@@ -233,24 +234,22 @@ class TestFoo(object):
 
 <p>As you can see, we have 4 tests and 2 methods-under-test. Our goal is that when running <code>nosetests --with-nostrils</code> (<code>--with-nostrils</code> is the switch to turn on the nostrils plugin), we get the following mappings:</p>
 
-<p>```python worker.py
-def add(x, y):
+<pre><code class="language-python">def add(x, y):
   z = x + y # test_add, test_add_negative, TestFoo.test_add
-  return z  # test_add, test_add_negative, TestFoo.test_add</p>
+  return z  # test_add, test_add_negative, TestFoo.test_add
 
-<p>def subtract(x, y):
+def subtract(x, y):
   z = x - y # test_subtract
-  return z  # test_subtract</p>
+  return z  # test_subtract
+</code></pre>
 
-<pre><code>
-## Nose plugin
+<h2 id="nose-plugin">Nose plugin</h2>
 
-I won't go into the details about how to create a plugin for nose. You can read it [here](http://readthedocs.org/docs/nose/en/latest/plugins/writing.html, and you can take a look at my sample setup [here](https://raw.github.com/kevinjqiu/nostrils/master/setup.py). In a nutshell, every plugin has a name, and when nose is supplied with --with-*plugin_name*, your plugin is activated. Nose provides a test lifecycle &quot;hooks&quot; that plugins can implement. For example, `startTest` is called when a test case is discovered and adapted into a nose [TestCase](http://readthedocs.org/docs/nose/en/latest/api/test_cases.html). `addSuccess` is called when a test case succeeded. `finalize` is called when all tests are finished.
+<p>I won&rsquo;t go into the details about how to create a plugin for nose. You can read it <a href="http://readthedocs.org/docs/nose/en/latest/plugins/writing.html, and you can take a look at my sample setup [here](https://raw.github.com/kevinjqiu/nostrils/master/setup.py). In a nutshell, every plugin has a name, and when nose is supplied with --with-*plugin_name*, your plugin is activated. Nose provides a test lifecycle &quot;hooks&quot; that plugins can implement. For example, `startTest` is called when a test case is discovered and adapted into a nose [TestCase](http://readthedocs.org/docs/nose/en/latest/api/test_cases.html">here</a>. <code>addSuccess</code> is called when a test case succeeded. <code>finalize</code> is called when all tests are finished.</p>
 
-Here's how my plugin looks like:
+<p>Here&rsquo;s how my plugin looks like:</p>
 
-```python
-class Nostrils(Plugin):
+<pre><code class="language-python">class Nostrils(Plugin):
     name = 'nostrils'
 
     def addError(self, test, err, *args):
@@ -377,7 +376,7 @@ class Nostrils(Plugin):
           </section>
           
           	<div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     
